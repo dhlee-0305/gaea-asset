@@ -51,6 +51,18 @@ export default function SampleForm() {
               contents: MESSAGE.error,
             }),
           );
+
+          // 임시 데이터 설정
+          reset({
+            userNo: '1',
+            userId: 'cookie',
+            userNm: '쿠키',
+            phoneNo: '010-8888-9999',
+            email: 'cookie@gaeasoft.co.kr',
+            deptNm: '기술연구소',
+            createDt: '2025.01.01',
+            updateDt: '2025.01.01',
+          });
         }
       })();
     }
