@@ -12,7 +12,7 @@ import { resolveDialog } from '@/store/dialogAction';
 
 export default function AtomDialog() {
   const dispatch = useDispatch();
-  const { dialog } = useSelector((state: RootState) => state.ui);
+  const { dialog } = useSelector((state: RootState) => state.dialog);
 
   const handleClose = (result: boolean) => {
     resolveDialog(result, dispatch);

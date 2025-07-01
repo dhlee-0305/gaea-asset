@@ -1,10 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
 
-import uiReducer from './dialogSlice';
+import dialogReducer from './dialogSlice';
 
 const store = configureStore({
   reducer: {
-    ui: uiReducer,
+    dialog: dialogReducer,
   },
 });
 
