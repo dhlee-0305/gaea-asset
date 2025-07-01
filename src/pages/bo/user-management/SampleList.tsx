@@ -20,7 +20,7 @@ import { useDispatch } from 'react-redux';
 
 import api from '@/common/utils/api';
 import type { SampleData } from '@/common/types/sample';
-import PageHeader from '@/components/common/PageHeader';
+import PageHeader from '@/components/bo/PageHeader';
 import { showAlert } from '@/store/dialogAction';
 import { MESSAGE } from '@/common/constants';
 import type { AppDispatch } from '@/store';
@@ -87,7 +87,7 @@ export default function SampleList() {
 
   // 등록 화면 이동
   const handleMoveCreate = (): void => {
-    navigate('/user-management/users/create');
+    navigate('/bo/user-management/users/create');
   };
 
   return (
@@ -144,7 +144,7 @@ export default function SampleList() {
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
               >
                 <TableCell align='center' component='th' scope='row'>
-                  <Link to={`/user-management/users/${data.userNo}`}>
+                  <Link to={`/bo/user-management/users/${data.userNo}`}>
                     {data.userId}
                   </Link>
                 </TableCell>

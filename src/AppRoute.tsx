@@ -1,31 +1,53 @@
 import { Route, Routes } from 'react-router-dom';
+import { useState } from 'react';
 
-import SampleDetail from '@/pages/user-management/SampleDetail';
-import SampleForm from '@/pages/user-management/SampleForm';
-import Layout from '@/layout/Layout';
+import LayoutBo from '@/layout/LayoutBo';
+import LayoutFo from '@/layout/LayoutFo';
+import SampleDetail from '@/pages/bo/user-management/SampleDetail';
+import SampleForm from '@/pages/bo/user-management/SampleForm';
 import Home from '@/pages/Home';
-import SampleList from '@/pages/user-management/SampleList';
+import SampleList from '@/pages/bo/user-management/SampleList';
 
 export default function AppRoute() {
+  const [userType, setUserType] = useState('BO');
   return (
     <div>
       <Routes>
-        <Route path='/' element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path='/user-management/users' element={<SampleList />} />
-          <Route
-            path='/user-management/users/:userNo'
-            element={<SampleDetail />}
-          />
-          <Route
-            path='/user-management/users/create'
-            element={<SampleForm />}
-          />
-          <Route
-            path='/user-management/users/:userNo/update'
-            element={<SampleForm />}
-          />
-        </Route>
+        {userType === 'BO' ? (
+          <Route path='/' element={<LayoutBo />}>
+            <Route index element={<Home />} />
+            <Route path='/bo/user-management/users' element={<SampleList />} />
+            <Route
+              path='/bo/user-management/users/:userNo'
+              element={<SampleDetail />}
+            />
+            <Route
+              path='/bo/user-management/users/create'
+              element={<SampleForm />}
+            />
+            <Route
+              path='/bo/user-management/users/:userNo/update'
+              element={<SampleForm />}
+            />
+          </Route>
+        ) : (
+          <Route path='/' element={<LayoutFo />}>
+            <Route index element={<Home />} />
+            <Route path='/fo/user-management/users' element={<SampleList />} />
+            <Route
+              path='/fo/user-management/users/:userNo'
+              element={<SampleDetail />}
+            />
+            <Route
+              path='/fo/user-management/users/create'
+              element={<SampleForm />}
+            />
+            <Route
+              path='/fo/user-management/users/:userNo/update'
+              element={<SampleForm />}
+            />
+          </Route>
+        )}
       </Routes>
     </div>
   );

@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import api from '@/common/utils/api';
 import type { SampleData } from '@/common/types/sample';
 import { MESSAGE, VALID_RULES } from '@/common/constants';
-import PageHeader from '@/components/common/PageHeader';
+import PageHeader from '@/components/bo/PageHeader';
 import { showAlert, showConfirm } from '@/store/dialogAction';
 import type { AppDispatch } from '@/store';
 
@@ -110,9 +110,9 @@ export default function SampleForm() {
   // 목록 화면 이동
   const handleCancel = (): void => {
     if (isUpdate) {
-      navigate(`/user-management/users/${userNo}`);
+      navigate(`/bo/user-management/users/${userNo}`);
     } else {
-      navigate('/user-management/users');
+      navigate('/bo/user-management/users');
     }
   };
 

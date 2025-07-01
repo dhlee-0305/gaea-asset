@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 
 import api from '@/common/utils/api';
 import type { SampleData } from '@/common/types/sample';
-import PageHeader from '@/components/common/PageHeader';
+import PageHeader from '@/components/bo/PageHeader';
 import type { AppDispatch } from '@/store';
 import { showAlert } from '@/store/dialogAction';
 import { MESSAGE } from '@/common/constants';
@@ -63,12 +63,12 @@ export default function SampleDetail() {
 
   // 수정 화면 이동
   const handleMoveModify = (): void => {
-    navigate(`/user-management/users/${userNo}/update`);
+    navigate(`/bo/user-management/users/${userNo}/update`);
   };
 
   // 목록 화면 이동
   const handleMoveList = (): void => {
-    navigate('/user-management/users');
+    navigate('/bo/user-management/users');
   };
   return (
     <>

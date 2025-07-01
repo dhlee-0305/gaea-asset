@@ -1,10 +1,10 @@
 import { Outlet } from 'react-router-dom';
 import { Box, Toolbar } from '@mui/material';
 
-import Sidebar from '@/components/common/Sidebar';
-import Header from '@/components/common/Header';
+import Sidebar from '@/components/bo/Sidebar';
+import Header from '@/components/bo/Header';
 
-export default function Layout() {
+export default function LayoutBo() {
   return (
     <>
       <Box sx={{ display: 'flex' }}>

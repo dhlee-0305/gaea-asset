@@ -22,8 +22,8 @@ const menuItems = [
     path: '/user-management/users',
     icon: <PeopleIcon />,
     children: [
-      { text: '부서관리', to: '/user-management/departments' },
-      { text: '사용자관리', to: '/user-management/users' },
+      { text: '부서관리', to: '/fo/user-management/departments' },
+      { text: '사용자관리', to: '/fo/user-management/users' },
     ],
   },
   {
@@ -32,8 +32,8 @@ const menuItems = [
     path: '/',
     icon: <ComputerIcon />,
     children: [
-      { text: '장비관리', to: '/device-management/devices' },
-      { text: '장비유형관리', to: '/device-management/device-types' },
+      { text: '장비관리', to: '/fo/device-management/devices' },
+      { text: '장비유형관리', to: '/fo/device-management/device-types' },
     ],
   },
   {
@@ -41,7 +41,7 @@ const menuItems = [
     text: '공지사항',
     path: '/',
     icon: <AnnouncementIcon />,
-    children: [{ text: '공지사항', to: '/notice/notices' }],
+    children: [{ text: '공지사항', to: '/fo/notice/notices' }],
   },
 ];
 
