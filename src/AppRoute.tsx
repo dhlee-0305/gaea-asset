@@ -7,9 +7,10 @@ import SampleDetail from '@/pages/bo/user-management/SampleDetail';
 import SampleForm from '@/pages/bo/user-management/SampleForm';
 import Home from '@/pages/Home';
 import SampleList from '@/pages/bo/user-management/SampleList';
+import DeviceList from '@/pages/bo/device-management/DeviceList';
 
 export default function AppRoute() {
-  const [userType, setUserType] = useState('BO');
+  const [userType] = useState('BO');
   return (
     <div>
       <Routes>
@@ -28,6 +29,10 @@ export default function AppRoute() {
             <Route
               path='/bo/user-management/users/:userNo/update'
               element={<SampleForm />}
+            />
+            <Route
+              path='/bo/device-management/devices'
+              element={<DeviceList />}
             />
           </Route>
         ) : (

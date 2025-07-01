@@ -19,19 +19,19 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
 import api from '@/common/utils/api';
-import type { SampleData } from '@/common/types/sample';
+import type { DeviceData } from '@/common/types/device';
 import PageHeader from '@/components/bo/PageHeader';
 import { showAlert } from '@/store/dialogAction';
 import { MESSAGE } from '@/common/constants';
 import type { AppDispatch } from '@/store';
 import type { PageInfo } from '@/common/types/common';
 
-export default function SampleList() {
+export default function DeviceList() {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const [searchType, setSearchType] = useState('userNm');
   const [searchValue, setSearchValue] = useState('');
-  const [datas, setDatas] = useState<SampleData[]>([]);
+  const [datas, setDatas] = useState<DeviceData[]>([]);
   const [pageInfo, setPageInfo] = useState<PageInfo>({
     pageSize: 10,
     page: 1,
@@ -45,7 +45,7 @@ export default function SampleList() {
   // 데이터 검색
   const searchData = async (currentPage = pageInfo.page) => {
     try {
-      const response = await api.get('/users', {
+      const response = await api.get('/bo/deviceList', {
         params: {
           searchType: searchType,
           searchValue: searchValue,
@@ -55,7 +55,7 @@ export default function SampleList() {
       });
 
       if (response.status === 200) {
-        setDatas(response.data);
+        setDatas(response.data.data);
         setPageInfo(response.data.pagination);
       }
     } catch (e) {
@@ -66,25 +66,6 @@ export default function SampleList() {
           contents: MESSAGE.error,
         }),
       );
-      // 임시 데이터 설정
-      setDatas([
-        {
-          userNo: '1',
-          userId: 'cookie',
-          userNm: '쿠키',
-          phoneNo: '010-8888-9999',
-          deptNm: '기술연구소',
-          createDt: '2025.01.01',
-        },
-        {
-          userNo: '2',
-          userId: 'cake',
-          userNm: '케이크',
-          phoneNo: '010-7777-1111',
-          deptNm: '개발팀',
-          createDt: '2025.01.05',
-        },
-      ]);
     }
   };
 
@@ -106,7 +87,7 @@ export default function SampleList() {
 
   return (
     <>
-      <PageHeader contents='사용자 목록' />
+      <PageHeader contents='장비 목록' />
       {/* 검색 영역 */}
       <Box
         sx={{
@@ -144,28 +125,28 @@ export default function SampleList() {
         <Table sx={{ minWidth: 800 }} aria-label='simple table'>
           <TableHead>
             <TableRow>
-              <TableCell align='center'>아이디</TableCell>
-              <TableCell align='center'>이름</TableCell>
-              <TableCell align='center'>부서</TableCell>
-              <TableCell align='center'>휴대전화</TableCell>
-              <TableCell align='center'>등록일</TableCell>
+              <TableCell align='center'>장비번호</TableCell>
+              <TableCell align='center'>장비명</TableCell>
+              <TableCell align='center'>내용</TableCell>
+              <TableCell align='center'>등록자명</TableCell>
+              <TableCell align='center'>수정자명</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {datas.map((data) => (
               <TableRow
-                key={data.userNo}
+                key={data.deviceNumber}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
               >
                 <TableCell align='center' component='th' scope='row'>
-                  <Link to={`/bo/user-management/users/${data.userNo}`}>
-                    {data.userId}
+                  <Link to={`/bo/user-management/users/${data.deviceNumber}`}>
+                    {data.deviceNumber}
                   </Link>
                 </TableCell>
-                <TableCell align='center'>{data.userNm}</TableCell>
-                <TableCell align='center'>{data.deptNm}</TableCell>
-                <TableCell align='center'>{data.phoneNo}</TableCell>
-                <TableCell align='center'>{data.createDt}</TableCell>
+                <TableCell align='center'>{data.deviceName}</TableCell>
+                <TableCell align='center'>{data.contents}</TableCell>
+                <TableCell align='center'>{data.regUser}</TableCell>
+                <TableCell align='center'>{data.modUser}</TableCell>
               </TableRow>
             ))}
           </TableBody>
