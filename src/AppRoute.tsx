@@ -3,11 +3,11 @@ import { useState } from 'react';
 
 import LayoutBo from '@/layout/LayoutBo';
 import LayoutFo from '@/layout/LayoutFo';
-import SampleDetail from '@/pages/bo/user-management/SampleDetail';
-import SampleForm from '@/pages/bo/user-management/SampleForm';
+import SampleDetail from '@/pages/bo/user/SampleDetail';
+import SampleForm from '@/pages/bo/user/SampleForm';
 import Home from '@/pages/Home';
-import SampleList from '@/pages/bo/user-management/SampleList';
-import DeviceList from '@/pages/bo/device-management/DeviceList';
+import SampleList from '@/pages/bo/user/SampleList';
+import DeviceList from '@/pages/bo/device/DeviceList';
 
 export default function AppRoute() {
   const [userType] = useState('BO');
