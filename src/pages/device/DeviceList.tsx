@@ -20,7 +20,7 @@ import { useDispatch } from 'react-redux';
 
 import api from '@/common/utils/api';
 import type { DeviceData } from '@/common/types/device';
-import PageHeader from '@/components/bo/PageHeader';
+import PageHeader from '@/components/common/PageHeader';
 import { showAlert } from '@/store/dialogAction';
 import { MESSAGE } from '@/common/constants';
 import type { AppDispatch } from '@/store';
@@ -29,7 +29,7 @@ import type { PageInfo } from '@/common/types/common';
 export default function DeviceList() {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const [searchType, setSearchType] = useState('userNm');
+  const [searchKey, setSearchKey] = useState('userName');
   const [searchValue, setSearchValue] = useState('');
   const [datas, setDatas] = useState<DeviceData[]>([]);
   const [pageInfo, setPageInfo] = useState<PageInfo>({
@@ -45,9 +45,9 @@ export default function DeviceList() {
   // 데이터 검색
   const searchData = async (currentPage = pageInfo.page) => {
     try {
-      const response = await api.get('/bo/deviceList', {
+      const response = await api.get('/deviceList', {
         params: {
-          searchType: searchType,
+          searchKey: searchKey,
           searchValue: searchValue,
           page: currentPage,
           size: pageInfo.pageSize,
@@ -82,7 +82,7 @@ export default function DeviceList() {
 
   // 등록 화면 이동
   const handleMoveCreate = (): void => {
-    navigate('/bo/user-management/users/create');
+    navigate('/user-management/users/create');
   };
 
   return (
@@ -100,12 +100,11 @@ export default function DeviceList() {
       >
         <FormControl size='small'>
           <Select
-            value={searchType}
-            onChange={(e) => setSearchType(e.target.value)}
+            value={searchKey}
+            onChange={(e) => setSearchKey(e.target.value)}
           >
-            <MenuItem value='userNm'>이름</MenuItem>
-            <MenuItem value='userId'>아이디</MenuItem>
-            <MenuItem value='deptNm'>부서</MenuItem>
+            <MenuItem value='userName'>장비담당자</MenuItem>
+            <MenuItem value='departmentName'>부서</MenuItem>
           </Select>
         </FormControl>
 
@@ -126,27 +125,31 @@ export default function DeviceList() {
           <TableHead>
             <TableRow>
               <TableCell align='center'>장비번호</TableCell>
-              <TableCell align='center'>장비명</TableCell>
-              <TableCell align='center'>내용</TableCell>
-              <TableCell align='center'>등록자명</TableCell>
-              <TableCell align='center'>수정자명</TableCell>
+              <TableCell align='center'>장비담당자</TableCell>
+              <TableCell align='center'>부서</TableCell>
+              <TableCell align='center'>장비유형</TableCell>
+              <TableCell align='center'>제조년도</TableCell>
+              <TableCell align='center'>모델명</TableCell>
+              <TableCell align='center'>상태</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {datas.map((data) => (
               <TableRow
-                key={data.deviceNumber}
+                key={data.deviceNum}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
               >
                 <TableCell align='center' component='th' scope='row'>
-                  <Link to={`/bo/user-management/users/${data.deviceNumber}`}>
-                    {data.deviceNumber}
+                  <Link to={`/user-management/users/${data.deviceNum}`}>
+                    {data.deviceNum}
                   </Link>
                 </TableCell>
-                <TableCell align='center'>{data.deviceName}</TableCell>
-                <TableCell align='center'>{data.contents}</TableCell>
-                <TableCell align='center'>{data.regUser}</TableCell>
-                <TableCell align='center'>{data.modUser}</TableCell>
+                <TableCell align='center'>{data.userName}</TableCell>
+                <TableCell align='center'></TableCell>
+                <TableCell align='center'>{data.deviceType}</TableCell>
+                <TableCell align='center'>{data.manufactureDate}</TableCell>
+                <TableCell align='center'>{data.modelName}</TableCell>
+                <TableCell align='center'>{data.status}</TableCell>
               </TableRow>
             ))}
           </TableBody>
