@@ -1,0 +1,224 @@
+/* Header.module.css */
+
+/* AppBar 스타일 */
+.appBar {
+  background-color: #1e1e2f !important;
+  background: #1e1e2f !important;
+}
+
+/* Material-UI AppBar 클래스 오버라이드 */
+.appBar.MuiAppBar-root {
+  background-color: #1e1e2f !important;
+  background: #1e1e2f !important;
+}
+
+/* 오버라이드 */
+:global(.MuiAppBar-root) {
+  background-color: #1e1e2f !important;
+  background: #1e1e2f !important;
+}
+
+/* 모든 가능한 MUI AppBar 클래스 타겟팅 */
+:global(.MuiAppBar-colorPrimary) {
+  background-color: #1e1e2f !important;
+  background: #1e1e2f !important;
+}
+
+:global(.css-hip9hq-MuiPaper-root-MuiAppBar-root) {
+  background-color: #1e1e2f !important;
+  background: #1e1e2f !important;
+}
+
+/* 로고 컨테이너 */
+.logoContainer {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  flex-grow: 1;
+  padding: var(--spacing-xs);
+}
+
+/* 로고 이미지 */
+.logo {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+  cursor: pointer !important;
+  transition: all 0.2s ease-in-out;
+}
+
+.logo:hover {
+  opacity: 0.9;
+  transform: scale(1.02);
+  cursor: pointer !important;
+}
+
+/* Fallback 로고 컨테이너 */
+.logoFallback {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  cursor: pointer !important;
+}
+
+/* Fallback 로고 아이콘 */
+.logoIcon {
+  height: 32px;
+  width: 32px;
+  object-fit: contain;
+  border-radius: var(--radius-sm);
+  cursor: pointer !important;
+  transition: all 0.2s ease-in-out;
+}
+
+.logoIcon:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+  cursor: pointer !important;
+}
+
+/* 그라데이션 애니메이션 키프레임 */
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* 그라데이션 로고 텍스트 */
+.logoText {
+  font-weight: 600 !important;
+  font-size: 1.125rem !important;
+  background: linear-gradient(
+    270deg,
+    #87ceeb,
+    #5dade2,
+    #3498db,
+    #2980b9,
+    #1e3a8a,
+    #87ceeb
+  );
+  background-size: 400% 400%;
+  animation: gradientShift 8s ease-in-out infinite;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  cursor: pointer !important;
+  transition: all 0.3s ease-in-out;
+}
+
+.logoText:hover {
+  animation-duration: 3s;
+  transform: scale(1.05);
+  cursor: pointer !important;
+}
+
+/* 제목 텍스트 */
+.title {
+  text-align: left;
+  font-weight: 600 !important;
+  color: white !important;
+  font-size: 1.25rem !important;
+  letter-spacing: 0.5px;
+  cursor: default !important;
+}
+
+.title:hover {
+  cursor: default !important;
+}
+
+/* 사용자 메뉴 컨테이너 */
+.userMenuContainer {
+  display: flex;
+  align-items: center;
+}
+
+/* 사용자 메뉴 버튼 */
+.userMenuButton {
+  color: white !important;
+  transition: all 0.2s ease-in-out;
+}
+
+.userMenuButton:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  transform: scale(1.05);
+}
+
+/* 메뉴 */
+.menu {
+  margin-top: var(--spacing-sm);
+}
+
+/* 메뉴 아이템 */
+.menuItem {
+  min-width: 120px;
+  padding: var(--spacing-sm) var(--spacing-md) !important;
+  font-size: 0.875rem;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.menuItem:hover {
+  background-color: var(--gray-100) !important;
+  color: var(--primary-color) !important;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .logoContainer {
+    gap: var(--spacing-sm);
+    padding: var(--spacing-xs);
+  }
+
+  .logo {
+    height: 36px;
+  }
+
+  .logoIcon {
+    height: 28px;
+    width: 28px;
+  }
+
+  .logoText {
+    font-size: 1rem !important;
+  }
+
+  .title {
+    font-size: 1.1rem !important;
+  }
+
+  .menuItem {
+    min-width: 100px;
+    padding: var(--spacing-xs) var(--spacing-sm) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .logoContainer {
+    gap: var(--spacing-xs);
+  }
+
+  .logo {
+    height: 32px;
+  }
+
+  .logoIcon {
+    height: 24px;
+    width: 24px;
+  }
+
+  .logoText {
+    font-size: 0.9rem !important;
+  }
+
+  .title {
+    font-size: 1rem !important;
+  }
+}

@@ -9,14 +9,17 @@ import {
 } from '@mui/material';
 import { AccountCircle } from '@mui/icons-material';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+
+import styles from '@/styles/components/Header.module.css';
+import gaeasoftLogo from '@/assets/images/gaeasoft-logo.svg';
+import gaeasoftLogoIcon from '@/assets/images/gaeasoft-logo-icon.png';
 
 /**
- *
+ * Header 컴포넌트
  */
 export default function Header() {
-  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [logoError, setLogoError] = useState(false);
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -26,33 +29,85 @@ export default function Header() {
     setAnchorEl(null);
   };
 
+  const handleLogoError = () => {
+    setLogoError(true);
+  };
+
+  const handleLogoClick = () => {
+    // localhost:3000 메인 화면으로 이동
+    window.location.href = 'http://localhost:3000';
+  };
+
   return (
     <>
       <AppBar
         position='fixed'
+        color='transparent'
+        className={styles.appBar}
         sx={{
-          backgroundColor: '#1e1e2f',
           zIndex: (theme) => theme.zIndex.drawer + 1,
+          backgroundColor: '#1e1e2f !important',
+          background: '#1e1e2f !important',
+          '&.MuiAppBar-root': {
+            backgroundColor: '#1e1e2f !important',
+            background: '#1e1e2f !important',
+          },
+          '&.MuiAppBar-colorPrimary': {
+            backgroundColor: '#1e1e2f !important',
+            background: '#1e1e2f !important',
+          },
+          '&.MuiAppBar-colorTransparent': {
+            backgroundColor: '#1e1e2f !important',
+            background: '#1e1e2f !important',
+          },
         }}
       >
         <Toolbar>
-          <Typography
-            variant='h6'
-            component='div'
-            sx={{ flexGrow: 1, textAlign: 'left' }}
-            onClick={() => navigate('/')}
-          >
-            관리자
-          </Typography>
+          <Box className={styles.logoContainer}>
+            {!logoError ? (
+              <img
+                src={gaeasoftLogo}
+                alt='GAEA SOFT 로고'
+                className={styles.logo}
+                onError={handleLogoError}
+                onClick={handleLogoClick}
+                style={{ cursor: 'pointer' }}
+              />
+            ) : (
+              // SVG 로고 실패 시 아이콘 + 텍스트 fallback
+              <Box
+                className={styles.logoFallback}
+                onClick={handleLogoClick}
+                sx={{ cursor: 'pointer !important' }}
+              >
+                <img
+                  src={gaeasoftLogoIcon}
+                  alt='GAEA SOFT 아이콘'
+                  className={styles.logoIcon}
+                />
+                <Typography variant='h6' className={styles.logoText}>
+                  GAEASOFT
+                </Typography>
+              </Box>
+            )}
+            <Typography
+              variant='h6'
+              component='div'
+              className={styles.title}
+              sx={{ cursor: 'default !important' }}
+            >
+              전산장비관리시스템
+            </Typography>
+          </Box>
 
-          <Box>
+          <Box className={styles.userMenuContainer}>
             <IconButton
               size='large'
               aria-label='account of current user'
               aria-controls='menu-appbar'
               aria-haspopup='true'
               onClick={handleMenu}
-              color='inherit'
+              className={styles.userMenuButton}
             >
               <AccountCircle />
             </IconButton>
@@ -70,9 +125,14 @@ export default function Header() {
               }}
               open={Boolean(anchorEl)}
               onClose={handleClose}
+              className={styles.menu}
             >
-              <MenuItem onClick={handleClose}>Profile</MenuItem>
-              <MenuItem onClick={handleClose}>Logout</MenuItem>
+              <MenuItem onClick={handleClose} className={styles.menuItem}>
+                Profile
+              </MenuItem>
+              <MenuItem onClick={handleClose} className={styles.menuItem}>
+                Logout
+              </MenuItem>
             </Menu>
           </Box>
         </Toolbar>
