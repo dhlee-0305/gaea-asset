@@ -11,15 +11,14 @@ import {
 import ComputerIcon from '@mui/icons-material/Computer';
 import PeopleIcon from '@mui/icons-material/People';
 import AnnouncementIcon from '@mui/icons-material/Announcement';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const menuItems = [
   {
     key: 'user-management',
     text: '사용자관리',
-    path: '/user-management/users',
     icon: <PeopleIcon />,
     children: [
       { text: '부서관리', to: '/user-management/departments' },
@@ -29,7 +28,6 @@ const menuItems = [
   {
     key: 'device-management',
     text: '장비관리',
-    path: '/',
     icon: <ComputerIcon />,
     children: [
       { text: '장비관리', to: '/device-management/devices' },
@@ -39,7 +37,6 @@ const menuItems = [
   {
     key: 'notice',
     text: '공지사항',
-    path: '/',
     icon: <AnnouncementIcon />,
     children: [{ text: '공지사항', to: '/notice/notices' }],
   },
@@ -47,7 +44,19 @@ const menuItems = [
 
 export default function Sidebar() {
   const [openMenu, setOpenMenu] = useState<string | null>(null);
+  const location = useLocation();
 
+  useEffect(() => {
+    // 현재 경로에 해당하는 메뉴를 열기
+    const currentMenu = menuItems.find(
+      (menu) => location.pathname.indexOf(menu.key) > 0,
+    );
+    if (currentMenu) {
+      setOpenMenu(currentMenu.key);
+    }
+  }, [location.pathname]);
+
+  // 메뉴 클릭
   const handleClick = (menu: string) => {
     setOpenMenu((prev) => (prev === menu ? null : menu));
   };
@@ -84,20 +93,24 @@ export default function Sidebar() {
               </ListItemButton>
               <Collapse in={openMenu === menu.key} timeout='auto'>
                 <List component='div' disablePadding>
-                  {menu.children?.map((child) => (
-                    <ListItemButton
-                      key={child.to}
-                      component={Link}
-                      to={child.to}
-                      sx={{
-                        '&:hover': { backgroundColor: '#33334d' },
-                        color: '#fff',
-                        pl: 4,
-                      }}
-                    >
-                      <ListItemText primary={child.text} />
-                    </ListItemButton>
-                  ))}
+                  {menu.children?.map((child) => {
+                    const isSelected = location.pathname === child.to;
+                    return (
+                      <ListItemButton
+                        key={child.to}
+                        component={Link}
+                        to={child.to}
+                        sx={{
+                          '&:hover': { backgroundColor: '#33334d' },
+                          backgroundColor: isSelected ? '#2d2d4d' : 'inherit',
+                          color: isSelected ? '#90caf9' : '#fff',
+                          pl: 4,
+                        }}
+                      >
+                        <ListItemText primary={child.text} />
+                      </ListItemButton>
+                    );
+                  })}
                 </List>
               </Collapse>
             </Box>
