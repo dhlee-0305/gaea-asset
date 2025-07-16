@@ -38,9 +38,9 @@ export default function NoticeList() {
   });
 
   useEffect(() => {
-    searchData();
+    searchData(1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [searchValue]);
 
   // 데이터 검색
   const searchData = async (currentPage = pageInfo.page) => {
@@ -130,23 +130,33 @@ export default function NoticeList() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {datas.map((data, index) => (
-              <TableRow
-                key={data.noticeNum}
-                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-              >
-                <TableCell align='center'>{index + 1}</TableCell>
-                <TableCell align='center' component='th' scope='row'>
-                  <Link to={`/notice/notices/${data.noticeNum}`}>
-                    {data.title}
-                  </Link>
-                </TableCell>
-                <TableCell align='center'>{data.createUser}</TableCell>
-                <TableCell align='center'>
-                  {data.createDateTime?.slice(0, 10)}
+            {datas.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={4} align='center'>
+                  검색 결과가 없습니다.
                 </TableCell>
               </TableRow>
-            ))}
+            ) : (
+              datas.map((data, index) => (
+                <TableRow
+                  key={data.noticeNum}
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                >
+                  <TableCell align='center'>
+                    {(pageInfo.page - 1) * pageInfo.pageSize + index + 1}
+                  </TableCell>
+                  <TableCell align='center' component='th' scope='row'>
+                    <Link to={`/notice/notices/${data.noticeNum}`}>
+                      {data.title}
+                    </Link>
+                  </TableCell>
+                  <TableCell align='center'>{data.createUser}</TableCell>
+                  <TableCell align='center'>
+                    {data.createDateTime?.slice(0, 10)}
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
       </TableContainer>
