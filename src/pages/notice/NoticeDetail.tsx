@@ -47,7 +47,7 @@ export default function NoticeDetail() {
     }
   };
 
-  // 저장(등록, 수정) 처리
+  // 삭제 처리
   const handleDelete = async (): Promise<void> => {
     const confirmed = await dispatch(
       showConfirm({ contents: '삭제하시겠습니까?' }),
@@ -87,7 +87,7 @@ export default function NoticeDetail() {
   };
 
   // 수정 화면 이동
-  const handleMoveModify = (): void => {
+  const handleMoveUpdate = (): void => {
     navigate(`/notice/notices/update/${noticeId}`);
   };
 
@@ -134,7 +134,7 @@ export default function NoticeDetail() {
             <Button
               variant='contained'
               color='primary'
-              onClick={handleMoveModify}
+              onClick={handleMoveUpdate}
             >
               수정
             </Button>

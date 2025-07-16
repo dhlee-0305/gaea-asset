@@ -1,6 +1,8 @@
 import { Route, Routes } from 'react-router-dom';
 
 import NoticeForm from './pages/notice/NoticeForm';
+import DeviceDetail from './pages/device/DeviceDetail';
+import DeviceForm from './pages/device/DeviceForm';
 
 import LayoutBo from '@/layout/Layout';
 import SampleDetail from '@/pages/user/SampleDetail';
@@ -31,6 +33,18 @@ export default function AppRoute() {
             element={<SampleForm />}
           />
           <Route path='/device-management/devices' element={<DeviceList />} />
+          <Route
+            path='/device-management/devices/:deviceNum'
+            element={<DeviceDetail />}
+          />
+          <Route
+            path='/device-management/devices/create'
+            element={<DeviceForm />}
+          />
+          <Route
+            path='/device-management/devices/:deviceNum/update'
+            element={<DeviceForm />}
+          />
           <Route path='/notice/notices' element={<NoticeList />} />
           <Route path='/notice/notices/:noticeNum' element={<NoticeDetail />} />
           <Route path='/notice/notices/create' element={<NoticeForm />} />

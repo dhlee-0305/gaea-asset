@@ -38,12 +38,12 @@ export default function DeviceList() {
   });
 
   useEffect(() => {
-    searchData();
+    fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // 데이터 검색
-  const searchData = async (currentPage = pageInfo.page) => {
+  // 데이터 조회
+  const fetchData = async (currentPage = pageInfo.page) => {
     try {
       const response = await api.get('/deviceList', {
         params: {
@@ -54,7 +54,7 @@ export default function DeviceList() {
         },
       });
 
-      if (response.status === 200) {
+      if (response.status === 200 && response.data.resultCode === '0000') {
         setDatas(response.data.data);
         setPageInfo(response.data.pagination);
       }
@@ -69,20 +69,27 @@ export default function DeviceList() {
     }
   };
 
-  // 검색 버튼 클릭
+  // 검색 버튼 클릭 핸들러
   const handleSearch = (): void => {
-    searchData(1);
+    fetchData(1);
   };
 
-  // 페이지 이동
+  // 검색어 입력 핸들러
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
+    if (e.key === 'Enter') {
+      fetchData(1);
+    }
+  };
+
+  // 페이지 변경 핸들러
   const handleChangePage = (_: React.ChangeEvent<unknown>, page: number) => {
     if (page === pageInfo.page) return;
-    searchData(page); // 해당 페이지 요청
+    fetchData(page);
   };
 
-  // 등록 화면 이동
+  // 등록 버튼 클릭 핸들러
   const handleMoveCreate = (): void => {
-    navigate('/user-management/users/create');
+    navigate('/device-management/devices/create');
   };
 
   return (
@@ -104,7 +111,7 @@ export default function DeviceList() {
             onChange={(e) => setSearchKey(e.target.value)}
           >
             <MenuItem value='userName'>장비담당자</MenuItem>
-            <MenuItem value='departmentName'>부서</MenuItem>
+            <MenuItem value='orgName'>부서</MenuItem>
           </Select>
         </FormControl>
 
@@ -113,6 +120,7 @@ export default function DeviceList() {
           label='검색어'
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
+          onKeyDown={handleKeyDown}
         />
 
         <Button variant='contained' onClick={handleSearch}>
@@ -134,34 +142,44 @@ export default function DeviceList() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {datas.map((data) => (
-              <TableRow
-                key={data.deviceNum}
-                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-              >
-                <TableCell align='center' component='th' scope='row'>
-                  <Link to={`/user-management/users/${data.deviceNum}`}>
-                    {data.deviceNum}
-                  </Link>
+            {datas.length > 0 ? (
+              datas.map((data) => (
+                <TableRow
+                  key={data.deviceNum}
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                >
+                  <TableCell align='center' component='th' scope='row'>
+                    <Link to={`/device-management/devices/${data.deviceNum}`}>
+                      {data.deviceNum}
+                    </Link>
+                  </TableCell>
+                  <TableCell align='center'>{data.userName}</TableCell>
+                  <TableCell align='center'>{data.orgName}</TableCell>
+                  <TableCell align='center'>{data.deviceType}</TableCell>
+                  <TableCell align='center'>{data.manufactureDate}</TableCell>
+                  <TableCell align='center'>{data.modelName}</TableCell>
+                  <TableCell align='center'>{data.status}</TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell align='center' colSpan={7}>
+                  검색 결과가 없습니다.
                 </TableCell>
-                <TableCell align='center'>{data.userName}</TableCell>
-                <TableCell align='center'></TableCell>
-                <TableCell align='center'>{data.deviceType}</TableCell>
-                <TableCell align='center'>{data.manufactureDate}</TableCell>
-                <TableCell align='center'>{data.modelName}</TableCell>
-                <TableCell align='center'>{data.status}</TableCell>
               </TableRow>
-            ))}
+            )}
           </TableBody>
         </Table>
       </TableContainer>
       <Box sx={{ mt: 2, display: 'flex', justifyContent: 'center' }}>
-        <Pagination
-          count={pageInfo.totalPageCnt}
-          onChange={handleChangePage}
-          page={pageInfo.page}
-          shape='rounded'
-        />
+        {datas.length > 0 && (
+          <Pagination
+            count={pageInfo.totalPageCnt}
+            onChange={handleChangePage}
+            page={pageInfo.page}
+            shape='rounded'
+          />
+        )}
       </Box>
       <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
         <Button variant='contained' onClick={handleMoveCreate}>
