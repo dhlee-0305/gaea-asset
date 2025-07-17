@@ -61,12 +61,12 @@ export default function SampleDetail() {
     }
   };
 
-  // 수정 화면 이동
-  const handleMoveModify = (): void => {
+  // 수정 버튼 클릭 핸들러
+  const handleMoveUpdate = (): void => {
     navigate(`/user-management/users/${userNo}/update`);
   };
 
-  // 목록 화면 이동
+  // 목록 버튼 클릭 핸들러
   const handleMoveList = (): void => {
     navigate('/user-management/users');
   };
@@ -134,7 +134,7 @@ export default function SampleDetail() {
             <Button
               variant='contained'
               color='primary'
-              onClick={handleMoveModify}
+              onClick={handleMoveUpdate}
             >
               수정
             </Button>

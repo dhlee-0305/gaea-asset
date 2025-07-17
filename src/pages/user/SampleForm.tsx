@@ -107,7 +107,7 @@ export default function SampleForm() {
     }
   };
 
-  // 목록 화면 이동
+  // 취소 버튼 클릭 핸들러
   const handleCancel = (): void => {
     if (isUpdate) {
       navigate(`/user-management/users/${userNo}`);

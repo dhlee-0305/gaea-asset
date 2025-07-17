@@ -15,7 +15,7 @@ export default function DeviceDetail() {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { deviceNum } = useParams();
-  const [data, setData] = useState<DeviceData | null>(null);
+  const [deviceData, setDeviceData] = useState<DeviceData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -29,7 +29,7 @@ export default function DeviceDetail() {
       const response = await api.get(`/devices/${deviceNum}`);
 
       if (response.status === 200 && response.data.resultCode === '0000') {
-        setData(response.data.data);
+        setDeviceData(response.data.data);
       }
     } catch (e) {
       console.error(e);
@@ -96,81 +96,81 @@ export default function DeviceDetail() {
               <Typography color='textSecondary'>장비번호</Typography>
             </Grid>
             <Grid size={8}>
-              <Typography>{data?.deviceNum}</Typography>
+              <Typography>{deviceData?.deviceNum}</Typography>
             </Grid>
             <Grid size={4}>
               <Typography color='textSecondary'>장비담당자</Typography>
             </Grid>
             <Grid size={8}>
-              <Typography>{data?.userName}</Typography>
+              <Typography>{deviceData?.userName}</Typography>
             </Grid>
             <Grid size={4}>
               <Typography color='textSecondary'>장비유형</Typography>
             </Grid>
             <Grid size={8}>
-              <Typography>{data?.deviceType}</Typography>
+              <Typography>{deviceData?.deviceType}</Typography>
             </Grid>
             <Grid size={4}>
               <Typography color='textSecondary'>사용용도</Typography>
             </Grid>
             <Grid size={8}>
-              <Typography>{data?.usagePurpose}</Typography>
+              <Typography>{deviceData?.usagePurpose}</Typography>
             </Grid>
             <Grid size={4}>
               <Typography color='textSecondary'>기존 장비관리번호</Typography>
             </Grid>
             <Grid size={8}>
-              <Typography>{data?.oldDeviceId}</Typography>
+              <Typography>{deviceData?.oldDeviceId}</Typography>
             </Grid>
             <Grid size={4}>
               <Typography color='textSecondary'>모델명</Typography>
             </Grid>
             <Grid size={8}>
-              <Typography>{data?.modelName}</Typography>
+              <Typography>{deviceData?.modelName}</Typography>
             </Grid>
             <Grid size={4}>
               <Typography color='textSecondary'>제조년도</Typography>
             </Grid>
             <Grid size={8}>
-              <Typography>{data?.manufactureDate}</Typography>
+              <Typography>{deviceData?.manufactureDate}</Typography>
             </Grid>
             <Grid size={4}>
               <Typography color='textSecondary'>CPU</Typography>
             </Grid>
             <Grid size={8}>
-              <Typography>{data?.cpuSpec}</Typography>
+              <Typography>{deviceData?.cpuSpec}</Typography>
             </Grid>
             <Grid size={4}>
               <Typography color='textSecondary'>메모리</Typography>
             </Grid>
             <Grid size={8}>
-              <Typography>{data?.memorySize}</Typography>
+              <Typography>{deviceData?.memorySize}</Typography>
             </Grid>
             <Grid size={4}>
               <Typography color='textSecondary'>SSD/HDD</Typography>
             </Grid>
             <Grid size={8}>
-              <Typography>{data?.storageInfo}</Typography>
+              <Typography>{deviceData?.storageInfo}</Typography>
             </Grid>
             <Grid size={4}>
               <Typography color='textSecondary'>OS</Typography>
             </Grid>
             <Grid size={8}>
-              <Typography>{data?.operatingSystem}</Typography>
+              <Typography>{deviceData?.operatingSystem}</Typography>
             </Grid>
             <Grid size={4}>
               <Typography color='textSecondary'>인치</Typography>
             </Grid>
             <Grid size={8}>
-              <Typography>{data?.screenSize}</Typography>
+              <Typography>{deviceData?.screenSize}</Typography>
             </Grid>
             <Grid size={4}>
               <Typography color='textSecondary'>구매일자</Typography>
             </Grid>
             <Grid size={8}>
               <Typography>
-                {data?.purchaseDate &&
-                  dayjs(data.purchaseDate).format('YYYY.MM.DD')}
+                {deviceData?.purchaseDate &&
+                  dayjs(deviceData.purchaseDate).format('YYYY.MM.DD')}
               </Typography>
             </Grid>
             <Grid size={4}>
@@ -178,15 +178,15 @@ export default function DeviceDetail() {
             </Grid>
             <Grid size={8}>
               <Typography>
-                {data?.returnDate &&
-                  dayjs(data.returnDate).format('YYYY.MM.DD')}
+                {deviceData?.returnDate &&
+                  dayjs(deviceData.returnDate).format('YYYY.MM.DD')}
               </Typography>
             </Grid>
             <Grid size={4}>
               <Typography color='textSecondary'>비고</Typography>
             </Grid>
             <Grid size={8}>
-              <Typography>{data?.remarks}</Typography>
+              <Typography>{deviceData?.remarks}</Typography>
             </Grid>
           </Grid>
           <Box

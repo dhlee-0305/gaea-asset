@@ -29,12 +29,12 @@ import type { PageInfo } from '@/common/types/common';
 export default function DeviceList() {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const [searchKey, setSearchKey] = useState('userName');
-  const [searchValue, setSearchValue] = useState('');
-  const [datas, setDatas] = useState<DeviceData[]>([]);
+  const [searchColumn, setSearchColumn] = useState('userName');
+  const [searchKeyword, setSearchKeyword] = useState('');
+  const [deviceDatas, setDeviceDatas] = useState<DeviceData[]>([]);
   const [pageInfo, setPageInfo] = useState<PageInfo>({
     pageSize: 10,
-    page: 1,
+    currentPage: 1,
   });
 
   useEffect(() => {
@@ -43,19 +43,19 @@ export default function DeviceList() {
   }, []);
 
   // 데이터 조회
-  const fetchData = async (currentPage = pageInfo.page) => {
+  const fetchData = async (currentPage = pageInfo.currentPage) => {
     try {
       const response = await api.get('/devices', {
         params: {
-          searchKey: searchKey,
-          searchValue: searchValue,
-          page: currentPage,
-          size: pageInfo.pageSize,
+          searchColumn: searchColumn,
+          searchKeyword: searchKeyword,
+          currentPage: currentPage,
+          pageSize: pageInfo.pageSize,
         },
       });
 
       if (response.status === 200 && response.data.resultCode === '0000') {
-        setDatas(response.data.data);
+        setDeviceDatas(response.data.data);
         setPageInfo(response.data.pagination);
       }
     } catch (e) {
@@ -83,7 +83,7 @@ export default function DeviceList() {
 
   // 페이지 변경 핸들러
   const handleChangePage = (_: React.ChangeEvent<unknown>, page: number) => {
-    if (page === pageInfo.page) return;
+    if (page === pageInfo.currentPage) return;
     fetchData(page);
   };
 
@@ -107,8 +107,8 @@ export default function DeviceList() {
       >
         <FormControl size='small'>
           <Select
-            value={searchKey}
-            onChange={(e) => setSearchKey(e.target.value)}
+            value={searchColumn}
+            onChange={(e) => setSearchColumn(e.target.value)}
           >
             <MenuItem value='userName'>장비담당자</MenuItem>
             <MenuItem value='orgName'>부서</MenuItem>
@@ -118,8 +118,8 @@ export default function DeviceList() {
         <TextField
           size='small'
           label='검색어'
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
+          value={searchKeyword}
+          onChange={(e) => setSearchKeyword(e.target.value)}
           onKeyDown={handleKeyDown}
         />
 
@@ -143,24 +143,32 @@ export default function DeviceList() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {datas.length > 0 ? (
-              datas.map((data) => (
+            {deviceDatas.length > 0 ? (
+              deviceDatas.map((deviceData) => (
                 <TableRow
-                  key={data.deviceNum}
+                  key={deviceData.deviceNum}
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
                   <TableCell align='center' component='th' scope='row'>
-                    <Link to={`/device-management/devices/${data.deviceNum}`}>
-                      {data.deviceNum}
+                    <Link
+                      to={`/device-management/devices/${deviceData.deviceNum}`}
+                    >
+                      {deviceData.deviceNum}
                     </Link>
                   </TableCell>
-                  <TableCell align='center'>{data.userName}</TableCell>
-                  <TableCell align='center'>{data.orgName}</TableCell>
-                  <TableCell align='center'>{data.deviceType}</TableCell>
-                  <TableCell align='center'>{data.manufactureDate}</TableCell>
-                  <TableCell align='center'>{data.modelName}</TableCell>
-                  <TableCell align='center'>{data.deviceStatus}</TableCell>
-                  <TableCell align='center'>{data.approvalStatus}</TableCell>
+                  <TableCell align='center'>{deviceData.userName}</TableCell>
+                  <TableCell align='center'>{deviceData.orgName}</TableCell>
+                  <TableCell align='center'>{deviceData.deviceType}</TableCell>
+                  <TableCell align='center'>
+                    {deviceData.manufactureDate}
+                  </TableCell>
+                  <TableCell align='center'>{deviceData.modelName}</TableCell>
+                  <TableCell align='center'>
+                    {deviceData.deviceStatus}
+                  </TableCell>
+                  <TableCell align='center'>
+                    {deviceData.approvalStatus}
+                  </TableCell>
                 </TableRow>
               ))
             ) : (
@@ -174,11 +182,11 @@ export default function DeviceList() {
         </Table>
       </TableContainer>
       <Box sx={{ mt: 2, display: 'flex', justifyContent: 'center' }}>
-        {datas.length > 0 && (
+        {deviceDatas.length > 0 && (
           <Pagination
             count={pageInfo.totalPageCnt}
             onChange={handleChangePage}
-            page={pageInfo.page}
+            page={pageInfo.currentPage}
             shape='rounded'
           />
         )}

@@ -35,12 +35,12 @@ export default function UserListPopup({
   onSelectUser: (user: UserData) => void;
 }) {
   const dispatch = useDispatch<AppDispatch>();
-  const [searchValue, setSearchValue] = useState('');
-  const [datas, setDatas] = useState<UserData[]>([]);
+  const [searchKeyword, setSearchKeyword] = useState('');
+  const [userDatas, setUserDatas] = useState<UserData[]>([]);
 
   useEffect(() => {
     if (isOpen) {
-      setSearchValue('');
+      setSearchKeyword('');
       fetchData('');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -51,12 +51,12 @@ export default function UserListPopup({
     try {
       const response = await api.get('/userList', {
         params: {
-          searchValue: value,
+          searchKeyword: value,
         },
       });
 
       if (response.status === 200 && response.data.resultCode === '0000') {
-        setDatas(response.data.data);
+        setUserDatas(response.data.data);
       }
     } catch (e) {
       console.error(e);
@@ -71,13 +71,13 @@ export default function UserListPopup({
 
   // 검색 버튼 클릭 핸들러
   const handleSearch = () => {
-    fetchData(searchValue);
+    fetchData(searchKeyword);
   };
 
   // 검색어 입력 핸들러
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      fetchData(searchValue);
+      fetchData(searchKeyword);
     }
   };
 
@@ -122,8 +122,8 @@ export default function UserListPopup({
           <TextField
             size='small'
             label='담당자'
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
+            value={searchKeyword}
+            onChange={(e) => setSearchKeyword(e.target.value)}
             onKeyDown={handleKeyDown}
           />
 
@@ -141,17 +141,17 @@ export default function UserListPopup({
               </TableRow>
             </TableHead>
             <TableBody>
-              {datas.length > 0 ? (
-                datas.map((data) => (
+              {userDatas.length > 0 ? (
+                userDatas.map((userData) => (
                   <TableRow
-                    key={data.empNum}
+                    key={userData.empNum}
                     hover
                     sx={{ cursor: 'pointer' }}
-                    onClick={() => handleSelectUser(data)}
+                    onClick={() => handleSelectUser(userData)}
                   >
-                    <TableCell align='center'>{data.empNum}</TableCell>
-                    <TableCell align='center'>{data.userName}</TableCell>
-                    <TableCell align='center'>{data.orgName}</TableCell>
+                    <TableCell align='center'>{userData.empNum}</TableCell>
+                    <TableCell align='center'>{userData.userName}</TableCell>
+                    <TableCell align='center'>{userData.orgName}</TableCell>
                   </TableRow>
                 ))
               ) : (

@@ -29,33 +29,33 @@ import type { PageInfo } from '@/common/types/common';
 export default function NoticeList() {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const [searchKey, setSearchKey] = useState('title');
-  const [searchValue, setSearchValue] = useState('');
-  const [datas, setDatas] = useState<NoticeData[]>([]);
+  const [searchColumn, setSearchColumn] = useState('title');
+  const [searchKeyword, setSearchKeyword] = useState('');
+  const [noticeDatas, setNoticeDatas] = useState<NoticeData[]>([]);
   const [pageInfo, setPageInfo] = useState<PageInfo>({
     pageSize: 10,
-    page: 1,
+    currentPage: 1,
   });
 
   useEffect(() => {
-    searchData(1);
+    searchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchValue]);
+  }, []);
 
   // 데이터 검색
-  const searchData = async (currentPage = pageInfo.page) => {
+  const searchData = async (currentPage = pageInfo.currentPage) => {
     try {
       const response = await api.get('/notices', {
         params: {
-          searchKey: searchKey,
-          searchValue: searchValue,
-          page: currentPage,
-          size: pageInfo.pageSize,
+          searchColumn: searchColumn,
+          searchKeyword: searchKeyword,
+          currentPage: currentPage,
+          pageSize: pageInfo.pageSize,
         },
       });
 
       if (response.status === 200) {
-        setDatas(response.data.data);
+        setNoticeDatas(response.data.data);
         setPageInfo(response.data.pagination);
       }
     } catch (e) {
@@ -76,7 +76,7 @@ export default function NoticeList() {
 
   // 페이지 이동
   const handleChangePage = (_: React.ChangeEvent<unknown>, page: number) => {
-    if (page === pageInfo.page) return;
+    if (page === pageInfo.currentPage) return;
     searchData(page); // 해당 페이지 요청
   };
 
@@ -100,8 +100,8 @@ export default function NoticeList() {
       >
         <FormControl size='small'>
           <Select
-            value={searchKey}
-            onChange={(e) => setSearchKey(e.target.value)}
+            value={searchColumn}
+            onChange={(e) => setSearchColumn(e.target.value)}
           >
             <MenuItem value='title'>제목</MenuItem>
           </Select>
@@ -110,8 +110,8 @@ export default function NoticeList() {
         <TextField
           size='small'
           label='검색어'
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
+          value={searchKeyword}
+          onChange={(e) => setSearchKeyword(e.target.value)}
         />
 
         <Button variant='contained' onClick={handleSearch}>
@@ -130,29 +130,29 @@ export default function NoticeList() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {datas.length === 0 ? (
+            {noticeDatas.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={4} align='center'>
                   검색 결과가 없습니다.
                 </TableCell>
               </TableRow>
             ) : (
-              datas.map((data, index) => (
+              noticeDatas.map((noticeData, index) => (
                 <TableRow
-                  key={data.noticeNum}
+                  key={noticeData.noticeNum}
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
                   <TableCell align='center'>
-                    {(pageInfo.page - 1) * pageInfo.pageSize + index + 1}
+                    {noticeDatas.length - index}
                   </TableCell>
                   <TableCell align='center' component='th' scope='row'>
-                    <Link to={`/notice/notices/${data.noticeNum}`}>
-                      {data.title}
+                    <Link to={`/notice/notices/${noticeData.noticeNum}`}>
+                      {noticeData.title}
                     </Link>
                   </TableCell>
-                  <TableCell align='center'>{data.createUser}</TableCell>
+                  <TableCell align='center'>{noticeData.createUser}</TableCell>
                   <TableCell align='center'>
-                    {data.createDateTime?.slice(0, 10)}
+                    {noticeData.createDateTime?.slice(0, 10)}
                   </TableCell>
                 </TableRow>
               ))
@@ -164,7 +164,7 @@ export default function NoticeList() {
         <Pagination
           count={pageInfo.totalPageCnt}
           onChange={handleChangePage}
-          page={pageInfo.page}
+          page={pageInfo.currentPage}
           shape='rounded'
         />
       </Box>

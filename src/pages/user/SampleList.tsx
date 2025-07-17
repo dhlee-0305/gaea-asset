@@ -88,18 +88,18 @@ export default function SampleList() {
     }
   };
 
-  // 검색 버튼 클릭
+  // 검색 버튼 클릭 핸들러
   const handleSearch = (): void => {
     searchData(1);
   };
 
-  // 페이지 이동
+  // 페이지 변경 핸들러
   const handleChangePage = (_: React.ChangeEvent<unknown>, page: number) => {
     if (page === pageInfo.page) return;
     searchData(page); // 해당 페이지 요청
   };
 
-  // 등록 화면 이동
+  // 등록 버튼 클릭 핸들러
   const handleMoveCreate = (): void => {
     navigate('/user-management/users/create');
   };

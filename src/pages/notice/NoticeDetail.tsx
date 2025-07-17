@@ -16,7 +16,7 @@ export default function NoticeDetail() {
   const [isLoading, setIsLoading] = useState(false);
   const { noticeNum } = useParams();
   const noticeId = Number(noticeNum ?? 0);
-  const [data, setData] = useState<NoticeData>({
+  const [noticeData, setnoticeData] = useState<NoticeData>({
     title: '',
     content: '',
     createDateTime: '',
@@ -34,7 +34,7 @@ export default function NoticeDetail() {
       const response = await api.get(`/notices/${noticeId}`);
 
       if (response.status === 200) {
-        setData(response.data.data);
+        setnoticeData(response.data.data);
       }
     } catch (e) {
       console.error(e);
@@ -101,27 +101,27 @@ export default function NoticeDetail() {
               <Typography color='textSecondary'>제목</Typography>
             </Grid>
             <Grid size={8}>
-              <Typography>{data.title}</Typography>
+              <Typography>{noticeData.title}</Typography>
             </Grid>
 
             <Grid size={4}>
               <Typography color='textSecondary'>부서/작성자</Typography>
             </Grid>
             <Grid size={8}>
-              <Typography>{data.createUser}</Typography>
+              <Typography>{noticeData.createUser}</Typography>
             </Grid>
 
             <Grid size={4}>
               <Typography color='textSecondary'>등록일자</Typography>
             </Grid>
             <Grid size={8}>
-              <Typography>{data.createDateTime?.slice(0, 10)}</Typography>
+              <Typography>{noticeData.createDateTime?.slice(0, 10)}</Typography>
             </Grid>
 
             <Grid size={4}></Grid>
             <Grid size={50}>
               <Typography component='pre' sx={{ whiteSpace: 'pre-wrap' }}>
-                {data.content}
+                {noticeData.content}
               </Typography>
             </Grid>
           </Grid>
