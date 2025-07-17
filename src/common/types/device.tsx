@@ -40,8 +40,14 @@ export interface DeviceData {
   screenSize: number;
   /* GPU */
   gpuSpec: number;
+  /* 장비 상태 코드*/
+  deviceStatusCode: string;
   /* 장비 상태 */
-  status: string;
+  deviceStatus: string;
+  /* 결재 상태 코드*/
+  approvalStatusCode: string;
+  /* 결재 상태 */
+  approvalStatus: string;
   /* 구매일자 */
   purchaseDate: Dayjs | null;
   /* 반납일자 */
