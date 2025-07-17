@@ -45,7 +45,7 @@ export default function NoticeList() {
   // 데이터 검색
   const searchData = async (currentPage = pageInfo.page) => {
     try {
-      const response = await api.get('/notices', {
+      const response = await api.get('/noticeList', {
         params: {
           searchKey: searchKey,
           searchValue: searchValue,

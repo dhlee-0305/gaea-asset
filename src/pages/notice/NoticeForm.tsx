@@ -45,7 +45,7 @@ export default function NoticeForm() {
     if (isUpdate) {
       (async () => {
         try {
-          const response = await api.get(`/notice/${noticeId}`);
+          const response = await api.get(`/getNoticeInfo/${noticeId}`);
           if (response.status === 200) {
             reset(response.data.data);
           }
@@ -87,9 +87,9 @@ export default function NoticeForm() {
         }),
       };
 
-      const url = isUpdate ? '/notice' : '/notice';
+      const url = isUpdate ? '/updateNotice' : '/insertNotice';
       const response = isUpdate
-        ? await api.put(url, requestData)
+        ? await api.patch(url, requestData)
         : await api.post(url, requestData);
 
       setIsLoading(false);
