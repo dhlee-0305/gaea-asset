@@ -88,7 +88,14 @@ export default function UserListPopup({
   };
 
   return (
-    <Dialog open={isOpen}>
+    <Dialog
+      open={isOpen}
+      slotProps={{
+        paper: {
+          sx: { minWidth: 650 },
+        },
+      }}
+    >
       <DialogTitle sx={{ m: 0, p: 2 }}>담당자 조회</DialogTitle>
       <IconButton
         aria-label='close'
@@ -125,7 +132,7 @@ export default function UserListPopup({
           </Button>
         </Box>
         <TableContainer component={Paper}>
-          <Table sx={{ width: 500 }}>
+          <Table sx={{ width: 580 }}>
             <TableHead>
               <TableRow>
                 <TableCell align='center'>사원번호</TableCell>

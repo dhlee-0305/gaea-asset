@@ -67,7 +67,7 @@ export default function DeviceForm() {
     if (isUpdate) {
       (async () => {
         try {
-          const response = await api.get(`/getDevice/${deviceNum}`);
+          const response = await api.get(`/devices/${deviceNum}`);
 
           if (response.status === 200 && response.data.resultCode === '0000') {
             reset({
@@ -103,10 +103,8 @@ export default function DeviceForm() {
     );
 
     if (!confirmed) return;
-    console.log(data.purchaseDate);
-    try {
-      const url = isUpdate ? `/updateDevice` : `/insertDevice`;
 
+    try {
       const payload = {
         ...data,
         purchaseDate: data.purchaseDate
@@ -115,8 +113,11 @@ export default function DeviceForm() {
         returnDate: data.returnDate ? data.returnDate.format('YYYYMMDD') : '',
       };
 
+      const url = isUpdate ? `/devices/${deviceNum}` : '/devices';
+      const method = isUpdate ? 'put' : 'post';
+
       setIsLoading(true);
-      const response = await api.post(url, payload);
+      const response = await api[method](url, payload);
       setIsLoading(false);
 
       if (response.status === 200 && response.data.resultCode === '0000') {

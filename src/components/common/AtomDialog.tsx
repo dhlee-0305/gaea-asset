@@ -21,7 +21,15 @@ export default function AtomDialog() {
   return (
     <>
       {/* Dialog */}
-      <Dialog open={dialog.visible} onClose={() => handleClose(false)}>
+      <Dialog
+        slotProps={{
+          paper: {
+            sx: { minWidth: 250 },
+          },
+        }}
+        open={dialog.visible}
+        onClose={() => handleClose(false)}
+      >
         <DialogTitle>{dialog.title}</DialogTitle>
         <DialogContent>{dialog.contents}</DialogContent>
         <DialogActions>

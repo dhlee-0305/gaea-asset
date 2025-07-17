@@ -7,7 +7,7 @@ import dayjs from 'dayjs';
 import api from '@/common/utils/api';
 import PageHeader from '@/components/common/PageHeader';
 import type { AppDispatch } from '@/store';
-import { showAlert } from '@/store/dialogAction';
+import { showAlert, showConfirm } from '@/store/dialogAction';
 import { MESSAGE } from '@/common/constants';
 import type { DeviceData } from '@/common/types/device';
 
@@ -16,6 +16,7 @@ export default function DeviceDetail() {
   const navigate = useNavigate();
   const { deviceNum } = useParams();
   const [data, setData] = useState<DeviceData | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -25,7 +26,7 @@ export default function DeviceDetail() {
   // 데이터 조회
   const fetchData = async () => {
     try {
-      const response = await api.get(`/getDevice/${deviceNum}`);
+      const response = await api.get(`/devices/${deviceNum}`);
 
       if (response.status === 200 && response.data.resultCode === '0000') {
         setData(response.data.data);
@@ -52,7 +53,39 @@ export default function DeviceDetail() {
   };
 
   // 삭제 버튼 클릭 핸들러
-  const handleDelete = (): void => {};
+  const handleDelete = async (): Promise<void> => {
+    const confirmed = await dispatch(
+      showConfirm({ contents: '삭제하시겠습니까?' }),
+    );
+
+    if (!confirmed) return;
+
+    try {
+      setIsLoading(true);
+      const response = await api.delete(`/devices/${deviceNum}`);
+
+      setIsLoading(false);
+
+      if (response.status === 200 && response.data.resultCode === '0000') {
+        await dispatch(
+          showAlert({
+            contents: '장비 정보가 삭제되었습니다.',
+          }),
+        );
+        navigate('/device-management/devices');
+      }
+    } catch (error) {
+      console.error(error);
+      setIsLoading(false);
+      dispatch(
+        showAlert({
+          title: 'Error',
+          contents: MESSAGE.error,
+        }),
+      );
+    }
+  };
+
   return (
     <>
       <PageHeader contents='장비 상세' />
@@ -169,7 +202,13 @@ export default function DeviceDetail() {
             >
               수정
             </Button>
-            <Button variant='contained' color='error' onClick={handleDelete}>
+            <Button
+              variant='contained'
+              color='error'
+              onClick={handleDelete}
+              loading={isLoading}
+              loadingPosition='start'
+            >
               삭제
             </Button>
           </Box>

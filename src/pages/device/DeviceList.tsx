@@ -45,7 +45,7 @@ export default function DeviceList() {
   // 데이터 조회
   const fetchData = async (currentPage = pageInfo.page) => {
     try {
-      const response = await api.get('/deviceList', {
+      const response = await api.get('/devices', {
         params: {
           searchKey: searchKey,
           searchValue: searchValue,
