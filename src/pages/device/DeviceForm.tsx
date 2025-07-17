@@ -55,7 +55,7 @@ export default function DeviceForm() {
       deviceTypeCode: 'PC',
       userName: '',
       modelName: '',
-      status: '',
+      deviceStatus: '',
       manufactureDate: '',
       purchaseDate: null,
       returnDate: null,
@@ -206,7 +206,7 @@ export default function DeviceForm() {
                       },
                     }}
                     {...register('userName', {
-                      required: '장비담당자를 입력해 주세요.',
+                      required: '장비담당자를 선택해 주세요.',
                     })}
                     error={!!errors.userName}
                     helperText={errors.userName?.message}
@@ -215,38 +215,6 @@ export default function DeviceForm() {
                     조회
                   </Button>
                 </Box>
-              </Grid>
-              <Grid size={12}>
-                <TextField
-                  label='사용용도'
-                  fullWidth
-                  size='small'
-                  variant='outlined'
-                  slotProps={{
-                    inputLabel: {
-                      shrink: true,
-                    },
-                  }}
-                  {...register('usagePurpose', {
-                    required: '사용용도는 필수입니다.',
-                  })}
-                  error={!!errors.usagePurpose}
-                  helperText={errors.usagePurpose?.message}
-                />
-              </Grid>
-              <Grid size={12}>
-                <TextField
-                  label='기존 장비관리번호'
-                  fullWidth
-                  size='small'
-                  variant='outlined'
-                  slotProps={{
-                    inputLabel: {
-                      shrink: true,
-                    },
-                  }}
-                  {...register('oldDeviceId')}
-                />
               </Grid>
               <Grid size={12}>
                 <Controller
@@ -274,6 +242,35 @@ export default function DeviceForm() {
                   )}
                 />
               </Grid>
+              <Grid size={12}>
+                <TextField
+                  label='사용용도'
+                  fullWidth
+                  size='small'
+                  variant='outlined'
+                  slotProps={{
+                    inputLabel: {
+                      shrink: true,
+                    },
+                  }}
+                  {...register('usagePurpose')}
+                />
+              </Grid>
+              <Grid size={12}>
+                <TextField
+                  label='기존 장비관리번호'
+                  fullWidth
+                  size='small'
+                  variant='outlined'
+                  slotProps={{
+                    inputLabel: {
+                      shrink: true,
+                    },
+                  }}
+                  {...register('oldDeviceId')}
+                />
+              </Grid>
+
               <Grid size={12}>
                 <TextField
                   label='모델명'

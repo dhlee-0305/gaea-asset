@@ -105,6 +105,12 @@ export default function DeviceDetail() {
               <Typography>{data?.userName}</Typography>
             </Grid>
             <Grid size={4}>
+              <Typography color='textSecondary'>장비유형</Typography>
+            </Grid>
+            <Grid size={8}>
+              <Typography>{data?.deviceType}</Typography>
+            </Grid>
+            <Grid size={4}>
               <Typography color='textSecondary'>사용용도</Typography>
             </Grid>
             <Grid size={8}>
@@ -115,12 +121,6 @@ export default function DeviceDetail() {
             </Grid>
             <Grid size={8}>
               <Typography>{data?.oldDeviceId}</Typography>
-            </Grid>
-            <Grid size={4}>
-              <Typography color='textSecondary'>장비유형</Typography>
-            </Grid>
-            <Grid size={8}>
-              <Typography>{data?.deviceType}</Typography>
             </Grid>
             <Grid size={4}>
               <Typography color='textSecondary'>모델명</Typography>

@@ -138,7 +138,8 @@ export default function DeviceList() {
               <TableCell align='center'>장비유형</TableCell>
               <TableCell align='center'>제조년도</TableCell>
               <TableCell align='center'>모델명</TableCell>
-              <TableCell align='center'>상태</TableCell>
+              <TableCell align='center'>장비상태</TableCell>
+              <TableCell align='center'>결재상태</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -158,12 +159,13 @@ export default function DeviceList() {
                   <TableCell align='center'>{data.deviceType}</TableCell>
                   <TableCell align='center'>{data.manufactureDate}</TableCell>
                   <TableCell align='center'>{data.modelName}</TableCell>
-                  <TableCell align='center'>{data.status}</TableCell>
+                  <TableCell align='center'>{data.deviceStatus}</TableCell>
+                  <TableCell align='center'>{data.approvalStatus}</TableCell>
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell align='center' colSpan={7}>
+                <TableCell align='center' colSpan={8}>
                   검색 결과가 없습니다.
                 </TableCell>
               </TableRow>
