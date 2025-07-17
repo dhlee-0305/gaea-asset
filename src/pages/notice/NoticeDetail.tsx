@@ -31,7 +31,7 @@ export default function NoticeDetail() {
   // 데이터 검색
   const searchData = async () => {
     try {
-      const response = await api.get(`/getNoticeInfo/${noticeId}`);
+      const response = await api.get(`/notice/${noticeId}`);
 
       if (response.status === 200) {
         setData(response.data.data);
@@ -57,7 +57,7 @@ export default function NoticeDetail() {
 
     try {
       setIsLoading(true);
-      const response = await api.delete(`/deleteNotice/${noticeId}`);
+      const response = await api.delete(`/notice/${noticeId}`);
 
       setIsLoading(false);
 
