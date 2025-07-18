@@ -12,11 +12,13 @@ import Home from '@/pages/Home';
 import SampleList from '@/pages/user/SampleList';
 import DeviceList from '@/pages/device/DeviceList';
 import NoticeList from '@/pages/notice/NoticeList';
+import LoginPage from '@/pages/login/LoginPage';
 
 export default function AppRoute() {
   return (
     <div>
       <Routes>
+        <Route path='/login' element={<LoginPage />} />
         <Route path='/' element={<LayoutBo />}>
           <Route index element={<Home />} />
           <Route path='/user-management/users' element={<SampleList />} />

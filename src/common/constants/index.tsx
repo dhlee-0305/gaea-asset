@@ -1,5 +1,6 @@
 export const MESSAGE = {
   error: '오류가 발생했습니다.',
+  login_error: '아이디 또는 비밀번호를 확인하세요.',
 };
 
 export const VALID_RULES = {

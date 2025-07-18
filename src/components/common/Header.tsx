@@ -9,17 +9,22 @@ import {
 } from '@mui/material';
 import { AccountCircle } from '@mui/icons-material';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import styles from '@/styles/components/Header.module.css';
 import gaeasoftLogo from '@/assets/images/gaeasoft-logo.svg';
 import gaeasoftLogoIcon from '@/assets/images/gaeasoft-logo-icon.png';
-
+import { getToken, parseJwt, removeToken } from '@/common/utils/auth';
 /**
  * Header 컴포넌트
  */
 export default function Header() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [logoError, setLogoError] = useState(false);
+  const navigate = useNavigate();
+
+  const token = getToken();
+  const userInfo = token ? parseJwt(token) : null;
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -27,6 +32,13 @@ export default function Header() {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    //setAnchorEl(null);
+    alert('로그아웃 되었습니다.');
+    removeToken();
+    navigate('/login');
   };
 
   const handleLogoError = () => {
@@ -100,41 +112,43 @@ export default function Header() {
             </Typography>
           </Box>
 
-          <Box className={styles.userMenuContainer}>
-            <IconButton
-              size='large'
-              aria-label='account of current user'
-              aria-controls='menu-appbar'
-              aria-haspopup='true'
-              onClick={handleMenu}
-              className={styles.userMenuButton}
-            >
-              <AccountCircle />
-            </IconButton>
-            <Menu
-              id='menu-appbar'
-              anchorEl={anchorEl}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-              className={styles.menu}
-            >
-              <MenuItem onClick={handleClose} className={styles.menuItem}>
-                Profile
-              </MenuItem>
-              <MenuItem onClick={handleClose} className={styles.menuItem}>
-                Logout
-              </MenuItem>
-            </Menu>
-          </Box>
+          {userInfo ? (
+            <Box className={styles.userMenuContainer}>
+              <IconButton
+                size='large'
+                aria-label='account of current user'
+                aria-controls='menu-appbar'
+                aria-haspopup='true'
+                onClick={handleMenu}
+                className={styles.userMenuButton}
+              >
+                <AccountCircle />
+              </IconButton>
+              <Menu
+                id='menu-appbar'
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+                className={styles.menu}
+              >
+                <MenuItem onClick={handleClose} className={styles.menuItem}>
+                  {userInfo.userName}
+                </MenuItem>
+                <MenuItem onClick={handleLogout} className={styles.menuItem}>
+                  Logout
+                </MenuItem>
+              </Menu>
+            </Box>
+          ) : null}
         </Toolbar>
       </AppBar>
     </>
