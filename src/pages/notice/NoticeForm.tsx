@@ -10,6 +10,7 @@ import { MESSAGE } from '@/common/constants';
 import PageHeader from '@/components/common/PageHeader';
 import { showAlert, showConfirm } from '@/store/dialogAction';
 import type { AppDispatch } from '@/store';
+import { getToken, parseJwt } from '@/common/utils/auth';
 
 export default function NoticeForm() {
   const dispatch = useDispatch<AppDispatch>();
@@ -18,10 +19,11 @@ export default function NoticeForm() {
   const { noticeNum } = useParams();
   const noticeId = Number(noticeNum ?? 0);
   const isUpdate = !!noticeId;
+  const token = getToken();
+  const loginInfo = token ? parseJwt(token) : null;
 
   // useForm 선언
   const {
-    watch,
     register,
     handleSubmit,
     reset,
@@ -30,15 +32,10 @@ export default function NoticeForm() {
     defaultValues: {
       title: '',
       content: '',
-      createDateTime: isUpdate
-        ? ''
-        : new Date().toISOString().slice(0, 19).replace('T', ' '),
-      createUser: isUpdate ? '' : '100000',
+      createDateTime: '',
+      createUser: loginInfo?.empNum || '',
     },
   });
-
-  const createUserValue = watch('createUser');
-  const createDateTimeValue = watch('createDateTime');
 
   useEffect(() => {
     // 공지사항 정보 조회
@@ -79,11 +76,7 @@ export default function NoticeForm() {
       const requestData: Partial<NoticeData> = {
         ...data,
         ...(isUpdate && {
-          updateUser: '100008',
-          updateDateTime: new Date()
-            .toISOString()
-            .slice(0, 19)
-            .replace('T', ' '),
+          updateUser: loginInfo?.empNum,
         }),
       };
 
@@ -156,7 +149,12 @@ export default function NoticeForm() {
                     fullWidth
                     size='small'
                     variant='outlined'
-                    value={createUserValue}
+                    slotProps={{
+                      inputLabel: {
+                        shrink: true,
+                      },
+                    }}
+                    {...register('createUser')}
                     disabled
                   />
                 </Grid>
@@ -169,7 +167,12 @@ export default function NoticeForm() {
                     fullWidth
                     size='small'
                     variant='outlined'
-                    value={createDateTimeValue?.slice(0, 10)}
+                    slotProps={{
+                      inputLabel: {
+                        shrink: true,
+                      },
+                    }}
+                    {...register('createDateTime')}
                     disabled
                   />
                 </Grid>

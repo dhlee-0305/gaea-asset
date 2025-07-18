@@ -74,6 +74,13 @@ export default function NoticeList() {
     searchData(1);
   };
 
+  // 검색어 입력 핸들러
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
+    if (e.key === 'Enter') {
+      searchData(1);
+    }
+  };
+
   // 페이지 이동
   const handleChangePage = (_: React.ChangeEvent<unknown>, page: number) => {
     if (page === pageInfo.currentPage) return;
@@ -112,6 +119,7 @@ export default function NoticeList() {
           label='검색어'
           value={searchKeyword}
           onChange={(e) => setSearchKeyword(e.target.value)}
+          onKeyDown={handleKeyDown}
         />
 
         <Button variant='contained' onClick={handleSearch}>
@@ -130,21 +138,13 @@ export default function NoticeList() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {noticeDatas.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={4} align='center'>
-                  검색 결과가 없습니다.
-                </TableCell>
-              </TableRow>
-            ) : (
-              noticeDatas.map((noticeData, index) => (
+            {noticeDatas.length > 0 ? (
+              noticeDatas.map((noticeData) => (
                 <TableRow
                   key={noticeData.noticeNum}
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
-                  <TableCell align='center'>
-                    {noticeDatas.length - index}
-                  </TableCell>
+                  <TableCell align='center'>{noticeData.rowNum}</TableCell>
                   <TableCell align='center' component='th' scope='row'>
                     <Link to={`/notice/notices/${noticeData.noticeNum}`}>
                       {noticeData.title}
@@ -152,21 +152,29 @@ export default function NoticeList() {
                   </TableCell>
                   <TableCell align='center'>{noticeData.createUser}</TableCell>
                   <TableCell align='center'>
-                    {noticeData.createDateTime?.slice(0, 10)}
+                    {noticeData.createDateTime}
                   </TableCell>
                 </TableRow>
               ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={4} align='center'>
+                  검색 결과가 없습니다.
+                </TableCell>
+              </TableRow>
             )}
           </TableBody>
         </Table>
       </TableContainer>
       <Box sx={{ mt: 2, display: 'flex', justifyContent: 'center' }}>
-        <Pagination
-          count={pageInfo.totalPageCnt}
-          onChange={handleChangePage}
-          page={pageInfo.currentPage}
-          shape='rounded'
-        />
+        {noticeDatas.length > 0 && (
+          <Pagination
+            count={pageInfo.totalPageCnt}
+            onChange={handleChangePage}
+            page={pageInfo.currentPage}
+            shape='rounded'
+          />
+        )}
       </Box>
       <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
         <Button variant='contained' onClick={handleMoveCreate}>

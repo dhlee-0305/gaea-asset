@@ -115,7 +115,7 @@ export default function NoticeDetail() {
               <Typography color='textSecondary'>등록일자</Typography>
             </Grid>
             <Grid size={8}>
-              <Typography>{noticeData.createDateTime?.slice(0, 10)}</Typography>
+              <Typography>{noticeData.createDateTime}</Typography>
             </Grid>
 
             <Grid size={4}></Grid>
