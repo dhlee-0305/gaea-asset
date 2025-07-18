@@ -10,11 +10,14 @@ import {
 import { AccountCircle } from '@mui/icons-material';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
 import styles from '@/styles/components/Header.module.css';
 import gaeasoftLogo from '@/assets/images/gaeasoft-logo.svg';
 import gaeasoftLogoIcon from '@/assets/images/gaeasoft-logo-icon.png';
 import { getToken, parseJwt, removeToken } from '@/common/utils/auth';
+import type { AppDispatch } from '@/store';
+import { showAlert } from '@/store/dialogAction';
 /**
  * Header 컴포넌트
  */
@@ -22,6 +25,7 @@ export default function Header() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [logoError, setLogoError] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
 
   const token = getToken();
   const userInfo = token ? parseJwt(token) : null;
@@ -36,7 +40,13 @@ export default function Header() {
 
   const handleLogout = () => {
     //setAnchorEl(null);
-    alert('로그아웃 되었습니다.');
+    //alert('로그아웃 되었습니다.');
+    dispatch(
+      showAlert({
+        title: '',
+        contents: '로그아웃 되었습니다.',
+      }),
+    );
     removeToken();
     navigate('/login');
   };
