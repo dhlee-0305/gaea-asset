@@ -10,6 +10,7 @@ import type { AppDispatch } from '@/store';
 import { showAlert, showConfirm } from '@/store/dialogAction';
 import { MESSAGE } from '@/common/constants';
 import type { DeviceData } from '@/common/types/device';
+import DeviceApprovalPopup from '@/components/device/DevicePopup';
 
 export default function DeviceDetail() {
   const dispatch = useDispatch<AppDispatch>();
@@ -17,11 +18,17 @@ export default function DeviceDetail() {
   const { deviceNum } = useParams();
   const [deviceData, setDeviceData] = useState<DeviceData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+
+  const isUpdatable = !(
+    deviceData?.approvalStatusCode === 'A1' ||
+    deviceData?.approvalStatusCode === 'A2'
+  );
 
   useEffect(() => {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isOpen]);
 
   // 데이터 조회
   const fetchData = async () => {
@@ -50,6 +57,16 @@ export default function DeviceDetail() {
   // 목록 버튼 클릭 핸들러
   const handleMoveList = (): void => {
     navigate('/device-management/devices');
+  };
+
+  // 장비 변경 승인 팝업 열기 핸들러
+  const handleOpenDialog = () => {
+    setIsOpen(true);
+  };
+
+  // 장비 변경 승인 팝업 닫기 핸들러
+  const handleCloseDialog = () => {
+    setIsOpen(false);
   };
 
   // 삭제 버튼 클릭 핸들러
@@ -188,10 +205,31 @@ export default function DeviceDetail() {
             <Grid size={8}>
               <Typography>{deviceData?.remarks}</Typography>
             </Grid>
+            <Grid size={4}>
+              <Typography color='textSecondary'>장비 상태</Typography>
+            </Grid>
+            <Grid size={8}>
+              <Typography>{deviceData?.deviceStatus}</Typography>
+            </Grid>
+            <Grid size={4}>
+              <Typography color='textSecondary'>결재 상태</Typography>
+            </Grid>
+            <Grid size={8}>
+              <Typography>{deviceData?.approvalStatus}</Typography>
+            </Grid>
           </Grid>
           <Box
             sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end', gap: 1 }}
           >
+            {!isUpdatable && (
+              <Button
+                variant='outlined'
+                color='error'
+                onClick={handleOpenDialog}
+              >
+                승인
+              </Button>
+            )}
             <Button variant='outlined' onClick={handleMoveList}>
               목록
             </Button>
@@ -199,8 +237,9 @@ export default function DeviceDetail() {
               variant='contained'
               color='primary'
               onClick={handleMoveUpdate}
+              disabled={!isUpdatable}
             >
-              수정
+              {isUpdatable ? '수정' : '승인 대기'}
             </Button>
             <Button
               variant='contained'
@@ -212,6 +251,13 @@ export default function DeviceDetail() {
               삭제
             </Button>
           </Box>
+          {deviceData && (
+            <DeviceApprovalPopup
+              isOpen={isOpen}
+              onClose={handleCloseDialog}
+              orgData={deviceData}
+            />
+          )}
         </Paper>
       </Box>
     </>

@@ -27,7 +27,7 @@ import type { UserData } from '@/common/types/user';
 
 const CODE = {
   deviceTypes: [
-    { code: 'PC', codeName: 'PC' },
+    { code: 'PC', codeName: '컴퓨터' },
     { code: 'MO', codeName: '모니터' },
     { code: 'HP', codeName: '핸드폰' },
     { code: 'ETC', codeName: '기타' },
@@ -114,17 +114,16 @@ export default function DeviceForm() {
       };
 
       const url = isUpdate ? `/devices/${deviceNum}` : '/devices';
-      const method = isUpdate ? 'put' : 'post';
 
       setIsLoading(true);
-      const response = await api[method](url, payload);
+      const response = await api.post(url, payload);
       setIsLoading(false);
 
       if (response.status === 200 && response.data.resultCode === '0000') {
         await dispatch(
           showAlert({
             contents: isUpdate
-              ? '장비 정보가 수정되었습니다.'
+              ? '장비 정보 수정이 요청되었습니다.'
               : '장비 정보가 등록되었습니다.',
           }),
         );

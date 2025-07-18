@@ -62,4 +62,23 @@ export interface DeviceData {
   updateDatetime: string;
   /* 최종 변경자 */
   updateUser: string;
+  /* 장비 변경 요청 사유 */
+  changeReason: string;
 }
+
+export const deviceLabels: Partial<Record<keyof DeviceData, string>> = {
+  userName: '담당자',
+  usagePurpose: '사용용도',
+  oldDeviceId: '기존 장비관리번호',
+  deviceType: '장비 유형',
+  modelName: '모델명',
+  manufactureDate: '제조년도',
+  cpuSpec: 'CPU',
+  memorySize: '메모리',
+  storageInfo: 'SSD/HDD',
+  operatingSystem: 'OS',
+  screenSize: '인치',
+  purchaseDate: '구매일자',
+  returnDate: '반납일자',
+  deviceStatus: '장비 상태',
+};
