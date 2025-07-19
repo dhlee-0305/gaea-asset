@@ -3,13 +3,13 @@ import { Route, Routes } from 'react-router-dom';
 import NoticeForm from './pages/notice/NoticeForm';
 import DeviceDetail from './pages/device/DeviceDetail';
 import DeviceForm from './pages/device/DeviceForm';
+import UserList from './pages/user/UserList';
+import UserDetail from './pages/user/UserDetail';
+import UserForm from './pages/user/UserForm';
 
 import LayoutBo from '@/layout/Layout';
-import SampleDetail from '@/pages/user/SampleDetail';
 import NoticeDetail from '@/pages/notice/NoticeDetail';
-import SampleForm from '@/pages/user/SampleForm';
 import Home from '@/pages/Home';
-import SampleList from '@/pages/user/SampleList';
 import DeviceList from '@/pages/device/DeviceList';
 import NoticeList from '@/pages/notice/NoticeList';
 import LoginPage from '@/pages/login/LoginPage';
@@ -21,18 +21,15 @@ export default function AppRoute() {
         <Route path='/login' element={<LoginPage />} />
         <Route path='/' element={<LayoutBo />}>
           <Route index element={<Home />} />
-          <Route path='/user-management/users' element={<SampleList />} />
+          <Route path='/user-management/users' element={<UserList />} />
           <Route
             path='/user-management/users/:userNo'
-            element={<SampleDetail />}
+            element={<UserDetail />}
           />
-          <Route
-            path='/user-management/users/create'
-            element={<SampleForm />}
-          />
+          <Route path='/user-management/users/create' element={<UserForm />} />
           <Route
             path='/user-management/users/:userNo/update'
-            element={<SampleForm />}
+            element={<UserForm />}
           />
           <Route path='/device-management/devices' element={<DeviceList />} />
           <Route
