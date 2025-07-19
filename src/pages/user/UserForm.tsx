@@ -127,18 +127,29 @@ export default function UserForm() {
       const url = isUpdate ? `/users/${userNo}` : '/users';
       setIsLoading(true);
       console.log(data);
-      const response = await api.put(url, data);
+      const response = isUpdate
+        ? await api.put(url, data)
+        : await api.post(url, data);
       setIsLoading(false);
 
       if (response.status === 200) {
-        await dispatch(
-          showAlert({
-            contents: isUpdate
-              ? '사용자가 수정되었습니다.'
-              : '사용자가 등록되었습니다.',
-          }),
-        );
-        handleCancel();
+        const resData = response.data;
+        if (resData.resultCode === '0000') {
+          await dispatch(
+            showAlert({
+              contents: isUpdate
+                ? '사용자가 수정되었습니다.'
+                : '사용자가 등록되었습니다.',
+            }),
+          );
+          handleCancel();
+        } else {
+          await dispatch(
+            showAlert({
+              contents: resData.description,
+            }),
+          );
+        }
       }
     } catch (error) {
       console.error(error);
@@ -168,6 +179,23 @@ export default function UserForm() {
         <form onSubmit={handleSubmit(save)}>
           <Paper sx={{ p: 4, mb: 4 }} elevation={4}>
             <Grid container spacing={3}>
+              <Grid size={12}>
+                <TextField
+                  label='사번'
+                  fullWidth
+                  size='small'
+                  variant='outlined'
+                  slotProps={{
+                    inputLabel: {
+                      shrink: true,
+                    },
+                  }}
+                  {...register('empNum', { required: '사번은 필수입니다.' })}
+                  error={!!errors.empNum}
+                  helperText={errors.empNum?.message}
+                  disabled={isUpdate}
+                />
+              </Grid>
               <Grid size={12}>
                 <TextField
                   label='아이디'
