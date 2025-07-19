@@ -29,8 +29,8 @@ import type { PageInfo } from '@/common/types/common';
 export default function UserList() {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const [searchType, setSearchType] = useState('userNm');
-  const [searchValue, setSearchValue] = useState('');
+  const [searchColumn, setSearchColumn] = useState('userName');
+  const [searchKeyword, setSearchKeyword] = useState('');
   const [datas, setDatas] = useState<UserData[]>([]);
   const [pageInfo, setPageInfo] = useState<PageInfo>({
     pageSize: 10,
@@ -47,8 +47,8 @@ export default function UserList() {
     try {
       const response = await api.get('/users', {
         params: {
-          searchType: searchType,
-          searchValue: searchValue,
+          searchColumn: searchColumn,
+          searchKeyword: searchKeyword,
           currentPage: currentPage,
           pageSize: pageInfo.pageSize,
         },
@@ -93,6 +93,13 @@ export default function UserList() {
     searchData(1);
   };
 
+  // 검색어 입력 핸들러
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
+    if (e.key === 'Enter') {
+      searchData(1);
+    }
+  };
+
   // 페이지 변경 핸들러
   const handleChangePage = (_: React.ChangeEvent<unknown>, page: number) => {
     if (page === pageInfo.currentPage) return;
@@ -119,20 +126,20 @@ export default function UserList() {
       >
         <FormControl size='small'>
           <Select
-            value={searchType}
-            onChange={(e) => setSearchType(e.target.value)}
+            value={searchColumn}
+            onChange={(e) => setSearchColumn(e.target.value)}
           >
-            <MenuItem value='userNm'>이름</MenuItem>
-            <MenuItem value='userId'>아이디</MenuItem>
-            <MenuItem value='deptNm'>부서</MenuItem>
+            <MenuItem value='userName'>이름</MenuItem>
+            <MenuItem value='orgName'>부서</MenuItem>
           </Select>
         </FormControl>
 
         <TextField
           size='small'
           label='검색어'
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
+          value={searchKeyword}
+          onChange={(e) => setSearchKeyword(e.target.value)}
+          onKeyDown={handleKeyDown}
         />
 
         <Button variant='contained' onClick={handleSearch}>
