@@ -81,4 +81,5 @@ export const deviceLabels: Partial<Record<keyof DeviceData, string>> = {
   purchaseDate: '구매일자',
   returnDate: '반납일자',
   deviceStatus: '장비 상태',
+  changeReason: '변경 사유',
 };

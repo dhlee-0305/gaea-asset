@@ -22,8 +22,9 @@ import PageHeader from '@/components/common/PageHeader';
 import { showAlert, showConfirm } from '@/store/dialogAction';
 import type { AppDispatch } from '@/store';
 import type { DeviceData } from '@/common/types/device';
-import UserListPopup from '@/components/user/UserListPopup';
 import type { UserData } from '@/common/types/user';
+import { getUserRoleCode } from '@/common/utils/auth';
+import UserSelectPopup from '@/components/user/UserSelectPopup';
 
 const CODE = {
   deviceTypes: [
@@ -34,6 +35,10 @@ const CODE = {
   ],
 };
 
+const userRoleCode = getUserRoleCode();
+const approvalStatusCode =
+  userRoleCode === '03' ? 'A3' : userRoleCode === '02' ? 'A2' : 'A1';
+
 export default function DeviceForm() {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
@@ -41,6 +46,7 @@ export default function DeviceForm() {
   const { deviceNum } = useParams();
   const isUpdate = !!deviceNum;
   const [isOpen, setIsOpen] = useState(false);
+  const userRoleCode = getUserRoleCode();
 
   // useForm 선언
   const {
@@ -107,6 +113,7 @@ export default function DeviceForm() {
     try {
       const payload = {
         ...data,
+        approvalStatusCode,
         purchaseDate: data.purchaseDate
           ? data.purchaseDate.format('YYYYMMDD')
           : '',
@@ -114,16 +121,19 @@ export default function DeviceForm() {
       };
 
       const url = isUpdate ? `/devices/${deviceNum}` : '/devices';
+      const method = isUpdate ? 'put' : 'post';
 
       setIsLoading(true);
-      const response = await api.post(url, payload);
+      const response = await api[method](url, payload, {
+        params: { userRoleCode },
+      });
       setIsLoading(false);
 
       if (response.status === 200 && response.data.resultCode === '0000') {
         await dispatch(
           showAlert({
             contents: isUpdate
-              ? '장비 정보 수정이 요청되었습니다.'
+              ? '장비 정보가 수정되었습니다.'
               : '장비 정보가 등록되었습니다.',
           }),
         );
@@ -449,7 +459,7 @@ export default function DeviceForm() {
           </Paper>
         </form>
       </Box>
-      <UserListPopup
+      <UserSelectPopup
         isOpen={isOpen}
         onClose={handleCloseDialog}
         onSelectUser={handleSelectUser}

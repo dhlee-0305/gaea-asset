@@ -10,7 +10,7 @@ import type { AppDispatch } from '@/store';
 import { showAlert, showConfirm } from '@/store/dialogAction';
 import { MESSAGE } from '@/common/constants';
 import type { DeviceData } from '@/common/types/device';
-import DeviceApprovalPopup from '@/components/device/DevicePopup';
+import DeviceApprovalPopup from '@/components/device/DeviceApprovalPopup';
 
 export default function DeviceDetail() {
   const dispatch = useDispatch<AppDispatch>();
@@ -239,7 +239,7 @@ export default function DeviceDetail() {
               onClick={handleMoveUpdate}
               disabled={!isUpdatable}
             >
-              {isUpdatable ? '수정' : '승인 대기'}
+              수정
             </Button>
             <Button
               variant='contained'

@@ -22,6 +22,7 @@ import type { AppDispatch } from '@/store';
 import { showAlert, showConfirm } from '@/store/dialogAction';
 import { MESSAGE } from '@/common/constants';
 import api from '@/common/utils/api';
+import { getUserRoleCode } from '@/common/utils/auth';
 
 export default function DeviceApprovalPopup({
   isOpen,
@@ -34,21 +35,23 @@ export default function DeviceApprovalPopup({
 }) {
   const dispatch = useDispatch<AppDispatch>();
   const { deviceNum } = useParams();
-  const [deviceTempData, setDeviceTempData] = useState<DeviceData | null>(null);
+  const [deviceApprovaldata, setDeviceApprovaldata] =
+    useState<DeviceData | null>(null);
 
+  const userRoleCode = getUserRoleCode();
   useEffect(() => {
     if (isOpen) {
-      getDeviceTempData();
+      getDeviceApprovalData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
   // 데이터 조회
-  const getDeviceTempData = async () => {
+  const getDeviceApprovalData = async () => {
     try {
       const response = await api.get(`/devices/${deviceNum}/draft`);
       if (response.status === 200 && response.data.resultCode === '0000') {
-        setDeviceTempData(response.data.data);
+        setDeviceApprovaldata(response.data.data);
       }
     } catch (e) {
       console.error(e);
@@ -66,7 +69,7 @@ export default function DeviceApprovalPopup({
     return {
       label: deviceLabels[field],
       original: orgData?.[field] ?? '-',
-      new: deviceTempData?.[field] ?? '-',
+      new: deviceApprovaldata?.[field] ?? '-',
     };
   });
 
@@ -82,12 +85,16 @@ export default function DeviceApprovalPopup({
     if (!confirmed) return;
 
     try {
-      const payload =
+      const url =
         action === 'approve'
-          ? { ...deviceTempData, approvalStatusCode: 'A3' }
-          : { approvalStatusCode: 'A4' };
+          ? `/devices/${deviceNum}/approval`
+          : `/devices/${deviceNum}/rejection`;
 
-      const response = await api.put(`/devices/${deviceNum}`, payload);
+      const response = await api.post(url, deviceApprovaldata, {
+        params: {
+          userRoleCode,
+        },
+      });
 
       if (response.status === 200 && response.data.resultCode === '0000') {
         dispatch(
@@ -97,6 +104,13 @@ export default function DeviceApprovalPopup({
           }),
         );
         onClose();
+      } else {
+        dispatch(
+          showAlert({
+            title: 'Error',
+            contents: response.data.description,
+          }),
+        );
       }
     } catch (error) {
       console.error(error);

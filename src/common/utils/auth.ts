@@ -40,3 +40,11 @@ export function parseJwt(token: string) {
     return null;
   }
 }
+
+export const getUserRoleCode = (): string | null => {
+  const token = getToken();
+  if (!token) return null;
+
+  const payload = parseJwt(token);
+  return payload?.roleCode ?? null;
+};

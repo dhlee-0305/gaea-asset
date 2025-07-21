@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  ButtonGroup,
   FormControl,
   MenuItem,
   Pagination,
@@ -36,6 +37,20 @@ export default function DeviceList() {
     pageSize: 10,
     currentPage: 1,
   });
+
+  const excelButtonStyle = {
+    fontSize: '11px',
+    minWidth: 'auto',
+    padding: '2px 8px',
+  };
+  const buttons = [
+    <Button size='small' sx={excelButtonStyle}>
+      액셀 다운로드
+    </Button>,
+    <Button size='small' sx={excelButtonStyle}>
+      액셀 업로드
+    </Button>,
+  ];
 
   useEffect(() => {
     fetchData();
@@ -103,6 +118,7 @@ export default function DeviceList() {
           gap: 1,
           alignItems: 'center',
           justifyContent: 'flex-end',
+          mb: 1.2,
         }}
       >
         <FormControl size='small'>
@@ -126,6 +142,10 @@ export default function DeviceList() {
         <Button variant='contained' onClick={handleSearch}>
           검색
         </Button>
+      </Box>
+      {/* 액셀 영역 */}
+      <Box display='flex' justifyContent='flex-end' sx={{ mt: 0.1, mb: 2.5 }}>
+        <ButtonGroup>{buttons}</ButtonGroup>
       </Box>
       {/* 목록 영역 */}
       <TableContainer component={Paper}>
