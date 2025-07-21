@@ -36,8 +36,6 @@ const CODE = {
 };
 
 const userRoleCode = getUserRoleCode();
-const approvalStatusCode =
-  userRoleCode === '03' ? 'A3' : userRoleCode === '02' ? 'A2' : 'A1';
 
 export default function DeviceForm() {
   const dispatch = useDispatch<AppDispatch>();
@@ -46,7 +44,6 @@ export default function DeviceForm() {
   const { deviceNum } = useParams();
   const isUpdate = !!deviceNum;
   const [isOpen, setIsOpen] = useState(false);
-  const userRoleCode = getUserRoleCode();
 
   // useForm 선언
   const {
@@ -113,7 +110,6 @@ export default function DeviceForm() {
     try {
       const payload = {
         ...data,
-        approvalStatusCode,
         purchaseDate: data.purchaseDate
           ? data.purchaseDate.format('YYYYMMDD')
           : '',

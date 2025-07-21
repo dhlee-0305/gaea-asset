@@ -11,6 +11,7 @@ import { showAlert, showConfirm } from '@/store/dialogAction';
 import { MESSAGE } from '@/common/constants';
 import type { DeviceData } from '@/common/types/device';
 import DeviceApprovalPopup from '@/components/device/DeviceApprovalPopup';
+import { getUserRoleCode } from '@/common/utils/auth';
 
 export default function DeviceDetail() {
   const dispatch = useDispatch<AppDispatch>();
@@ -19,6 +20,7 @@ export default function DeviceDetail() {
   const [deviceData, setDeviceData] = useState<DeviceData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const userRoleCode = getUserRoleCode();
 
   const isUpdatable = !(
     deviceData?.approvalStatusCode === 'A1' ||
@@ -221,7 +223,7 @@ export default function DeviceDetail() {
           <Box
             sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end', gap: 1 }}
           >
-            {!isUpdatable && (
+            {!isUpdatable && userRoleCode != '00' && (
               <Button
                 variant='outlined'
                 color='error'

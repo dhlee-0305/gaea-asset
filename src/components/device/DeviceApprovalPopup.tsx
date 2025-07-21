@@ -39,6 +39,7 @@ export default function DeviceApprovalPopup({
     useState<DeviceData | null>(null);
 
   const userRoleCode = getUserRoleCode();
+
   useEffect(() => {
     if (isOpen) {
       getDeviceApprovalData();
