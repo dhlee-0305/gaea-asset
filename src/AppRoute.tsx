@@ -13,12 +13,14 @@ import Home from '@/pages/Home';
 import DeviceList from '@/pages/device/DeviceList';
 import NoticeList from '@/pages/notice/NoticeList';
 import LoginPage from '@/pages/login/LoginPage';
+import ChangePasswordPage from '@/pages/login/ChangePasswordPage';
 
 export default function AppRoute() {
   return (
     <div>
       <Routes>
         <Route path='/login' element={<LoginPage />} />
+        <Route path='/change-password' element={<ChangePasswordPage />} />
         <Route path='/' element={<LayoutBo />}>
           <Route index element={<Home />} />
           <Route path='/user-management/users' element={<UserList />} />
