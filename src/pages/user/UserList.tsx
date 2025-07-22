@@ -171,7 +171,11 @@ export default function UserList() {
                 </TableCell>
                 <TableCell align='center'>{data.userName}</TableCell>
                 <TableCell align='center'>{data.orgName}</TableCell>
-                <TableCell align='center'>{data.userPositionName}</TableCell>
+                <TableCell align='center'>
+                  {data.userPositionCd === '03'
+                    ? data.userGradeName + '(' + data.userPositionName + ')'
+                    : data.userGradeName}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
