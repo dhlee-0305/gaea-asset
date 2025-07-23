@@ -14,6 +14,7 @@ import DeviceList from '@/pages/device/DeviceList';
 import NoticeList from '@/pages/notice/NoticeList';
 import LoginPage from '@/pages/login/LoginPage';
 import ChangePasswordPage from '@/pages/login/ChangePasswordPage';
+import DepartmentManagement from '@/pages/department/DepartmentManagement';
 
 export default function AppRoute() {
   return (
@@ -32,6 +33,10 @@ export default function AppRoute() {
           <Route
             path='/user-management/users/:userNo/update'
             element={<UserForm />}
+          />
+          <Route
+            path='/user-management/departments'
+            element={<DepartmentManagement />}
           />
           <Route path='/device-management/devices' element={<DeviceList />} />
           <Route
