@@ -21,7 +21,6 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import UploadFileIcon from '@mui/icons-material/UploadFile';
 
 import api from '@/common/utils/api';
 
@@ -36,6 +35,7 @@ export default function DepartmentManagement() {
   const [departments, setDepartments] = useState<Dept[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [emptyMessage, setEmptyMessage] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState('');
   const [editDept, setEditDept] = useState<Dept | null>(null);
@@ -46,7 +46,6 @@ export default function DepartmentManagement() {
     setEditDept(null);
     setInput('');
   };
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -57,10 +56,24 @@ export default function DepartmentManagement() {
     try {
       setLoading(true);
       setError(null);
-      const res = await api.get<{ data: Dept[] }>('/organization');
-      setDepartments(res.data.data);
+      setEmptyMessage(null);
+      const res = await api.get('/organization');
+      const { resultCode, description, data } = res.data;
+      if (resultCode === '204') {
+        setDepartments([]);
+        setEmptyMessage(description || '등록된 부서정보가 없습니다.');
+      } else if (resultCode === '500') {
+        setDepartments([]);
+        setError(null);
+        window.alert(description || '부서 목록 조회 중 오류가 발생했습니다.');
+      } else {
+        setDepartments(data || []);
+        setError(null);
+        setEmptyMessage(null);
+      }
     } catch {
       setError('부서 정보를 불러오지 못했습니다.');
+      setEmptyMessage(null);
     } finally {
       setLoading(false);
     }
@@ -73,14 +86,16 @@ export default function DepartmentManagement() {
   ) => {
     setEditDept({ orgName: '', parentOrgId, orgType });
     setInput('');
-    setOpen(false);
-    setTimeout(() => {
-      setOpen(true);
+    setOpen(true);
+  };
+  // Dialog open 시 input에 포커스
+  useEffect(() => {
+    if (open) {
       setTimeout(() => {
         inputRef.current?.focus();
       }, 50);
-    }, 0);
-  };
+    }
+  }, [open]);
 
   // 부서 수정
   const handleEdit = async (dept: Dept) => {
@@ -96,9 +111,19 @@ export default function DepartmentManagement() {
     if (!input.trim() || submitLoading) return;
     setSubmitLoading(true);
     try {
-      await api.post('/organization', { orgName: input });
-      setOpen(false);
-      fetchDepartments();
+      const res = await api.post('/organization', { orgName: input });
+      const { resultCode, description } = res.data || {};
+      if (resultCode === '204') {
+        alert(description || '부서 등록에 실패했습니다.');
+        return;
+      }
+      if (resultCode === '200') {
+        alert(description || '등록되었습니다.');
+        setOpen(false);
+        fetchDepartments();
+      } else {
+        alert(description || '등록 실패');
+      }
     } catch {
       alert('등록 실패');
     } finally {
@@ -111,11 +136,24 @@ export default function DepartmentManagement() {
     if (!input.trim() || !editDept?.parentOrgId || submitLoading) return;
     setSubmitLoading(true);
     try {
-      await api.post(`/organization/${editDept.parentOrgId}/child`, {
-        orgName: input,
-      });
-      setOpen(false);
-      fetchDepartments();
+      const res = await api.post(
+        `/organization/${editDept.parentOrgId}/child`,
+        {
+          orgName: input,
+        },
+      );
+      const { resultCode, description } = res.data || {};
+      if (resultCode === '204') {
+        alert(description || '하위부서 등록에 실패했습니다.');
+        return;
+      }
+      if (resultCode === '200') {
+        alert(description || '하위부서가 등록되었습니다.');
+        setOpen(false);
+        fetchDepartments();
+      } else {
+        alert(description || '등록 실패');
+      }
     } catch {
       alert('등록 실패');
     } finally {
@@ -127,12 +165,21 @@ export default function DepartmentManagement() {
   const handleEditSubmit = async () => {
     if (!input.trim() || !editDept?.orgId) return;
     try {
-      await api.put(`/organization/${editDept.orgId}`, {
+      const res = await api.put(`/organization/${editDept.orgId}`, {
         ...editDept,
         orgName: input,
       });
-      setOpen(false);
-      fetchDepartments();
+      const { resultCode, description } = res.data || {};
+      if (resultCode === '204') {
+        alert(description || '수정 대상 부서 정보가 없습니다.');
+        return;
+      }
+      if (resultCode === '200') {
+        setOpen(false);
+        fetchDepartments();
+      } else {
+        alert(description || '수정 실패');
+      }
     } catch {
       alert('수정 실패');
     }
@@ -142,30 +189,21 @@ export default function DepartmentManagement() {
   const handleDelete = async (dept: Dept) => {
     if (!window.confirm(`삭제하시겠습니까? (${dept.orgName})`)) return;
     try {
-      await api.put(`/organization/${dept.orgId}/inactive`);
-      fetchDepartments();
+      const res = await api.put(`/organization/${dept.orgId}/inactive`);
+      const { resultCode, description } = res.data || {};
+      if (resultCode === '204') {
+        alert(description || '삭제 대상 부서가 없습니다.');
+        return;
+      }
+      if (resultCode === '200') {
+        alert(description || '부서 및 하위 부서가 모두 삭제 되었습니다.');
+        fetchDepartments();
+      } else {
+        alert(description || '삭제 실패');
+      }
     } catch {
       alert('삭제 실패');
     }
-  };
-
-  // 엑셀 업로드
-
-  const handleExcelUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const formData = new FormData();
-    formData.append('file', file);
-    try {
-      await api.post('/organization/excel', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
-      fetchDepartments();
-      alert('엑셀 업로드 성공');
-    } catch {
-      alert('엑셀 업로드 실패');
-    }
-    e.target.value = '';
   };
 
   // 계층 구조
@@ -312,28 +350,24 @@ export default function DepartmentManagement() {
         >
           회사 등록
         </Button>
-        <Button
-          variant='contained'
-          color='success'
-          startIcon={<UploadFileIcon />}
-          onClick={() => fileInputRef.current?.click()}
-          sx={{ display: 'none' }}
-        >
-          엑셀 업로드
-        </Button>
-        <input
-          ref={fileInputRef}
-          type='file'
-          accept='.xlsx,.xls'
-          style={{ display: 'none' }}
-          onChange={handleExcelUpload}
-        />
+        {/* 엑셀 업로드 버튼 및 input 제거 */}
       </Stack>
       <Paper style={{ padding: 8 }}>
         {loading ? (
           <Typography>로딩 중...</Typography>
         ) : error ? (
-          <Typography color='error'>{error}</Typography>
+          <Typography
+            color='error'
+            style={{ textAlign: 'center', padding: '48px 0' }}
+          >
+            {error}
+          </Typography>
+        ) : emptyMessage ? (
+          <Typography
+            style={{ color: '#888', textAlign: 'center', padding: '48px 0' }}
+          >
+            {emptyMessage}
+          </Typography>
         ) : departments.length === 0 ? (
           <Typography
             style={{ color: '#888', textAlign: 'center', padding: '48px 0' }}
