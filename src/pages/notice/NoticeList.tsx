@@ -144,7 +144,7 @@ export default function NoticeList() {
                   key={noticeData.noticeNum}
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
-                  <TableCell align='center'>{noticeData.rowNum}</TableCell>
+                  <TableCell align='center'>{noticeData.noticeNum}</TableCell>
                   <TableCell align='center' component='th' scope='row'>
                     <Link to={`/notice/notices/${noticeData.noticeNum}`}>
                       {noticeData.title}

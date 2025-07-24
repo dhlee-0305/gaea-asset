@@ -29,10 +29,7 @@ const menuItems = [
     key: 'device-management',
     text: '장비관리',
     icon: <ComputerIcon />,
-    children: [
-      { text: '장비관리', to: '/device-management/devices' },
-      { text: '장비유형관리', to: '/device-management/device-types' },
-    ],
+    children: [{ text: '장비관리', to: '/device-management/devices' }],
   },
   {
     key: 'notice',

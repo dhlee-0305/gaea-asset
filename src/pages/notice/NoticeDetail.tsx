@@ -16,7 +16,7 @@ export default function NoticeDetail() {
   const [isLoading, setIsLoading] = useState(false);
   const { noticeNum } = useParams();
   const noticeId = Number(noticeNum ?? 0);
-  const [noticeData, setnoticeData] = useState<NoticeData>({
+  const [noticeData, setNoticeData] = useState<NoticeData>({
     title: '',
     content: '',
     createDateTime: '',
@@ -34,7 +34,7 @@ export default function NoticeDetail() {
       const response = await api.get(`/notices/${noticeId}`);
 
       if (response.status === 200) {
-        setnoticeData(response.data.data);
+        setNoticeData(response.data.data);
       }
     } catch (e) {
       console.error(e);
