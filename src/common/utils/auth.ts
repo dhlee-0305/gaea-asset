@@ -27,7 +27,12 @@ export const isTokenExpired = (token: string): boolean => {
 
 export function parseJwt(token: string) {
   try {
-    const base64 = token.split('.')[1];
+    if (!token || typeof token !== 'string') return null;
+    const parts = token.split('.');
+    if (parts.length !== 3) return null;
+    const base64Url = parts[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+
     const jsonPayload = decodeURIComponent(
       atob(base64)
         .split('')
