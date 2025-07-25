@@ -248,6 +248,26 @@ export default function DepartmentManagement() {
         nameStyle = { fontWeight: 700 };
       }
 
+      // 등록, 수정, 삭제 아이콘 (팀은 등록 버튼 미노출)
+      const actionIcons = (
+        <span style={{ display: 'flex', alignItems: 'center', marginLeft: 8 }}>
+          {dept.orgType !== 'TEAM' && (
+            <IconButton
+              size='small'
+              onClick={() => handleAdd(dept.orgId, dept.orgType)}
+            >
+              <AddIcon fontSize='small' style={{ color: '#bdbdbd' }} />
+            </IconButton>
+          )}
+          <IconButton size='small' onClick={() => handleEdit(dept)}>
+            <EditIcon fontSize='small' style={{ color: '#bdbdbd' }} />
+          </IconButton>
+          <IconButton size='small' onClick={() => handleDelete(dept)}>
+            <DeleteIcon fontSize='small' style={{ color: '#bdbdbd' }} />
+          </IconButton>
+        </span>
+      );
+
       if (dept.children && dept.children.length > 0) {
         return (
           <Accordion
@@ -265,26 +285,16 @@ export default function DepartmentManagement() {
                 >
                   {icon}
                   <span style={nameStyle}>{dept.orgName}</span>
+                  {dept.orgType === 'TEAM' && actionIcons}
                 </Typography>
               </Box>
             </AccordionSummary>
             <AccordionDetails>
-              <Stack direction='row' spacing={1} style={{ marginLeft: 8 }}>
-                {dept.orgType !== 'TEAM' && (
-                  <IconButton
-                    size='small'
-                    onClick={() => handleAdd(dept.orgId)}
-                  >
-                    <AddIcon fontSize='small' style={{ color: '#bdbdbd' }} />
-                  </IconButton>
-                )}
-                <IconButton size='small' onClick={() => handleEdit(dept)}>
-                  <EditIcon fontSize='small' style={{ color: '#bdbdbd' }} />
-                </IconButton>
-                <IconButton size='small' onClick={() => handleDelete(dept)}>
-                  <DeleteIcon fontSize='small' style={{ color: '#bdbdbd' }} />
-                </IconButton>
-              </Stack>
+              {dept.orgType !== 'TEAM' && (
+                <div style={{ marginBottom: 8, marginLeft: 24 }}>
+                  {actionIcons}
+                </div>
+              )}
               {renderAccordion(dept.children, level + 1)}
             </AccordionDetails>
           </Accordion>
@@ -306,23 +316,8 @@ export default function DepartmentManagement() {
             >
               {icon}
               <span style={nameStyle}>{dept.orgName}</span>
+              {actionIcons}
             </Typography>
-            <Stack direction='row' spacing={1} style={{ marginLeft: 8 }}>
-              {dept.orgType !== 'TEAM' && (
-                <IconButton
-                  size='small'
-                  onClick={() => handleAdd(dept.orgId, dept.orgType)}
-                >
-                  <AddIcon fontSize='small' style={{ color: '#bdbdbd' }} />
-                </IconButton>
-              )}
-              <IconButton size='small' onClick={() => handleEdit(dept)}>
-                <EditIcon fontSize='small' style={{ color: '#bdbdbd' }} />
-              </IconButton>
-              <IconButton size='small' onClick={() => handleDelete(dept)}>
-                <DeleteIcon fontSize='small' style={{ color: '#bdbdbd' }} />
-              </IconButton>
-            </Stack>
           </Box>
         );
       }
