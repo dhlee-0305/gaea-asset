@@ -14,6 +14,7 @@ import AnnouncementIcon from '@mui/icons-material/Announcement';
 import { Link, useLocation } from 'react-router-dom';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
+import { getToken, parseJwt } from '@/common/utils/auth';
 
 const menuItems = [
   {
@@ -43,9 +44,29 @@ export default function Sidebar() {
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const location = useLocation();
 
+  // 사용자 정보 추출
+  const token = getToken();
+  const userInfo = token ? parseJwt(token) : null;
+
+  // 메뉴 동적 구성
+  let dynamicMenuItems = menuItems.map((menu) => {
+    if (menu.key === 'device-management') {
+      // roleCode가 '01' 또는 '02'인 경우에만 장비이력관리 메뉴 추가
+      const children = [...menu.children];
+      if (userInfo && (userInfo.roleCode === '01' || userInfo.roleCode === '02')) {
+        if (!children.some((c) => c.text === '장비이력관리')) {
+          children.push({ text: '장비이력관리', to: '/device-management/device-history' });
+        }
+      }
+      return { ...menu, children };
+    }
+    return menu;
+  });
+
+
   useEffect(() => {
     // 현재 경로에 해당하는 메뉴를 열기
-    const currentMenu = menuItems.find(
+    const currentMenu = dynamicMenuItems.find(
       (menu) => location.pathname.indexOf(menu.key) > 0,
     );
     if (currentMenu) {
@@ -75,7 +96,7 @@ export default function Sidebar() {
       <Box sx={{ overflow: 'auto' }}>
         <Toolbar />
         <List>
-          {menuItems.map((menu) => (
+          {dynamicMenuItems.map((menu) => (
             <Box key={menu.key}>
               <ListItemButton
                 sx={{

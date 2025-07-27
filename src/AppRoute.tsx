@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 import NoticeForm from './pages/notice/NoticeForm';
 import DeviceDetail from './pages/device/DeviceDetail';
 import DeviceForm from './pages/device/DeviceForm';
+import DeviceHistoryList from './pages/device/DeviceHistoryList';
 import UserList from './pages/user/UserList';
 import UserDetail from './pages/user/UserDetail';
 import UserForm from './pages/user/UserForm';
@@ -50,6 +51,10 @@ export default function AppRoute() {
           <Route
             path='/device-management/devices/:deviceNum/update'
             element={<DeviceForm />}
+          />
+          <Route
+            path='/device-management/device-history'
+            element={<DeviceHistoryList />}
           />
           <Route path='/notice/notices' element={<NoticeList />} />
           <Route path='/notice/notices/:noticeNum' element={<NoticeDetail />} />
