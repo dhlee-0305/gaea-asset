@@ -124,10 +124,22 @@ export default function DeviceDetail() {
               <Typography>{deviceData?.userName}</Typography>
             </Grid>
             <Grid size={4}>
+              <Typography color='textSecondary'>장비 상태</Typography>
+            </Grid>
+            <Grid size={8}>
+              <Typography>{deviceData?.deviceStatus}</Typography>
+            </Grid>
+            <Grid size={4}>
               <Typography color='textSecondary'>장비유형</Typography>
             </Grid>
             <Grid size={8}>
               <Typography>{deviceData?.deviceType}</Typography>
+            </Grid>
+            <Grid size={4}>
+              <Typography color='textSecondary'>용도구분</Typography>
+            </Grid>
+            <Grid size={8}>
+              <Typography>{deviceData?.usageDivision}</Typography>
             </Grid>
             <Grid size={4}>
               <Typography color='textSecondary'>사용용도</Typography>
@@ -140,6 +152,12 @@ export default function DeviceDetail() {
             </Grid>
             <Grid size={8}>
               <Typography>{deviceData?.oldDeviceId}</Typography>
+            </Grid>
+            <Grid size={4}>
+              <Typography color='textSecondary'>제조사</Typography>
+            </Grid>
+            <Grid size={8}>
+              <Typography>{deviceData?.manufacturerCode}</Typography>
             </Grid>
             <Grid size={4}>
               <Typography color='textSecondary'>모델명</Typography>
@@ -207,12 +225,7 @@ export default function DeviceDetail() {
             <Grid size={8}>
               <Typography>{deviceData?.remarks}</Typography>
             </Grid>
-            <Grid size={4}>
-              <Typography color='textSecondary'>장비 상태</Typography>
-            </Grid>
-            <Grid size={8}>
-              <Typography>{deviceData?.deviceStatus}</Typography>
-            </Grid>
+
             <Grid size={4}>
               <Typography color='textSecondary'>결재 상태</Typography>
             </Grid>

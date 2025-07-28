@@ -49,9 +49,11 @@ export default function UserListPopup({
   // 데이터 조회
   const fetchData = async (value: string) => {
     try {
-      const response = await api.get('/userList', {
+      const response = await api.get('/users', {
         params: {
           searchKeyword: value,
+          currentPage: 1,
+          pageSize: 10000,
         },
       });
 

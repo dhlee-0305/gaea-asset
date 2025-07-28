@@ -12,6 +12,8 @@ export interface DeviceData {
   orgName: string;
   /* 기존 장비 관리 번호 */
   oldDeviceId: string;
+  /* 용도구분 코드 */
+  usageDivisionCode: string;
   /* 용도구분 */
   usageDivision: string;
   /* 사용용도 */

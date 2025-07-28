@@ -1,12 +1,16 @@
 import {
   Box,
   Button,
+  FormControl,
   FormControlLabel,
   FormLabel,
   Grid,
+  InputLabel,
+  MenuItem,
   Paper,
   Radio,
   RadioGroup,
+  Select,
   TextField,
 } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -17,7 +21,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 
 import api from '@/common/utils/api';
-import { MESSAGE } from '@/common/constants';
+import { MESSAGE, CODE } from '@/common/constants';
 import PageHeader from '@/components/common/PageHeader';
 import { showAlert, showConfirm } from '@/store/dialogAction';
 import type { AppDispatch } from '@/store';
@@ -25,15 +29,6 @@ import type { DeviceData } from '@/common/types/device';
 import type { UserData } from '@/common/types/user';
 import { getUserRoleCode } from '@/common/utils/auth';
 import UserSelectPopup from '@/components/user/UserSelectPopup';
-
-const CODE = {
-  deviceTypes: [
-    { code: 'PC', codeName: '컴퓨터' },
-    { code: 'MO', codeName: '모니터' },
-    { code: 'HP', codeName: '핸드폰' },
-    { code: 'ETC', codeName: '기타' },
-  ],
-};
 
 const userRoleCode = getUserRoleCode();
 
@@ -56,9 +51,10 @@ export default function DeviceForm() {
   } = useForm<DeviceData>({
     defaultValues: {
       deviceTypeCode: 'PC',
+      usageDivisionCode: '01',
       userName: '',
       modelName: '',
-      deviceStatus: '',
+      deviceStatusCode: '01',
       manufactureDate: '',
       purchaseDate: null,
       returnDate: null,
@@ -75,10 +71,10 @@ export default function DeviceForm() {
           if (response.status === 200 && response.data.resultCode === '0000') {
             reset({
               ...response.data.data,
-              purchaseDate: response.data.data.purchaseDate
+              purchaseDate: response.data.data?.purchaseDate
                 ? dayjs(response.data.data.purchaseDate)
                 : null,
-              returnDate: response.data.data.returnDate
+              returnDate: response.data.data?.returnDate
                 ? dayjs(response.data.data.returnDate)
                 : null,
             });
@@ -223,23 +219,78 @@ export default function DeviceForm() {
               </Grid>
               <Grid size={12}>
                 <Controller
-                  name='deviceTypeCode'
+                  name='deviceStatusCode'
                   control={control}
-                  rules={{ required: '장비유형은 필수입니다.' }}
                   render={({ field }) => (
                     <>
-                      <FormLabel id='device-type-label'>장비유형</FormLabel>
+                      <FormControl sx={{ minWidth: 250 }} size='small'>
+                        <InputLabel id='device-status-label'>
+                          장비상태
+                        </InputLabel>
+                        <Select
+                          labelId='device-status-label'
+                          id='device-status'
+                          label='장비상태'
+                          {...field}
+                        >
+                          {CODE.deviceStatus.map((status) => (
+                            <MenuItem key={status.code} value={status.code}>
+                              {status.codeName}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </>
+                  )}
+                />
+              </Grid>
+              <Grid size={12}>
+                <Controller
+                  name='deviceTypeCode'
+                  control={control}
+                  render={({ field }) => (
+                    <>
+                      <FormControl sx={{ minWidth: 250 }} size='small'>
+                        <InputLabel id='device-type-label'>장비유형</InputLabel>
+                        <Select
+                          labelId='device-type-label'
+                          id='device-type'
+                          label='장비유형'
+                          {...field}
+                        >
+                          {CODE.deviceType.map((deviceType) => (
+                            <MenuItem
+                              key={deviceType.code}
+                              value={deviceType.code}
+                            >
+                              {deviceType.codeName}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </>
+                  )}
+                />
+              </Grid>
+
+              <Grid size={12}>
+                <Controller
+                  name='usageDivisionCode'
+                  control={control}
+                  render={({ field }) => (
+                    <>
+                      <FormLabel id='usage-division-label'>용도구분</FormLabel>
                       <RadioGroup
                         {...field}
                         row
-                        aria-labelledby='device-type-label'
+                        aria-labelledby='usage-division-label'
                       >
-                        {CODE.deviceTypes.map((deviceType) => (
+                        {CODE.usageDivision.map((usageDivision) => (
                           <FormControlLabel
-                            key={deviceType.code}
-                            value={deviceType.code}
+                            key={usageDivision.code}
+                            value={usageDivision.code}
                             control={<Radio />}
-                            label={deviceType.codeName}
+                            label={usageDivision.codeName}
                           />
                         ))}
                       </RadioGroup>
@@ -247,6 +298,7 @@ export default function DeviceForm() {
                   )}
                 />
               </Grid>
+
               <Grid size={12}>
                 <TextField
                   label='사용용도'
@@ -263,6 +315,20 @@ export default function DeviceForm() {
               </Grid>
               <Grid size={12}>
                 <TextField
+                  label='사용/보관 위치'
+                  fullWidth
+                  size='small'
+                  variant='outlined'
+                  slotProps={{
+                    inputLabel: {
+                      shrink: true,
+                    },
+                  }}
+                  {...register('archiveLocation')}
+                />
+              </Grid>
+              <Grid size={12}>
+                <TextField
                   label='기존 장비관리번호'
                   fullWidth
                   size='small'
@@ -275,7 +341,20 @@ export default function DeviceForm() {
                   {...register('oldDeviceId')}
                 />
               </Grid>
-
+              <Grid size={12}>
+                <TextField
+                  label='제조사'
+                  fullWidth
+                  size='small'
+                  variant='outlined'
+                  slotProps={{
+                    inputLabel: {
+                      shrink: true,
+                    },
+                  }}
+                  {...register('manufacturerCode')}
+                />
+              </Grid>
               <Grid size={12}>
                 <TextField
                   label='모델명'
@@ -372,6 +451,20 @@ export default function DeviceForm() {
                     },
                   }}
                   {...register('screenSize')}
+                />
+              </Grid>
+              <Grid size={12}>
+                <TextField
+                  label='GPU'
+                  fullWidth
+                  size='small'
+                  variant='outlined'
+                  slotProps={{
+                    inputLabel: {
+                      shrink: true,
+                    },
+                  }}
+                  {...register('gpuSpec')}
                 />
               </Grid>
               <Grid size={12}>

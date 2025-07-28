@@ -14,6 +14,7 @@ import AnnouncementIcon from '@mui/icons-material/Announcement';
 import { Link, useLocation } from 'react-router-dom';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
+
 import { getToken, parseJwt } from '@/common/utils/auth';
 
 const menuItems = [
@@ -49,13 +50,19 @@ export default function Sidebar() {
   const userInfo = token ? parseJwt(token) : null;
 
   // 메뉴 동적 구성
-  let dynamicMenuItems = menuItems.map((menu) => {
+  const dynamicMenuItems = menuItems.map((menu) => {
     if (menu.key === 'device-management') {
       // roleCode가 '01' 또는 '02'인 경우에만 장비이력관리 메뉴 추가
       const children = [...menu.children];
-      if (userInfo && (userInfo.roleCode === '01' || userInfo.roleCode === '02')) {
+      if (
+        userInfo &&
+        (userInfo.roleCode === '01' || userInfo.roleCode === '02')
+      ) {
         if (!children.some((c) => c.text === '장비이력관리')) {
-          children.push({ text: '장비이력관리', to: '/device-management/device-history' });
+          children.push({
+            text: '장비이력관리',
+            to: '/device-management/device-history',
+          });
         }
       }
       return { ...menu, children };
@@ -63,11 +70,10 @@ export default function Sidebar() {
     return menu;
   });
 
-
   useEffect(() => {
     // 현재 경로에 해당하는 메뉴를 열기
     const currentMenu = dynamicMenuItems.find(
-      (menu) => location.pathname.indexOf(menu.key) > 0,
+      (menu) => location.pathname.indexOf(menu.key) > -1,
     );
     if (currentMenu) {
       setOpenMenu(currentMenu.key);
@@ -112,7 +118,7 @@ export default function Sidebar() {
               <Collapse in={openMenu === menu.key} timeout='auto'>
                 <List component='div' disablePadding>
                   {menu.children?.map((child) => {
-                    const isSelected = location.pathname === child.to;
+                    const isSelected = location.pathname.indexOf(child.to) > -1;
                     return (
                       <ListItemButton
                         key={child.to}
