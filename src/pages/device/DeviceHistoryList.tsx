@@ -145,10 +145,10 @@ export default function DeviceHistoryList() {
                 >
                   <TableCell align='center'>{historyData.historyNum}</TableCell>
                   <TableCell align='center'>{historyData.deviceNum ?? ''}</TableCell>
-                  <TableCell align='center'>{''}</TableCell> {/* deviceType 없음 */}
-                  <TableCell align='center'>{''}</TableCell> {/* userName 없음 */}
-                  <TableCell align='center'>{historyData.deviceStatusCode ?? ''}</TableCell>
-                  <TableCell align='center'>{historyData.approvalStatusCode ?? ''}</TableCell>
+                  <TableCell align='center'>{historyData.deviceType ?? ''}</TableCell> {/* deviceType 없음 */}
+                  <TableCell align='center'>{historyData.userName ?? ''}</TableCell> {/* userName 없음 */}
+                  <TableCell align='center'>{historyData.deviceStatus ?? ''}</TableCell>
+                  <TableCell align='center'>{historyData.approvalStatus ?? ''}</TableCell>
                   <TableCell align='center'>{historyData.createDatetime ? historyData.createDatetime.split(' ')[0].replace(/-/g, '.') : ''}</TableCell>
                 </TableRow>
               ))
