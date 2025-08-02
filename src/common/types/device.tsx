@@ -85,3 +85,29 @@ export const deviceLabels: Partial<Record<keyof DeviceData, string>> = {
   deviceStatus: '장비 상태',
   changeReason: '변경 사유',
 };
+
+// 장비 이력 데이터
+export interface DeviceHistoryData {
+  /* 이력 순번 */
+  historyNum: number;
+  /* 장비 번호 */
+  deviceNum: string;
+  /* 장비 유형 */
+  deviceType: string;
+  /* 현재 담당자 */
+  userName: string;
+  /* 장비 상태 */
+  deviceStatus: string;
+  /* 결재 상태 */
+  approvalStatus: string;
+  /* 변경일시 */
+  createDatetime: string;
+  /* 모델명 */
+  modelName?: string;
+  /* 변경 내용 */
+  changeContents?: string;
+  /* 사유 */
+  reason?: string;
+  /* 수정일 */
+  modifyDate?: string;
+}

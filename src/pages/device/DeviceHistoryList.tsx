@@ -21,6 +21,7 @@ import { useDispatch } from 'react-redux';
 import api from '@/common/utils/api';
 import type { DeviceHistoryData } from '@/common/types/device';
 import PageHeader from '@/components/common/PageHeader';
+import DeviceHistoryDetailPopup from '@/components/device/DeviceHistoryDetailPopup';
 import { showAlert } from '@/store/dialogAction';
 import { MESSAGE } from '@/common/constants';
 import type { AppDispatch } from '@/store';
@@ -35,6 +36,8 @@ export default function DeviceHistoryList() {
     pageSize: 10,
     currentPage: 1,
   });
+  const [selectedHistoryData, setSelectedHistoryData] = useState<DeviceHistoryData | null>(null);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -84,6 +87,18 @@ export default function DeviceHistoryList() {
   const handleChangePage = (_: React.ChangeEvent<unknown>, page: number) => {
     if (page === pageInfo.currentPage) return;
     fetchData(page);
+  };
+
+  // 장비번호 클릭 핸들러
+  const handleDeviceNumClick = (historyData: DeviceHistoryData) => {
+    setSelectedHistoryData(historyData);
+    setIsPopupOpen(true);
+  };
+
+  // 팝업 닫기 핸들러
+  const handleClosePopup = () => {
+    setIsPopupOpen(false);
+    setSelectedHistoryData(null);
   };
 
   return (
@@ -144,9 +159,22 @@ export default function DeviceHistoryList() {
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
                   <TableCell align='center'>{historyData.historyNum}</TableCell>
-                  <TableCell align='center'>{historyData.deviceNum ?? ''}</TableCell>
-                  <TableCell align='center'>{historyData.deviceType ?? ''}</TableCell> {/* deviceType 없음 */}
-                  <TableCell align='center'>{historyData.userName ?? ''}</TableCell> {/* userName 없음 */}
+                  <TableCell 
+                    align='center'
+                    sx={{ 
+                      cursor: 'pointer',
+                      color: 'primary.main',
+                      textDecoration: 'underline',
+                      '&:hover': {
+                        color: 'primary.dark',
+                      }
+                    }}
+                    onClick={() => handleDeviceNumClick(historyData)}
+                  >
+                    {historyData.deviceNum ?? ''}
+                  </TableCell>
+                  <TableCell align='center'>{historyData.deviceType ?? ''}</TableCell>
+                  <TableCell align='center'>{historyData.userName ?? ''}</TableCell>
                   <TableCell align='center'>{historyData.deviceStatus ?? ''}</TableCell>
                   <TableCell align='center'>{historyData.approvalStatus ?? ''}</TableCell>
                   <TableCell align='center'>{historyData.createDatetime ? historyData.createDatetime.split(' ')[0].replace(/-/g, '.') : ''}</TableCell>
@@ -172,6 +200,13 @@ export default function DeviceHistoryList() {
           />
         )}
       </Box>
+
+      {/* 상세 팝업 */}
+      <DeviceHistoryDetailPopup
+        open={isPopupOpen}
+        onClose={handleClosePopup}
+        historyData={selectedHistoryData}
+      />
     </>
   );
 } 
