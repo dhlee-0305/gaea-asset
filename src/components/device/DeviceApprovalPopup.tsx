@@ -22,7 +22,6 @@ import type { AppDispatch } from '@/store';
 import { showAlert, showConfirm } from '@/store/dialogAction';
 import { MESSAGE } from '@/common/constants';
 import api from '@/common/utils/api';
-import { getUserRoleCode } from '@/common/utils/auth';
 
 export default function DeviceApprovalPopup({
   isOpen,
@@ -37,8 +36,6 @@ export default function DeviceApprovalPopup({
   const { deviceNum } = useParams();
   const [deviceApprovaldata, setDeviceApprovaldata] =
     useState<DeviceData | null>(null);
-
-  const userRoleCode = getUserRoleCode();
 
   useEffect(() => {
     if (isOpen) {
@@ -91,11 +88,7 @@ export default function DeviceApprovalPopup({
           ? `/devices/${deviceNum}/approval`
           : `/devices/${deviceNum}/rejection`;
 
-      const response = await api.post(url, deviceApprovaldata, {
-        params: {
-          userRoleCode,
-        },
-      });
+      const response = await api.post(url, deviceApprovaldata);
 
       if (response.status === 200 && response.data.resultCode === '0000') {
         dispatch(

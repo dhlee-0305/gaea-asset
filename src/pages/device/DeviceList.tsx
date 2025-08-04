@@ -26,6 +26,7 @@ import { showAlert } from '@/store/dialogAction';
 import { MESSAGE } from '@/common/constants';
 import type { AppDispatch } from '@/store';
 import type { PageInfo } from '@/common/types/common';
+import { isAdminRole } from '@/common/utils/auth';
 
 export default function DeviceList() {
   const dispatch = useDispatch<AppDispatch>();
@@ -37,20 +38,13 @@ export default function DeviceList() {
     pageSize: 10,
     currentPage: 1,
   });
+  const isAdmin = isAdminRole();
 
   const excelButtonStyle = {
     fontSize: '11px',
     minWidth: 'auto',
     padding: '2px 8px',
   };
-  const buttons = [
-    <Button size='small' sx={excelButtonStyle}>
-      액셀 다운로드
-    </Button>,
-    <Button size='small' sx={excelButtonStyle}>
-      액셀 업로드
-    </Button>,
-  ];
 
   useEffect(() => {
     fetchData();
@@ -145,7 +139,16 @@ export default function DeviceList() {
       </Box>
       {/* 액셀 영역 */}
       <Box display='flex' justifyContent='flex-end' sx={{ mt: 0.1, mb: 2.5 }}>
-        <ButtonGroup>{buttons}</ButtonGroup>
+        <ButtonGroup>
+          <Button size='small' sx={excelButtonStyle}>
+            액셀 다운로드
+          </Button>
+          {isAdmin && (
+            <Button size='small' sx={excelButtonStyle}>
+              액셀 업로드
+            </Button>
+          )}
+        </ButtonGroup>
       </Box>
       {/* 목록 영역 */}
       <TableContainer component={Paper}>
@@ -212,9 +215,11 @@ export default function DeviceList() {
         )}
       </Box>
       <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
-        <Button variant='contained' onClick={handleMoveCreate}>
-          등록
-        </Button>
+        {isAdmin && (
+          <Button variant='contained' onClick={handleMoveCreate}>
+            등록
+          </Button>
+        )}
       </Box>
     </>
   );

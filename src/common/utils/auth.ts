@@ -1,3 +1,5 @@
+import type { UserData } from '../types/user';
+
 const TOKEN_KEY = 'token';
 
 export const saveToken = (token: string) => {
@@ -46,10 +48,16 @@ export function parseJwt(token: string) {
   }
 }
 
-export const getUserRoleCode = (): string | null => {
+export const getUserInfo = (): UserData | null => {
   const token = getToken();
   if (!token) return null;
 
-  const payload = parseJwt(token);
-  return payload?.roleCode ?? null;
+  return parseJwt(token) ?? null;
+};
+
+export const isAdminRole = (): boolean => {
+  const roleCode = getUserInfo()?.roleCode;
+  if (!roleCode) return false;
+
+  return roleCode === '02' || roleCode === '03';
 };

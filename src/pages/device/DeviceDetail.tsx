@@ -11,7 +11,7 @@ import { showAlert, showConfirm } from '@/store/dialogAction';
 import { MESSAGE } from '@/common/constants';
 import type { DeviceData } from '@/common/types/device';
 import DeviceApprovalPopup from '@/components/device/DeviceApprovalPopup';
-import { getUserRoleCode } from '@/common/utils/auth';
+import { getUserInfo, isAdminRole } from '@/common/utils/auth';
 
 export default function DeviceDetail() {
   const dispatch = useDispatch<AppDispatch>();
@@ -20,7 +20,9 @@ export default function DeviceDetail() {
   const [deviceData, setDeviceData] = useState<DeviceData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const userRoleCode = getUserRoleCode();
+  const userInfo = getUserInfo();
+  const userRoleCode = userInfo?.roleCode;
+  const isAdmin = isAdminRole();
 
   const isUpdatable = !(
     deviceData?.approvalStatusCode === 'A1' ||
@@ -92,6 +94,13 @@ export default function DeviceDetail() {
           }),
         );
         navigate('/device-management/devices');
+      } else {
+        await dispatch(
+          showAlert({
+            title: 'Error',
+            contents: response.data.description,
+          }),
+        );
       }
     } catch (error) {
       console.error(error);
@@ -248,23 +257,27 @@ export default function DeviceDetail() {
             <Button variant='outlined' onClick={handleMoveList}>
               목록
             </Button>
-            <Button
-              variant='contained'
-              color='primary'
-              onClick={handleMoveUpdate}
-              disabled={!isUpdatable}
-            >
-              수정
-            </Button>
-            <Button
-              variant='contained'
-              color='error'
-              onClick={handleDelete}
-              loading={isLoading}
-              loadingPosition='start'
-            >
-              삭제
-            </Button>
+            {(isAdmin || deviceData?.empNum === userInfo?.empNum) && (
+              <Button
+                variant='contained'
+                color='primary'
+                onClick={handleMoveUpdate}
+                disabled={!isUpdatable}
+              >
+                수정
+              </Button>
+            )}
+            {isAdmin && (
+              <Button
+                variant='contained'
+                color='error'
+                onClick={handleDelete}
+                loading={isLoading}
+                loadingPosition='start'
+              >
+                삭제
+              </Button>
+            )}
           </Box>
           {deviceData && (
             <DeviceApprovalPopup

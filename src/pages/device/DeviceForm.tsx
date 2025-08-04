@@ -27,10 +27,7 @@ import { showAlert, showConfirm } from '@/store/dialogAction';
 import type { AppDispatch } from '@/store';
 import type { DeviceData } from '@/common/types/device';
 import type { UserData } from '@/common/types/user';
-import { getUserRoleCode } from '@/common/utils/auth';
 import UserSelectPopup from '@/components/user/UserSelectPopup';
-
-const userRoleCode = getUserRoleCode();
 
 export default function DeviceForm() {
   const dispatch = useDispatch<AppDispatch>();
@@ -116,9 +113,7 @@ export default function DeviceForm() {
       const method = isUpdate ? 'put' : 'post';
 
       setIsLoading(true);
-      const response = await api[method](url, payload, {
-        params: { userRoleCode },
-      });
+      const response = await api[method](url, payload);
       setIsLoading(false);
 
       if (response.status === 200 && response.data.resultCode === '0000') {
@@ -130,6 +125,13 @@ export default function DeviceForm() {
           }),
         );
         handleCancel();
+      } else {
+        await dispatch(
+          showAlert({
+            title: 'Error',
+            contents: response.data.description,
+          }),
+        );
       }
     } catch (error) {
       console.error(error);
