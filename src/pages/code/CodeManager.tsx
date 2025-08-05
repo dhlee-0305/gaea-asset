@@ -130,6 +130,10 @@ export default function CodeManager() {
     );
   };
 
+  const handleRemove = (id: number) => {
+    setCodes((prev) => prev.filter((code) => code.id !== id));
+  };
+
   const handleDelete = async (category: string, code: string) => {
     //setCodes((prev) => prev.filter((code) => code.id !== id));
     const confirmed = await dispatch(
@@ -323,7 +327,7 @@ export default function CodeManager() {
                           등록
                         </Button>
                         <IconButton
-                          onClick={() => handleDelete(code.category, code.code)}
+                          onClick={() => handleRemove(code.id)}
                           size='small'
                           color='error'
                         >
