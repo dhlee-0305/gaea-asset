@@ -11,6 +11,7 @@ import {
 import ComputerIcon from '@mui/icons-material/Computer';
 import PeopleIcon from '@mui/icons-material/People';
 import AnnouncementIcon from '@mui/icons-material/Announcement';
+import Code from '@mui/icons-material/Code';
 import { Link, useLocation } from 'react-router-dom';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
@@ -38,6 +39,12 @@ const menuItems = [
     text: '공지사항',
     icon: <AnnouncementIcon />,
     children: [{ text: '공지사항', to: '/notice/notices' }],
+  },
+  {
+    key: 'code-management',
+    text: '공통코드',
+    icon: <Code />,
+    children: [{ text: '공통코드', to: '/code-management/codes' }],
   },
 ];
 

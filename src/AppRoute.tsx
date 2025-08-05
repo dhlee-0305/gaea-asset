@@ -16,6 +16,7 @@ import NoticeList from '@/pages/notice/NoticeList';
 import LoginPage from '@/pages/login/LoginPage';
 import ChangePasswordPage from '@/pages/login/ChangePasswordPage';
 import DepartmentManagement from '@/pages/department/DepartmentManagement';
+import CodeManager from '@/pages/code/CodeManager';
 
 export default function AppRoute() {
   return (
@@ -67,6 +68,7 @@ export default function AppRoute() {
             path='/notice/notices/delete:noticeNum'
             element={<NoticeDetail />}
           />
+          <Route path='/code-management/codes' element={<CodeManager />} />
         </Route>
       </Routes>
     </div>
