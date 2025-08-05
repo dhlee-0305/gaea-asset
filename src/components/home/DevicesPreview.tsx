@@ -78,20 +78,29 @@ export default function DevicesPreview() {
           </TableHead>
           <TableBody>
             {devices.length > 0 ? (
-              devices.map((device) => (
-                <TableRow
-                  key={device.deviceNum}
-                  hover
-                  onClick={() => handleRowClick(String(device.deviceNum))}
-                  sx={{ cursor: 'pointer' }}
-                >
-                  <TableCell align='center'>{device.deviceNum}</TableCell>
-                  <TableCell align='center'>{device.userName}</TableCell>
-                  <TableCell align='center'>{device.deviceStatus}</TableCell>
-                  <TableCell align='center'>{device.deviceType}</TableCell>
-                  <TableCell align='center'>{device.approvalStatus}</TableCell>
-                </TableRow>
-              ))
+              <>
+                {devices.map((device) => (
+                  <TableRow
+                    key={device.deviceNum}
+                    hover
+                    onClick={() => handleRowClick(String(device.deviceNum))}
+                    sx={{ cursor: 'pointer', height: 35 }}
+                  >
+                    <TableCell align='center'>{device.deviceNum}</TableCell>
+                    <TableCell align='center'>{device.userName}</TableCell>
+                    <TableCell align='center'>{device.deviceStatus}</TableCell>
+                    <TableCell align='center'>{device.deviceType}</TableCell>
+                    <TableCell align='center'>
+                      {device.approvalStatus}
+                    </TableCell>
+                  </TableRow>
+                ))}
+                {[...Array(5 - devices.length)].map((_, index) => (
+                  <TableRow key={`empty-${index}`} sx={{ height: 35 }}>
+                    <TableCell colSpan={5} />
+                  </TableRow>
+                ))}
+              </>
             ) : (
               <TableRow>
                 <TableCell align='center' colSpan={5}>

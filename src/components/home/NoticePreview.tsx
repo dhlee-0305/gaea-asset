@@ -64,12 +64,17 @@ export default function NoticePreview() {
               <TableRow
                 key={notice.noticeNum}
                 hover
-                sx={{ cursor: 'pointer' }}
+                sx={{ cursor: 'pointer', height: 35 }}
                 onClick={() => handleClickRow(Number(notice.noticeNum))}
               >
                 <TableCell align='center'>{notice.title}</TableCell>
                 <TableCell align='center'>{notice.createUser}</TableCell>
                 <TableCell align='center'>{notice.createDateTime}</TableCell>
+              </TableRow>
+            ))}
+            {[...Array(5 - noticeList.length)].map((_, index) => (
+              <TableRow key={`empty-${index}`} sx={{ height: 35 }}>
+                <TableCell colSpan={3} />
               </TableRow>
             ))}
             {noticeList.length === 0 && (

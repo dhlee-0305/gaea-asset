@@ -48,7 +48,7 @@ export default function ApprovalStatusPreview() {
   };
 
   const handleViewAll = () => {
-    navigate('/device-management/devices');
+    navigate('/device-management/device-history');
   };
 
   const handleClickRow = (deviceNum: string) => {
@@ -82,12 +82,18 @@ export default function ApprovalStatusPreview() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {approvalList.length > 0 ? (
-              approvalList.map((item) => (
+            {approvalList.length === 0 ? (
+              <TableRow sx={{ height: 35 }}>
+                <TableCell colSpan={4} align='center'>
+                  현재 결재 중인 항목이 없습니다.
+                </TableCell>
+              </TableRow>
+            ) : (
+              approvalList.slice(0, 5).map((item) => (
                 <TableRow
                   key={item.historyNum}
                   hover
-                  sx={{ cursor: 'pointer' }}
+                  sx={{ cursor: 'pointer', height: 35 }}
                   onClick={() => handleClickRow(item.deviceNum)}
                 >
                   <TableCell align='center'>{item.deviceNum}</TableCell>
@@ -100,13 +106,12 @@ export default function ApprovalStatusPreview() {
                   </TableCell>
                 </TableRow>
               ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={4} align='center'>
-                  현재 결재 중인 항목이 없습니다.
-                </TableCell>
-              </TableRow>
             )}
+            {[...Array(5 - approvalList.length)].map((_, index) => (
+              <TableRow key={`empty-${index}`} sx={{ height: 35 }}>
+                <TableCell colSpan={4} />
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </TableContainer>
