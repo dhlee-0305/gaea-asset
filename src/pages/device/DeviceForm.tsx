@@ -170,6 +170,28 @@ export default function DeviceForm() {
     setValue('empNum', user.empNum);
   };
 
+  // Select 코드명 데이터 세팅
+  const handleSetChangeData = (key: keyof DeviceData, value: string) => {
+    setValue(key, value);
+
+    // 코드명 세팅
+    if (key === 'deviceTypeCode') {
+      const name =
+        CODE.deviceType.find((opt) => opt.code === value)?.codeName || '';
+      setValue('deviceType', name);
+    }
+    if (key === 'deviceStatusCode') {
+      const name =
+        CODE.deviceStatus.find((opt) => opt.code === value)?.codeName || '';
+      setValue('deviceStatus', name);
+    }
+    if (key === 'usageDivisionCode') {
+      const name =
+        CODE.usageDivision.find((opt) => opt.code === value)?.codeName || '';
+      setValue('usageDivision', name);
+    }
+  };
+
   return (
     <>
       <PageHeader contents={isUpdate ? '장비 수정' : '장비 등록'} />
@@ -233,7 +255,14 @@ export default function DeviceForm() {
                           labelId='device-status-label'
                           id='device-status'
                           label='장비상태'
-                          {...field}
+                          value={field.value}
+                          onChange={(e) => {
+                            field.onChange(e.target.value);
+                            handleSetChangeData(
+                              'deviceStatusCode',
+                              e.target.value,
+                            );
+                          }}
                         >
                           {CODE.deviceStatus.map((status) => (
                             <MenuItem key={status.code} value={status.code}>
@@ -258,7 +287,14 @@ export default function DeviceForm() {
                           labelId='device-type-label'
                           id='device-type'
                           label='장비유형'
-                          {...field}
+                          value={field.value}
+                          onChange={(e) => {
+                            field.onChange(e.target.value);
+                            handleSetChangeData(
+                              'deviceTypeCode',
+                              e.target.value,
+                            );
+                          }}
                         >
                           {CODE.deviceType.map((deviceType) => (
                             <MenuItem
@@ -283,7 +319,14 @@ export default function DeviceForm() {
                     <>
                       <FormLabel id='usage-division-label'>용도구분</FormLabel>
                       <RadioGroup
-                        {...field}
+                        value={field.value}
+                        onChange={(e) => {
+                          field.onChange(e.target.value);
+                          handleSetChangeData(
+                            'usageDivisionCode',
+                            e.target.value,
+                          );
+                        }}
                         row
                         aria-labelledby='usage-division-label'
                       >

@@ -69,10 +69,14 @@ export interface DeviceData {
 }
 
 export const deviceLabels: Partial<Record<keyof DeviceData, string>> = {
-  userName: '담당자',
-  usagePurpose: '사용용도',
-  oldDeviceId: '기존 장비관리번호',
+  userName: '장비담당자',
+  deviceStatus: '장비 상태',
   deviceType: '장비 유형',
+  usageDivision: '용도 구분',
+  usagePurpose: '사용용도',
+  archiveLocation: '사용/보관 위치',
+  oldDeviceId: '기존 장비관리번호',
+  manufacturerCode: '제조사',
   modelName: '모델명',
   manufactureDate: '제조년도',
   cpuSpec: 'CPU',
@@ -80,9 +84,10 @@ export const deviceLabels: Partial<Record<keyof DeviceData, string>> = {
   storageInfo: 'SSD/HDD',
   operatingSystem: 'OS',
   screenSize: '인치',
-  purchaseDate: '구매일자',
-  returnDate: '반납일자',
-  deviceStatus: '장비 상태',
+  gpuSpec: 'GPU',
+  purchaseDate: '구매 일자',
+  returnDate: '반납 일자',
+  remarks: '비고',
   changeReason: '변경 사유',
 };
 
