@@ -101,6 +101,35 @@ export default function DeviceList() {
     navigate('/device-management/devices/create');
   };
 
+  const excelDownload = async (): Promise<void> => {
+    try {
+      const response = await api.get('/devices/download/excel', {
+        responseType: 'blob',
+      });
+      const contentDisposition = response.headers['content-disposition'];
+      const match = contentDisposition?.match(/filename="?([^"]+)"?/);
+      const fileName = match ? match[1] : 'DeviceList.xlsx';
+
+      const blob = new Blob([response.data]);
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+
+      link.href = url;
+      link.setAttribute('download', decodeURIComponent(fileName));
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      console.error(error);
+      dispatch(
+        showAlert({
+          title: 'Error',
+          contents: MESSAGE.error,
+        }),
+      );
+    }
+  };
+
   return (
     <>
       <PageHeader contents='장비 목록' />
@@ -140,7 +169,7 @@ export default function DeviceList() {
       {/* 액셀 영역 */}
       <Box display='flex' justifyContent='flex-end' sx={{ mt: 0.1, mb: 2.5 }}>
         <ButtonGroup>
-          <Button size='small' sx={excelButtonStyle}>
+          <Button size='small' sx={excelButtonStyle} onClick={excelDownload}>
             액셀 다운로드
           </Button>
           {isAdmin && (
