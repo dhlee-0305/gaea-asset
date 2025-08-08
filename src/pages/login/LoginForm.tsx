@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Container, TextField, Button, Typography, Box } from '@mui/material';
 import { useDispatch } from 'react-redux';
 
 import api from '@/common/utils/api';
 import type { AppDispatch } from '@/store';
 import { MESSAGE } from '@/common/constants';
-import { showAlert } from '@/store/dialogAction';
+import { showAlert, showConfirm } from '@/store/dialogAction';
 import { saveToken } from '@/common/utils/auth';
 
 export default function LoginForm() {
@@ -15,6 +15,7 @@ export default function LoginForm() {
 
   const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
+  const [isResetting, setIsResetting] = useState(false);
 
   const handleSubmit = async (e?: React.FormEvent) => {
     e?.preventDefault(); // form submit의 기본 동작 방지
@@ -38,7 +39,6 @@ export default function LoginForm() {
       if (res.data.resultCode === '0000') {
         saveToken(res.data.data);
 
-        //alert('로그인 성공, 반갑습니다.');
         dispatch(
           showAlert({
             title: '',
@@ -65,6 +65,57 @@ export default function LoginForm() {
     }
   };
 
+  const handlePasswordResetRequest = async () => {
+    if (!userId.trim()) {
+      dispatch(
+        showAlert({
+          title: '입력 오류',
+          contents: '비밀번호 초기화를 위해 아이디를 입력해주세요.',
+        }),
+      );
+      return;
+    }
+
+    const confirmed = await dispatch(
+      showConfirm({ contents: '비밀번호 초기화를 요청하시겠습니까?' }),
+    );
+
+    if (!confirmed) return;
+
+    try {
+      setIsResetting(true);
+      const res = await api.put('/auth/password/reset', {
+        userId,
+      });
+
+      if (res.status === 200 && res.data.resultCode === '0000') {
+        dispatch(
+          showAlert({
+            title: '비밀번호 초기화 요청 완료',
+            contents: '관리자에게 비밀번호 초기화 요청을 보냈습니다.',
+          }),
+        );
+      } else {
+        dispatch(
+          showAlert({
+            title: '초기화 요청 실패',
+            contents: res.data.description,
+          }),
+        );
+      }
+    } catch (e) {
+      console.error(e);
+      dispatch(
+        showAlert({
+          title: '초기화 요청 실패',
+          contents: '초기화 요청 중 오류가 발생했습니다.',
+        }),
+      );
+    } finally {
+      setIsResetting(false);
+    }
+  };
+
   return (
     <Container maxWidth='sm'>
       <Box mt={10}>
@@ -87,8 +138,14 @@ export default function LoginForm() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <Box textAlign={'right'} mt={1} mb={2}>
-            <Link to='/change-password'>비밀번호 변경</Link>
+          <Box textAlign='right' mt={1} mb={2}>
+            <Button
+              size='small'
+              onClick={handlePasswordResetRequest}
+              disabled={isResetting}
+            >
+              비밀번호 초기화 요청
+            </Button>
           </Box>
           <Button
             type='submit' // 중요: submit 버튼

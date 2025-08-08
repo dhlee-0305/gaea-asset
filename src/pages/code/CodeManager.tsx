@@ -135,7 +135,6 @@ export default function CodeManager() {
   };
 
   const handleDelete = async (category: string, code: string) => {
-    //setCodes((prev) => prev.filter((code) => code.id !== id));
     const confirmed = await dispatch(
       showConfirm({ contents: '공통 코드를 삭제하시겠습니까?' }),
     );
