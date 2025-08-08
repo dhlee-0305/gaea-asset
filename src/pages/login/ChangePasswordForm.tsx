@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Container, TextField, Button, Typography, Box } from '@mui/material';
 import { useDispatch } from 'react-redux';
 
@@ -12,33 +12,25 @@ export default function ChangePasswordForm() {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
-  const [userId, setUserId] = useState('');
-  const [password, setPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [checkPassword, setCheckPassword] = useState('');
 
+  const location = useLocation();
+  const userId = location.state?.userId || '';
+
+  if (!userId) {
+    dispatch(
+      showAlert({
+        title: '접근오류',
+        contents: '잘못된 접근입니다. 로그인 후 다시 시도해주세요.',
+      }),
+    );
+    navigate('/login');
+    return null;
+  }
+
   const handleSubmit = async (e?: React.FormEvent) => {
     e?.preventDefault(); // form submit의 기본 동작 방지
-
-    if (!userId.trim()) {
-      dispatch(
-        showAlert({
-          title: '입력 오류',
-          contents: '아이디를 입력해주세요.',
-        }),
-      );
-      return;
-    }
-
-    if (!password.trim()) {
-      dispatch(
-        showAlert({
-          title: '입력 오류',
-          contents: '기존 비밀번호를 입력해주세요.',
-        }),
-      );
-      return;
-    }
 
     if (!newPassword.trim()) {
       dispatch(
@@ -71,11 +63,10 @@ export default function ChangePasswordForm() {
     try {
       const res = await api.put('/auth/password', {
         userId,
-        password,
         newPassword,
       });
 
-      if (res.data.resultCode === '0000') {
+      if (res.data.resultCode === '200') {
         dispatch(
           showAlert({
             title: '',
@@ -109,21 +100,6 @@ export default function ChangePasswordForm() {
           <Typography variant='h4' gutterBottom>
             비밀번호 변경
           </Typography>
-          <TextField
-            fullWidth
-            margin='normal'
-            label='아이디'
-            value={userId}
-            onChange={(e) => setUserId(e.target.value)}
-          />
-          <TextField
-            fullWidth
-            margin='normal'
-            type='password'
-            label='기존 비밀번호'
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
           <TextField
             fullWidth
             margin='normal'

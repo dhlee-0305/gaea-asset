@@ -36,7 +36,7 @@ export default function LoginForm() {
         password,
       });
 
-      if (res.data.resultCode === '0000') {
+      if (res.data.resultCode === '200') {
         saveToken(res.data.data);
 
         dispatch(
@@ -46,6 +46,14 @@ export default function LoginForm() {
           }),
         );
         navigate('/'); // 메인 페이지로 이동
+      } else if (res.data.resultCode === '204') {
+        dispatch(
+          showAlert({
+            title: '비밀번호 변경',
+            contents: res.data.description,
+          }),
+        );
+        navigate('/change-password', { state: { userId } }); // 비밀번호 변경 페이지로 이동
       } else {
         dispatch(
           showAlert({
