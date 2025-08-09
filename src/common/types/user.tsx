@@ -15,4 +15,5 @@ export interface UserData {
   isEmployed: string;
   passwordChangeDate: string;
   createDatetime: string;
+  passwordResetReq: string;
 }

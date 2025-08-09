@@ -49,6 +49,44 @@ export default function UserDetail() {
     }
   };
 
+  // 비밀번호 초기화 버튼 클릭 핸들러
+  const handleInitPassword = async (): Promise<void> => {
+    try {
+      const url = '/users/initPassword';
+      setIsLoading(true);
+      console.log(data);
+      const response = await api.put(url, data);
+      setIsLoading(false);
+
+      if (response.status === 200) {
+        const resData = response.data;
+        if (resData.resultCode === '0000') {
+          await dispatch(
+            showAlert({
+              contents: '비밀번호가 초기화되었습니다.',
+            }),
+          );
+          handleMoveList();
+        } else {
+          await dispatch(
+            showAlert({
+              contents: resData.description,
+            }),
+          );
+        }
+      }
+    } catch (error) {
+      console.error(error);
+      setIsLoading(false);
+      dispatch(
+        showAlert({
+          title: 'Error',
+          contents: MESSAGE.error,
+        }),
+      );
+    }
+  };
+
   // 수정 버튼 클릭 핸들러
   const handleMoveUpdate = (): void => {
     navigate(`/user-management/users/${userNo}/update`);
@@ -147,6 +185,15 @@ export default function UserDetail() {
             >
               수정
             </Button>
+            {data?.passwordResetReq === 'Y' && (
+              <Button
+                variant='contained'
+                color='primary'
+                onClick={handleInitPassword}
+              >
+                비밀번호 초기화
+              </Button>
+            )}
             <Button
               variant='contained'
               color='error'
