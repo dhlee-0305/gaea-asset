@@ -63,7 +63,7 @@ export default function Sidebar() {
       const children = [...menu.children];
       if (
         userInfo &&
-        (userInfo.roleCode === '01' || userInfo.roleCode === '02')
+        (userInfo.roleCode === '01' || userInfo.roleCode === '02' || userInfo.roleCode === '03')
       ) {
         if (!children.some((c) => c.text === '장비이력관리')) {
           children.push({

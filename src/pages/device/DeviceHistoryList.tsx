@@ -38,6 +38,7 @@ export default function DeviceHistoryList() {
   });
   const [selectedHistoryData, setSelectedHistoryData] = useState<DeviceHistoryData | null>(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [selectedDeviceNum, setSelectedDeviceNum] = useState<number | null>(null);
 
   useEffect(() => {
     fetchData();
@@ -91,14 +92,14 @@ export default function DeviceHistoryList() {
 
   // 장비번호 클릭 핸들러
   const handleDeviceNumClick = (historyData: DeviceHistoryData) => {
-    setSelectedHistoryData(historyData);
+    setSelectedDeviceNum(Number(historyData.deviceNum));
     setIsPopupOpen(true);
   };
 
   // 팝업 닫기 핸들러
   const handleClosePopup = () => {
     setIsPopupOpen(false);
-    setSelectedHistoryData(null);
+    setSelectedDeviceNum(null);
   };
 
   return (
@@ -205,7 +206,7 @@ export default function DeviceHistoryList() {
       <DeviceHistoryDetailPopup
         open={isPopupOpen}
         onClose={handleClosePopup}
-        historyData={selectedHistoryData}
+        deviceNum={selectedDeviceNum}
       />
     </>
   );
