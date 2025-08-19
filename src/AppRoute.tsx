@@ -9,6 +9,7 @@ import UserDetail from './pages/user/UserDetail';
 import UserForm from './pages/user/UserForm';
 
 import LayoutBo from '@/layout/Layout';
+import RequireRoles from '@/components/common/RequireRoles';
 import NoticeDetail from '@/pages/notice/NoticeDetail';
 import Home from '@/pages/Home';
 import DeviceList from '@/pages/device/DeviceList';
@@ -55,7 +56,11 @@ export default function AppRoute() {
           />
           <Route
             path='/device-management/device-history'
-            element={<DeviceHistoryList />}
+            element={
+              <RequireRoles allowedRoles={['00', '01', '02', '03']}>
+                <DeviceHistoryList />
+              </RequireRoles>
+            }
           />
           <Route path='/notice/notices' element={<NoticeList />} />
           <Route path='/notice/notices/:noticeNum' element={<NoticeDetail />} />

@@ -59,11 +59,11 @@ export default function Sidebar() {
   // 메뉴 동적 구성
   const dynamicMenuItems = menuItems.map((menu) => {
     if (menu.key === 'device-management') {
-      // roleCode가 '01' 또는 '02'인 경우에만 장비이력관리 메뉴 추가
+      // roleCode가 '01','02','03' 인 경우 장비이력관리 메뉴 추가
       const children = [...menu.children];
       if (
         userInfo &&
-        (userInfo.roleCode === '01' || userInfo.roleCode === '02' || userInfo.roleCode === '03')
+        (userInfo.roleCode === '00' || userInfo.roleCode === '01' || userInfo.roleCode === '02' || userInfo.roleCode === '03')
       ) {
         if (!children.some((c) => c.text === '장비이력관리')) {
           children.push({
