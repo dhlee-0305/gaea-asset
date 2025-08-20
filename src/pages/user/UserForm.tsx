@@ -236,7 +236,7 @@ export default function UserForm() {
                   rules={{ required: '부서 선택은 필수입니다.' }}
                   render={({ field }) => (
                     <>
-                      <FormControl sx={{ m: 1, width: 525 }}>
+                      <FormControl sx={{ width: 525 }}>
                         <InputLabel id='demo-simple-select-label'>
                           부서
                         </InputLabel>
@@ -265,7 +265,7 @@ export default function UserForm() {
                   rules={{ required: '직급 선택은 필수입니다.' }}
                   render={({ field }) => (
                     <>
-                      <FormControl sx={{ m: 1, width: 525 }}>
+                      <FormControl sx={{ width: 525 }}>
                         <InputLabel id='demo-simple-select-label'>
                           직급
                         </InputLabel>
