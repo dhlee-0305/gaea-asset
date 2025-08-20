@@ -38,12 +38,12 @@ export default function UserList() {
   });
 
   useEffect(() => {
-    searchData();
+    fetchUsers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // 데이터 검색
-  const searchData = async (currentPage = pageInfo.currentPage) => {
+  const fetchUsers = async (currentPage = pageInfo.currentPage) => {
     try {
       const response = await api.get('/users', {
         params: {
@@ -55,12 +55,10 @@ export default function UserList() {
       });
 
       if (response.status === 200) {
-        console.log(response.data);
         if (response.data.resultCode === '0000') {
           const resData = response.data;
           setDatas(resData.data);
           setPageInfo(resData.pagination);
-          console.log(pageInfo);
         } else {
           dispatch(
             showAlert({
@@ -90,20 +88,20 @@ export default function UserList() {
 
   // 검색 버튼 클릭 핸들러
   const handleSearch = (): void => {
-    searchData(1);
+    fetchUsers(1);
   };
 
   // 검색어 입력 핸들러
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
     if (e.key === 'Enter') {
-      searchData(1);
+      fetchUsers(1);
     }
   };
 
   // 페이지 변경 핸들러
   const handleChangePage = (_: React.ChangeEvent<unknown>, page: number) => {
     if (page === pageInfo.currentPage) return;
-    searchData(page); // 해당 페이지 요청
+    fetchUsers(page); // 해당 페이지 요청
   };
 
   // 등록 버튼 클릭 핸들러

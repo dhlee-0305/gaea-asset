@@ -59,7 +59,6 @@ export default function UserForm() {
         try {
           const response = await api.get(`/users/${userNo}`);
           if (response.status === 200) {
-            console.log(response.data);
             if (response.data.resultCode === '0000') {
               const resData = response.data;
               reset({
@@ -108,7 +107,6 @@ export default function UserForm() {
     try {
       const url = isUpdate ? `/users/${userNo}` : '/users';
       setIsLoading(true);
-      console.log(data);
       const response = isUpdate
         ? await api.put(url, data)
         : await api.post(url, data);

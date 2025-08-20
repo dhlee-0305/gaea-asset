@@ -54,7 +54,6 @@ export default function UserDetail() {
     try {
       const url = '/users/initPassword';
       setIsLoading(true);
-      console.log(data);
       const response = await api.put(url, data);
       setIsLoading(false);
 
