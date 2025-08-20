@@ -15,7 +15,7 @@ export default function UserDetail() {
   const navigate = useNavigate();
   const { userNo } = useParams();
   const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState<UserData | null>(null);
+  const [data, setUserData] = useState<UserData | null>(null);
 
   useEffect(() => {
     searchData();
@@ -27,9 +27,17 @@ export default function UserDetail() {
     try {
       const response = await api.get(`/users/${userNo}`);
 
-      if (response.data.resultCode === '0000') {
+      if (response.status === 200) {
         const resData = response.data;
-        setData(resData.data);
+        if (resData.resultCode === '0000') {
+          setUserData(resData.data);
+        } else {
+          dispatch(
+            showAlert({
+              contents: resData.description,
+            }),
+          );
+        }
       } else {
         dispatch(
           showAlert({

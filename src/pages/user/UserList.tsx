@@ -31,7 +31,7 @@ export default function UserList() {
   const navigate = useNavigate();
   const [searchColumn, setSearchColumn] = useState('userName');
   const [searchKeyword, setSearchKeyword] = useState('');
-  const [datas, setDatas] = useState<UserData[]>([]);
+  const [datas, setUserDatas] = useState<UserData[]>([]);
   const [pageInfo, setPageInfo] = useState<PageInfo>({
     pageSize: 10,
     currentPage: 1,
@@ -55,15 +55,14 @@ export default function UserList() {
       });
 
       if (response.status === 200) {
-        if (response.data.resultCode === '0000') {
-          const resData = response.data;
-          setDatas(resData.data);
+        const resData = response.data;
+        if (resData.resultCode === '0000') {
+          setUserDatas(resData.data);
           setPageInfo(resData.pagination);
         } else {
           dispatch(
             showAlert({
-              title: 'Error',
-              contents: MESSAGE.error,
+              contents: resData.description,
             }),
           );
         }

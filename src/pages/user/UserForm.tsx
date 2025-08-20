@@ -59,16 +59,15 @@ export default function UserForm() {
         try {
           const response = await api.get(`/users/${userNo}`);
           if (response.status === 200) {
-            if (response.data.resultCode === '0000') {
-              const resData = response.data;
+            const resData = response.data;
+            if (resData.resultCode === '0000') {
               reset({
                 ...resData.data,
               });
             } else {
               dispatch(
                 showAlert({
-                  title: 'Error',
-                  contents: MESSAGE.error,
+                  contents: resData.description,
                 }),
               );
             }
