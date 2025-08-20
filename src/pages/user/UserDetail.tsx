@@ -31,6 +31,13 @@ export default function UserDetail() {
         const resData = response.data;
         if (resData.resultCode === '0000') {
           setUserData(resData.data);
+        } else if (resData.resultCode === '204') {
+          await dispatch(
+            showAlert({
+              contents: resData.description,
+            }),
+          );
+          navigate('/');
         } else {
           dispatch(
             showAlert({
