@@ -6,7 +6,7 @@ export interface UserData {
   userName: string;
   orgName: string;
   password: string;
-  orgId: number;
+  orgId: number | string;
   userPositionCd: string;
   userPositionName: string;
   userGradeCd: string;

@@ -20,28 +20,10 @@ import { useEffect, useState } from 'react';
 
 import api from '@/common/utils/api';
 import type { UserData } from '@/common/types/user';
-import { MESSAGE } from '@/common/constants';
+import { MESSAGE, CODE } from '@/common/constants';
 import PageHeader from '@/components/common/PageHeader';
 import { showAlert, showConfirm } from '@/store/dialogAction';
 import type { AppDispatch } from '@/store';
-
-const CODE = {
-  userPositionCd: [
-    { code: '03', codeName: '팀장' },
-    { code: '04', codeName: '팀원' },
-  ],
-  orgId: [
-    { code: 135, orgName: '오픈서비스사업팀' },
-    { code: 136, orgName: '지능형플랫폼사업팀' },
-  ],
-  userGradeCd: [
-    { code: '03', userGradeName: '부장' },
-    { code: '04', userGradeName: '차장' },
-    { code: '05', userGradeName: '과장' },
-    { code: '06', userGradeName: '대리' },
-    { code: '07', userGradeName: '사원' },
-  ],
-};
 
 export default function UserForm() {
   const dispatch = useDispatch<AppDispatch>();
@@ -61,7 +43,7 @@ export default function UserForm() {
     defaultValues: {
       userId: '',
       userName: '',
-      orgId: 0,
+      orgId: '',
       orgName: '',
       userPositionName: '',
       userPositionCd: '',
@@ -236,14 +218,12 @@ export default function UserForm() {
                   rules={{ required: '부서 선택은 필수입니다.' }}
                   render={({ field }) => (
                     <>
-                      <FormControl sx={{ width: 525 }}>
-                        <InputLabel id='demo-simple-select-label'>
-                          부서
-                        </InputLabel>
+                      <FormControl sx={{ width: 535 }}>
+                        <InputLabel id='org-id-label'>부서</InputLabel>
                         <Select
-                          labelId='demo-simple-select-label'
-                          id='demo-simple-select'
-                          label=''
+                          labelId='org-id-label'
+                          id='org-id'
+                          label='부서'
                           {...field}
                           error={!!errors.orgId}
                         >
@@ -265,15 +245,14 @@ export default function UserForm() {
                   rules={{ required: '직급 선택은 필수입니다.' }}
                   render={({ field }) => (
                     <>
-                      <FormControl sx={{ width: 525 }}>
-                        <InputLabel id='demo-simple-select-label'>
-                          직급
-                        </InputLabel>
+                      <FormControl sx={{ width: 535 }}>
+                        <InputLabel id='gracde-code-label'>직급</InputLabel>
                         <Select
-                          labelId='demo-simple-select-label'
-                          id='demo-simple-select'
-                          label=''
+                          labelId='gracde-code-label'
+                          id='gracde-code'
+                          label='직급'
                           {...field}
+                          error={!!errors.userGradeCd}
                         >
                           {CODE.userGradeCd.map((gradeCd) => (
                             <MenuItem key={gradeCd.code} value={gradeCd.code}>
