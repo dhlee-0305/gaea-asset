@@ -27,19 +27,45 @@ export default function AppRoute() {
         <Route path='/change-password' element={<ChangePasswordPage />} />
         <Route path='/' element={<LayoutBo />}>
           <Route index element={<Home />} />
-          <Route path='/user-management/users' element={<UserList />} />
+          <Route
+            path='/user-management/users'
+            element={
+              <RequireRoles allowedRoles={['01','02','03']}>
+                <UserList />
+              </RequireRoles>
+            }
+          />
           <Route
             path='/user-management/users/:userNo'
-            element={<UserDetail />}
+            element={
+              <RequireRoles allowedRoles={['01','02','03']}>
+                <UserDetail />
+              </RequireRoles>
+            }
           />
-          <Route path='/user-management/users/create' element={<UserForm />} />
+          <Route
+            path='/user-management/users/create'
+            element={
+              <RequireRoles allowedRoles={['01','02','03']}>
+                <UserForm />
+              </RequireRoles>
+            }
+          />
           <Route
             path='/user-management/users/:userNo/update'
-            element={<UserForm />}
+            element={
+              <RequireRoles allowedRoles={['01','02','03']}>
+                <UserForm />
+              </RequireRoles>
+            }
           />
           <Route
             path='/user-management/departments'
-            element={<DepartmentManagement />}
+            element={
+              <RequireRoles allowedRoles={['01','02','03']}>
+                <DepartmentManagement />
+              </RequireRoles>
+            }
           />
           <Route path='/device-management/devices' element={<DeviceList />} />
           <Route
@@ -56,11 +82,7 @@ export default function AppRoute() {
           />
           <Route
             path='/device-management/device-history'
-            element={
-              <RequireRoles allowedRoles={['00', '01', '02', '03']}>
-                <DeviceHistoryList />
-              </RequireRoles>
-            }
+            element={<DeviceHistoryList />}
           />
           <Route path='/notice/notices' element={<NoticeList />} />
           <Route path='/notice/notices/:noticeNum' element={<NoticeDetail />} />
@@ -73,7 +95,14 @@ export default function AppRoute() {
             path='/notice/notices/delete:noticeNum'
             element={<NoticeDetail />}
           />
-          <Route path='/code-management/codes' element={<CodeManager />} />
+          <Route
+            path='/code-management/codes'
+            element={
+              <RequireRoles allowedRoles={['03']}>
+                <CodeManager />
+              </RequireRoles>
+            }
+          />
         </Route>
       </Routes>
     </div>

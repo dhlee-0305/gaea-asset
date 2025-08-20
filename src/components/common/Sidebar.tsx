@@ -57,25 +57,43 @@ export default function Sidebar() {
   const userInfo = token ? parseJwt(token) : null;
 
   // 메뉴 동적 구성
-  const dynamicMenuItems = menuItems.map((menu) => {
-    if (menu.key === 'device-management') {
-      // roleCode가 '01','02','03' 인 경우 장비이력관리 메뉴 추가
-      const children = [...menu.children];
-      if (
-        userInfo &&
-        (userInfo.roleCode === '00' || userInfo.roleCode === '01' || userInfo.roleCode === '02' || userInfo.roleCode === '03')
-      ) {
-        if (!children.some((c) => c.text === '장비이력관리')) {
-          children.push({
-            text: '장비이력관리',
-            to: '/device-management/device-history',
-          });
-        }
+  type SidebarMenuItem = typeof menuItems[number];
+  const dynamicMenuItems = menuItems.reduce<Array<SidebarMenuItem>>((acc, menu) => {
+    if (menu.key === 'user-management') {
+      // roleCode가 '01','02','03'인 경우에만 사용자관리(및 하위 메뉴) 노출
+      const allowed =
+        !!userInfo &&
+        (userInfo.roleCode === '01' ||
+          userInfo.roleCode === '02' ||
+          userInfo.roleCode === '03');
+      if (!allowed) {
+        return acc;
       }
-      return { ...menu, children };
     }
-    return menu;
-  });
+
+    if (menu.key === 'code-management') {
+      // roleCode가 '03'인 경우에만 공통코드 노출
+      if (userInfo?.roleCode !== '03') {
+        return acc;
+      }
+    }
+
+    if (menu.key === 'device-management') {
+      // 장비이력관리 메뉴는 권한 제한 없이 항상 노출
+      const children = [...menu.children];
+      if (!children.some((c) => c.text === '장비이력관리')) {
+        children.push({
+          text: '장비이력관리',
+          to: '/device-management/device-history',
+        });
+      }
+      acc.push({ ...menu, children });
+      return acc;
+    }
+
+    acc.push(menu);
+    return acc;
+  }, []);
 
   useEffect(() => {
     // 현재 경로에 해당하는 메뉴를 열기

@@ -15,7 +15,6 @@ import {
   Button,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
 import api from '@/common/utils/api';
@@ -36,7 +35,7 @@ export default function DeviceHistoryList() {
     pageSize: 10,
     currentPage: 1,
   });
-  const [selectedHistoryData, setSelectedHistoryData] = useState<DeviceHistoryData | null>(null);
+  // 상세 팝업 선택 이력 데이터는 현재 미사용 상태이므로 제거
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedDeviceNum, setSelectedDeviceNum] = useState<number | null>(null);
 
@@ -120,9 +119,10 @@ export default function DeviceHistoryList() {
             value={searchColumn}
             onChange={(e) => setSearchColumn(e.target.value)}
           >
+            <MenuItem value='orgName'>부서</MenuItem>
+            <MenuItem value='userName'>장비담당자</MenuItem>
             <MenuItem value='deviceNum'>장비번호</MenuItem>
-            <MenuItem value='changeContents'>변경내용</MenuItem>
-            <MenuItem value='reason'>사유</MenuItem>
+
           </Select>
         </FormControl>
 
@@ -154,7 +154,7 @@ export default function DeviceHistoryList() {
           </TableHead>
           <TableBody>
             {deviceHistoryDatas.length > 0 ? (
-              deviceHistoryDatas.map((historyData, idx) => (
+              deviceHistoryDatas.map((historyData) => (
                 <TableRow
                   key={historyData.historyNum}
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
