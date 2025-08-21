@@ -345,7 +345,6 @@ export default function DepartmentManagement() {
         >
           회사 등록
         </Button>
-        {/* 엑셀 업로드 버튼 및 input 제거 */}
       </Stack>
       <Paper style={{ padding: 8 }}>
         {loading ? (
