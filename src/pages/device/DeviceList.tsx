@@ -102,6 +102,7 @@ export default function DeviceList() {
   };
 
   const excelDownload = async (): Promise<void> => {
+    let url: string | null = null;
     try {
       const response = await api.get('/devices/download/excel', {
         responseType: 'blob',
@@ -111,7 +112,7 @@ export default function DeviceList() {
       const fileName = match ? match[1] : 'DeviceList.xlsx';
 
       const blob = new Blob([response.data]);
-      const url = window.URL.createObjectURL(blob);
+      url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
 
       link.href = url;
@@ -127,6 +128,8 @@ export default function DeviceList() {
           contents: MESSAGE.error,
         }),
       );
+    } finally {
+      if (url) URL.revokeObjectURL(url);
     }
   };
 

@@ -22,14 +22,24 @@ export default function NoticePreview() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    api
-      .get('/notices', { params: { pageSize: 5, currentPage: 1 } })
-      .then((res) => {
-        if (res.status === 200) {
-          setNoticeList(res.data.data);
-        }
-      });
+    getNoticeList();
   }, []);
+
+  const getNoticeList = async () => {
+    try {
+      const response = await api.get('/notices', {
+        params: {
+          currentPage: 1,
+          pageSize: 5,
+        },
+      });
+      if (response.status === 200 && response.data.resultCode === '0000') {
+        setNoticeList(response.data.data);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const handleViewAll = () => {
     navigate('/notice/notices');
@@ -60,24 +70,29 @@ export default function NoticePreview() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {noticeList.map((notice) => (
-              <TableRow
-                key={notice.noticeNum}
-                hover
-                sx={{ cursor: 'pointer', height: 35 }}
-                onClick={() => handleClickRow(Number(notice.noticeNum))}
-              >
-                <TableCell align='center'>{notice.title}</TableCell>
-                <TableCell align='center'>{notice.createUser}</TableCell>
-                <TableCell align='center'>{notice.createDateTime}</TableCell>
-              </TableRow>
-            ))}
-            {[...Array(5 - noticeList.length)].map((_, index) => (
-              <TableRow key={`empty-${index}`} sx={{ height: 35 }}>
-                <TableCell colSpan={3} />
-              </TableRow>
-            ))}
-            {noticeList.length === 0 && (
+            {noticeList.length > 0 ? (
+              <>
+                {noticeList.map((notice) => (
+                  <TableRow
+                    key={notice.noticeNum}
+                    hover
+                    sx={{ cursor: 'pointer', height: 35 }}
+                    onClick={() => handleClickRow(Number(notice.noticeNum))}
+                  >
+                    <TableCell align='center'>{notice.title}</TableCell>
+                    <TableCell align='center'>{notice.createUser}</TableCell>
+                    <TableCell align='center'>
+                      {notice.createDateTime}
+                    </TableCell>
+                  </TableRow>
+                ))}
+                {[...Array(5 - noticeList.length)].map((_, index) => (
+                  <TableRow key={`empty-${index}`} sx={{ height: 35 }}>
+                    <TableCell colSpan={3} />
+                  </TableRow>
+                ))}
+              </>
+            ) : (
               <TableRow>
                 <TableCell colSpan={3} align='center'>
                   등록된 공지사항이 없습니다.

@@ -22,10 +22,10 @@ export default function ApprovalStatusPreview() {
   const [approvalList, setApprovalList] = useState<DeviceHistoryData[]>([]);
 
   useEffect(() => {
-    fetchApprovalData();
+    getApprovalList();
   }, []);
 
-  const fetchApprovalData = async () => {
+  const getApprovalList = async () => {
     try {
       const response = await api.get('/histories', {
         params: {
@@ -82,36 +82,38 @@ export default function ApprovalStatusPreview() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {approvalList.length === 0 ? (
-              <TableRow sx={{ height: 35 }}>
-                <TableCell colSpan={4} align='center'>
+            {approvalList.length > 0 ? (
+              <>
+                {approvalList.map((item) => (
+                  <TableRow
+                    key={item.historyNum}
+                    hover
+                    sx={{ cursor: 'pointer', height: 35 }}
+                    onClick={() => handleClickRow(item.deviceNum)}
+                  >
+                    <TableCell align='center'>{item.deviceNum}</TableCell>
+                    <TableCell align='center'>{item.deviceStatus}</TableCell>
+                    <TableCell align='center'>{item.approvalStatus}</TableCell>
+                    <TableCell align='center'>
+                      {item.createDatetime
+                        ? item.createDatetime.split(' ')[0].replace(/-/g, '.')
+                        : ''}
+                    </TableCell>
+                  </TableRow>
+                ))}
+                {[...Array(5 - approvalList.length)].map((_, index) => (
+                  <TableRow key={`empty-${index}`} sx={{ height: 35 }}>
+                    <TableCell colSpan={4} />
+                  </TableRow>
+                ))}
+              </>
+            ) : (
+              <TableRow>
+                <TableCell align='center' colSpan={5}>
                   현재 결재 중인 항목이 없습니다.
                 </TableCell>
               </TableRow>
-            ) : (
-              approvalList.slice(0, 5).map((item) => (
-                <TableRow
-                  key={item.historyNum}
-                  hover
-                  sx={{ cursor: 'pointer', height: 35 }}
-                  onClick={() => handleClickRow(item.deviceNum)}
-                >
-                  <TableCell align='center'>{item.deviceNum}</TableCell>
-                  <TableCell align='center'>{item.deviceStatus}</TableCell>
-                  <TableCell align='center'>{item.approvalStatus}</TableCell>
-                  <TableCell align='center'>
-                    {item.createDatetime
-                      ? item.createDatetime.split(' ')[0].replace(/-/g, '.')
-                      : ''}
-                  </TableCell>
-                </TableRow>
-              ))
             )}
-            {[...Array(5 - approvalList.length)].map((_, index) => (
-              <TableRow key={`empty-${index}`} sx={{ height: 35 }}>
-                <TableCell colSpan={4} />
-              </TableRow>
-            ))}
           </TableBody>
         </Table>
       </TableContainer>

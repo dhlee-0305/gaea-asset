@@ -22,10 +22,10 @@ export default function DevicesPreview() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchDevices();
+    getDeivceList();
   }, []);
 
-  const fetchDevices = async () => {
+  const getDeivceList = async () => {
     try {
       const response = await api.get('/devices', {
         params: {

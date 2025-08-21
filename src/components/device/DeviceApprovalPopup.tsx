@@ -66,8 +66,8 @@ export default function DeviceApprovalPopup({
     const field = key as keyof DeviceData;
     return {
       label: deviceLabels[field],
-      original: orgData?.[field] ?? '-',
-      new: deviceApprovaldata?.[field] ?? '-',
+      original: orgData?.[field] ?? '',
+      new: deviceApprovaldata?.[field] ?? '',
     };
   });
 
@@ -146,14 +146,14 @@ export default function DeviceApprovalPopup({
               {rows.map((row) => (
                 <TableRow key={row.label}>
                   <TableCell>{row.label}</TableCell>
-                  <TableCell>{row.original}</TableCell>
+                  <TableCell>{String(row.original)}</TableCell>
                   <TableCell
                     sx={{
                       fontWeight: row.original !== row.new ? 'bold' : 'normal',
                       color: row.original !== row.new ? 'red' : 'inherit',
                     }}
                   >
-                    {row.new}
+                    {String(row.new)}
                   </TableCell>
                 </TableRow>
               ))}
