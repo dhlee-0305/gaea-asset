@@ -18,11 +18,14 @@ import {
   DialogActions,
   TextField,
 } from '@mui/material';
+import { useDispatch } from 'react-redux';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
+import { showAlert, showConfirm } from '@/store/dialogAction';
 import api from '@/common/utils/api';
+import type { AppDispatch } from '@/store';
 
 type Dept = {
   orgId?: string | number;
@@ -39,7 +42,7 @@ export default function DepartmentManagement() {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState('');
   const [editDept, setEditDept] = useState<Dept | null>(null);
-
+  const dispatch = useDispatch<AppDispatch>();
   // Dialog 닫힘 시 상태 초기화
   const handleDialogClose = () => {
     setOpen(false);
@@ -65,7 +68,11 @@ export default function DepartmentManagement() {
       } else if (resultCode === '500') {
         setDepartments([]);
         setError(null);
-        window.alert(description || '부서 목록 조회 중 오류가 발생했습니다.');
+        await dispatch(
+          showAlert({
+            contents: description || '부서 목록 조회 중 오류가 발생했습니다.',
+          }),
+        );
       } else {
         setDepartments(data || []);
         setError(null);
@@ -114,18 +121,22 @@ export default function DepartmentManagement() {
       const res = await api.post('/organization', { orgName: input });
       const { resultCode, description } = res.data || {};
       if (resultCode === '204') {
-        alert(description || '부서 등록에 실패했습니다.');
+        await dispatch(
+          showAlert({ contents: description || '부서 등록에 실패했습니다.' }),
+        );
         return;
       }
       if (resultCode === '200') {
-        alert(description || '등록되었습니다.');
         setOpen(false);
+        await dispatch(
+          showAlert({ contents: description || '등록되었습니다.' }),
+        );
         fetchDepartments();
       } else {
-        alert(description || '등록 실패');
+        await dispatch(showAlert({ contents: description || '등록 실패' }));
       }
     } catch {
-      alert('등록 실패');
+      await dispatch(showAlert({ contents: '등록 실패' }));
     } finally {
       setSubmitLoading(false);
     }
@@ -144,18 +155,24 @@ export default function DepartmentManagement() {
       );
       const { resultCode, description } = res.data || {};
       if (resultCode === '204') {
-        alert(description || '하위부서 등록에 실패했습니다.');
+        await dispatch(
+          showAlert({
+            contents: description || '하위부서 등록에 실패했습니다.',
+          }),
+        );
         return;
       }
       if (resultCode === '200') {
-        alert(description || '하위부서가 등록되었습니다.');
         setOpen(false);
+        await dispatch(
+          showAlert({ contents: description || '하위부서가 등록되었습니다.' }),
+        );
         fetchDepartments();
       } else {
-        alert(description || '등록 실패');
+        await dispatch(showAlert({ contents: description || '등록 실패' }));
       }
     } catch {
-      alert('등록 실패');
+      await dispatch(showAlert({ contents: '등록 실패' }));
     } finally {
       setSubmitLoading(false);
     }
@@ -171,38 +188,56 @@ export default function DepartmentManagement() {
       });
       const { resultCode, description } = res.data || {};
       if (resultCode === '204') {
-        alert(description || '수정 대상 부서 정보가 없습니다.');
+        await dispatch(
+          showAlert({
+            contents: description || '수정 대상 부서 정보가 없습니다.',
+          }),
+        );
         return;
       }
       if (resultCode === '200') {
         setOpen(false);
+        await dispatch(
+          showAlert({ contents: description || '수정되었습니다.' }),
+        );
+        //setOpen(false);
         fetchDepartments();
       } else {
-        alert(description || '수정 실패');
+        await dispatch(showAlert({ contents: description || '수정 실패' }));
       }
     } catch {
-      alert('수정 실패');
+      await dispatch(showAlert({ contents: '수정 실패' }));
     }
   };
 
   // 부서 삭제
   const handleDelete = async (dept: Dept) => {
-    if (!window.confirm(`삭제하시겠습니까? (${dept.orgName})`)) return;
+    const confirmed = await dispatch(
+      showConfirm({ contents: `삭제하시겠습니까? (${dept.orgName})` }),
+    );
+    if (!confirmed) return;
     try {
       const res = await api.put(`/organization/${dept.orgId}/inactive`);
       const { resultCode, description } = res.data || {};
       if (resultCode === '204') {
-        alert(description || '삭제 대상 부서가 없습니다.');
+        await dispatch(
+          showAlert({ contents: description || '삭제 대상 부서가 없습니다.' }),
+        );
         return;
       }
       if (resultCode === '200') {
-        alert(description || '부서 및 하위 부서가 모두 삭제 되었습니다.');
+        await dispatch(
+          showAlert({
+            contents:
+              description || '부서 및 하위 부서가 모두 삭제 되었습니다.',
+          }),
+        );
         fetchDepartments();
       } else {
-        alert(description || '삭제 실패');
+        await dispatch(showAlert({ contents: description || '삭제 실패' }));
       }
     } catch {
-      alert('삭제 실패');
+      await dispatch(showAlert({ contents: '삭제 실패' }));
     }
   };
 
