@@ -26,7 +26,7 @@ import PageHeader from '@/components/common/PageHeader';
 import { showAlert, showConfirm } from '@/store/dialogAction';
 import type { AppDispatch } from '@/store';
 import type { DeviceData } from '@/common/types/device';
-import type { UserData } from '@/common/types/user';
+import { USER_ROLE, type UserData } from '@/common/types/user';
 import UserSelectPopup from '@/components/user/UserSelectPopup';
 
 export default function DeviceForm() {
@@ -48,10 +48,10 @@ export default function DeviceForm() {
   } = useForm<DeviceData>({
     defaultValues: {
       deviceTypeCode: 'PC',
-      usageDivisionCode: '01',
+      usageDivisionCode: USER_ROLE.TEAM_MANAGER,
       userName: '',
       modelName: '',
-      deviceStatusCode: '01',
+      deviceStatusCode: USER_ROLE.TEAM_MANAGER,
       manufactureDate: '',
       purchaseDate: null,
       returnDate: null,

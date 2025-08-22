@@ -12,6 +12,7 @@ import { MESSAGE } from '@/common/constants';
 import type { DeviceData } from '@/common/types/device';
 import DeviceApprovalPopup from '@/components/device/DeviceApprovalPopup';
 import { getUserInfo, isAdminRole } from '@/common/utils/auth';
+import { USER_ROLE } from '@/common/types/user';
 
 export default function DeviceDetail() {
   const dispatch = useDispatch<AppDispatch>();
@@ -245,7 +246,7 @@ export default function DeviceDetail() {
           <Box
             sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end', gap: 1 }}
           >
-            {!isUpdatable && userRoleCode != '00' && (
+            {!isUpdatable && userRoleCode != USER_ROLE.USER && (
               <Button
                 variant='outlined'
                 color='error'

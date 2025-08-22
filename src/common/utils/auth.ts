@@ -1,4 +1,4 @@
-import type { UserData } from '../types/user';
+import { USER_ROLE, type UserData } from '../types/user';
 
 const TOKEN_KEY = 'token';
 
@@ -59,5 +59,8 @@ export const isAdminRole = (): boolean => {
   const roleCode = getUserInfo()?.roleCode;
   if (!roleCode) return false;
 
-  return roleCode === '02' || roleCode === '03';
+  return (
+    roleCode === USER_ROLE.ASSET_MANAGER ||
+    roleCode === USER_ROLE.SYSTEM_MANAGER
+  );
 };
