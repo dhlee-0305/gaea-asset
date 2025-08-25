@@ -108,6 +108,10 @@ export default function UserList() {
     navigate('/user-management/users/create');
   };
 
+  const handleMoveDetail = (empNum: number): void => {
+    navigate(`/user-management/users/${empNum}`);
+  };
+
   return (
     <>
       <PageHeader contents='사용자 목록' />
@@ -159,12 +163,15 @@ export default function UserList() {
             {datas.map((data) => (
               <TableRow
                 key={data.empNum}
-                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                hover
+                sx={{
+                  '&:last-child td, &:last-child th': { border: 0 },
+                  cursor: 'pointer',
+                }}
+                onClick={() => handleMoveDetail(data.empNum)}
               >
                 <TableCell align='center' component='th' scope='row'>
-                  <Link to={`/user-management/users/${data.empNum}`}>
-                    {data.userId}
-                  </Link>
+                  {data.userId}
                 </TableCell>
                 <TableCell align='center'>{data.userName}</TableCell>
                 <TableCell align='center'>{data.orgName}</TableCell>

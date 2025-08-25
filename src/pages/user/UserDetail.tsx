@@ -18,12 +18,12 @@ export default function UserDetail() {
   const [data, setUserData] = useState<UserData | null>(null);
 
   useEffect(() => {
-    searchData();
+    userData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // 데이터 검색
-  const searchData = async () => {
+  const userData = async () => {
     try {
       const response = await api.get(`/users/${userNo}`);
 
