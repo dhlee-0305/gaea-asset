@@ -12,6 +12,9 @@ export const VALID_RULES = {
     regex: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
     message: '이메일 형식이 올바르지 않습니다.',
   },
+  whiteSpace: {
+    regex: /\s/g,
+  },
 };
 
 export const CODE = {

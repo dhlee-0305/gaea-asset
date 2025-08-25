@@ -20,7 +20,7 @@ import { useEffect, useState } from 'react';
 
 import api from '@/common/utils/api';
 import type { UserData } from '@/common/types/user';
-import { MESSAGE, CODE } from '@/common/constants';
+import { MESSAGE, CODE, VALID_RULES } from '@/common/constants';
 import PageHeader from '@/components/common/PageHeader';
 import { showAlert, showConfirm } from '@/store/dialogAction';
 import type { AppDispatch } from '@/store';
@@ -186,7 +186,19 @@ export default function UserForm() {
                       shrink: true,
                     },
                   }}
-                  {...register('userId', { required: '아이디는 필수입니다.' })}
+                  {...register('userId', {
+                    required: '아이디는 필수입니다.',
+                    validate: {
+                      chkWhiteSpace: (value) =>
+                        value.match(VALID_RULES.whiteSpace.regex)
+                          ? '공백을 제거해주세요.'
+                          : true,
+                      chkEmailType: (value) =>
+                        value.match(VALID_RULES.email.regex)
+                          ? '이메일형식은 등록 불가능합니다.'
+                          : true,
+                    },
+                  })}
                   error={!!errors.userId}
                   helperText={errors.userId?.message}
                   disabled={isUpdate}
