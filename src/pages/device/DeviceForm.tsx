@@ -21,12 +21,12 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 
 import api from '@/common/utils/api';
-import { MESSAGE, CODE } from '@/common/constants';
+import { MESSAGE, CODE, USER_ROLE } from '@/common/constants';
 import PageHeader from '@/components/common/PageHeader';
 import { showAlert, showConfirm } from '@/store/dialogAction';
 import type { AppDispatch } from '@/store';
 import type { DeviceData } from '@/common/types/device';
-import { USER_ROLE, type UserData } from '@/common/types/user';
+import { type UserData } from '@/common/types/user';
 import UserSelectPopup from '@/components/user/UserSelectPopup';
 
 export default function DeviceForm() {

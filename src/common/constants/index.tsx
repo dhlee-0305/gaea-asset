@@ -54,3 +54,15 @@ export const CODE = {
     { code: '07', userGradeName: '사원' },
   ],
 };
+
+export const USER_ROLE = {
+  USER: '00',
+  TEAM_MANAGER: '01',
+  ASSET_MANAGER: '02',
+  SYSTEM_MANAGER: '03',
+};
+
+export const DEVICE_APPROVAL_STATUS = {
+  TEAM_MANAGER_PENDING: 'A1',
+  ADMIN_PENDING: 'A2',
+};

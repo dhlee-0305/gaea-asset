@@ -8,11 +8,10 @@ import api from '@/common/utils/api';
 import PageHeader from '@/components/common/PageHeader';
 import type { AppDispatch } from '@/store';
 import { showAlert, showConfirm } from '@/store/dialogAction';
-import { MESSAGE } from '@/common/constants';
+import { DEVICE_APPROVAL_STATUS, MESSAGE, USER_ROLE } from '@/common/constants';
 import type { DeviceData } from '@/common/types/device';
 import DeviceApprovalPopup from '@/components/device/DeviceApprovalPopup';
 import { getUserInfo, isAdminRole } from '@/common/utils/auth';
-import { USER_ROLE } from '@/common/types/user';
 
 export default function DeviceDetail() {
   const dispatch = useDispatch<AppDispatch>();
@@ -26,8 +25,9 @@ export default function DeviceDetail() {
   const isAdmin = isAdminRole();
 
   const isUpdatable = !(
-    deviceData?.approvalStatusCode === 'A1' ||
-    deviceData?.approvalStatusCode === 'A2'
+    deviceData?.approvalStatusCode ===
+      DEVICE_APPROVAL_STATUS.TEAM_MANAGER_PENDING ||
+    deviceData?.approvalStatusCode === DEVICE_APPROVAL_STATUS.ADMIN_PENDING
   );
 
   useEffect(() => {

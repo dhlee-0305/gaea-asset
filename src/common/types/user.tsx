@@ -17,10 +17,3 @@ export interface UserData {
   createDatetime: string;
   passwordResetReq: string;
 }
-
-export const USER_ROLE = {
-  USER: '00',
-  TEAM_MANAGER: '01',
-  ASSET_MANAGER: '02',
-  SYSTEM_MANAGER: '03',
-};

@@ -1,4 +1,5 @@
-import { USER_ROLE, type UserData } from '../types/user';
+import { USER_ROLE } from '../constants';
+import { type UserData } from '../types/user';
 
 const TOKEN_KEY = 'token';
 
