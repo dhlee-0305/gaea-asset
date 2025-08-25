@@ -92,6 +92,11 @@ export default function NoticeList() {
     navigate('/notice/notices/create');
   };
 
+  // 상세보기 이동
+  const handleMoveDetail = (noticeNum: number) => {
+    navigate(`/notice/notices/${noticeNum}`);
+  };
+
   return (
     <>
       <PageHeader contents='공지사항 목록' />
@@ -111,6 +116,7 @@ export default function NoticeList() {
             onChange={(e) => setSearchColumn(e.target.value)}
           >
             <MenuItem value='title'>제목</MenuItem>
+            <MenuItem value='content'>내용</MenuItem>
           </Select>
         </FormControl>
 
@@ -132,7 +138,7 @@ export default function NoticeList() {
           <TableHead>
             <TableRow>
               <TableCell align='center'>No.</TableCell>
-              <TableCell align='center'>제목</TableCell>
+              <TableCell align='left'>제목</TableCell>
               <TableCell align='center'>부서/작성자</TableCell>
               <TableCell align='center'>등록일자</TableCell>
             </TableRow>
@@ -142,14 +148,12 @@ export default function NoticeList() {
               noticeDatas.map((noticeData) => (
                 <TableRow
                   key={noticeData.noticeNum}
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                  hover
+                  sx={{ cursor: 'pointer' }}
+                  onClick={() => handleMoveDetail(Number(noticeData.noticeNum))}
                 >
                   <TableCell align='center'>{noticeData.noticeNum}</TableCell>
-                  <TableCell align='center' component='th' scope='row'>
-                    <Link to={`/notice/notices/${noticeData.noticeNum}`}>
-                      {noticeData.title}
-                    </Link>
-                  </TableCell>
+                  <TableCell align='left'>{noticeData.title}</TableCell>
                   <TableCell align='center'>{noticeData.createUser}</TableCell>
                   <TableCell align='center'>
                     {noticeData.createDateTime}
