@@ -27,7 +27,7 @@ export default function ApprovalStatusPreview() {
 
   const getApprovalList = async () => {
     try {
-      const response = await api.get('/histories', {
+      const response = await api.get('/devices/pending', {
         params: {
           currentPage: 1,
           pageSize: 5,
@@ -35,11 +35,7 @@ export default function ApprovalStatusPreview() {
       });
 
       if (response.status === 200 && response.data.resultCode === '0000') {
-        const myApprovals = response.data.data.filter(
-          (history: DeviceHistoryData) =>
-            history.approvalStatus !== '승인완료' &&
-            history.approvalStatus !== '반려',
-        );
+        const myApprovals = response.data.data;
         setApprovalList(myApprovals);
       }
     } catch (e) {

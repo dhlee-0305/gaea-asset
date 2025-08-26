@@ -14,10 +14,10 @@ export default function Home() {
       <PageHeader contents='메인 화면' />
       <Box padding={3}>
         <Grid container spacing={2}>
-          <Grid size={6}>
+          <Grid size={{ xs: 12, lg: 6 }}>
             <DevicesPreview />
           </Grid>
-          <Grid size={6}>
+          <Grid size={{ xs: 12, lg: 6 }}>
             <NoticePreview />
           </Grid>
           <Grid size={12}>
