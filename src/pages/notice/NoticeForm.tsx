@@ -43,8 +43,18 @@ export default function NoticeForm() {
       (async () => {
         try {
           const response = await api.get(`/notices/${noticeId}`);
-          if (response.status === 200) {
-            reset(response.data.data);
+          const { resultCode, description, data } = response.data;
+
+          if (resultCode === '0000' && data) {
+            reset(data);
+          } else {
+            dispatch(
+              showAlert({
+                title: '알림',
+                contents: description || '서버 오류가 발생했습니다.',
+              }),
+            );
+            navigate('/notice/notices');
           }
         } catch (error) {
           console.error(error);
@@ -84,10 +94,11 @@ export default function NoticeForm() {
       const response = isUpdate
         ? await api.put(url, requestData)
         : await api.post(url, requestData);
+      const { resultCode, description } = response.data;
 
       setIsLoading(false);
 
-      if (response.status === 200) {
+      if (resultCode === '0000' && data) {
         await dispatch(
           showAlert({
             contents: isUpdate
@@ -96,6 +107,14 @@ export default function NoticeForm() {
           }),
         );
         handleCancel();
+      } else {
+        dispatch(
+          showAlert({
+            title: '알림',
+            contents: description || '서버 오류가 발생했습니다.',
+          }),
+        );
+        navigate('/notice/notices');
       }
     } catch (error) {
       console.error(error);

@@ -32,9 +32,26 @@ export default function NoticeDetail() {
   const searchData = async () => {
     try {
       const response = await api.get(`/notices/${noticeId}`);
+      const { resultCode, description, data } = response.data;
 
-      if (response.status === 200) {
-        setNoticeData(response.data.data);
+      if (resultCode === '0000' && data) {
+        setNoticeData(data);
+      } else if (resultCode === '204') {
+        dispatch(
+          showAlert({
+            title: '알림',
+            contents: description || '해당 공지사항을 찾을 수 없습니다.',
+          }),
+        );
+        navigate('/notice/notices');
+      } else {
+        dispatch(
+          showAlert({
+            title: '알림',
+            contents: description || '서버 오류가 발생했습니다.',
+          }),
+        );
+        navigate('/notice/notices');
       }
     } catch (e) {
       console.error(e);
@@ -58,13 +75,22 @@ export default function NoticeDetail() {
     try {
       setIsLoading(true);
       const response = await api.delete(`/notices/${noticeId}`);
+      const { resultCode, description, data } = response.data;
 
       setIsLoading(false);
 
-      if (response.status === 200) {
+      if (resultCode === '0000' && data) {
         await dispatch(
           showAlert({
             contents: '공지사항이 삭제되었습니다.',
+          }),
+        );
+        navigate('/notice/notices');
+      } else {
+        dispatch(
+          showAlert({
+            title: '알림',
+            contents: description || '서버 오류가 발생했습니다.',
           }),
         );
         navigate('/notice/notices');

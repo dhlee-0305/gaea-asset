@@ -54,9 +54,18 @@ export default function NoticeList() {
         },
       });
 
-      if (response.status === 200) {
-        setNoticeDatas(response.data.data);
-        setPageInfo(response.data.pagination);
+      const { resultCode, description, data, pagination } = response.data;
+
+      if (resultCode === '0000' && data) {
+        setNoticeDatas(data);
+        setPageInfo(pagination);
+      } else if (resultCode === '500') {
+        dispatch(
+          showAlert({
+            title: 'Error',
+            contents: description || '서버 오류가 발생했습니다.',
+          }),
+        );
       }
     } catch (e) {
       console.error(e);
