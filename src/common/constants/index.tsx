@@ -31,6 +31,12 @@ export const CODE = {
     { code: '04', codeName: '파손' },
     { code: '05', codeName: '폐기' },
   ],
+  approvalStatus: [
+    { code: 'A1', codeName: '부서장 승인대기' },
+    { code: 'A2', codeName: '관리자 승인대기' },
+    { code: 'A3', codeName: '승인완료' },
+    { code: 'A4', codeName: '반려' },
+  ],
   usageDivision: [
     { code: '01', codeName: '업무용' },
     { code: '02', codeName: '개발용' },

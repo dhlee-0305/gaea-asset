@@ -97,6 +97,8 @@ export interface DeviceHistoryData {
   historyNum: number;
   /* 장비 번호 */
   deviceNum: string;
+  /* 사원번호 */
+  empNum?: number;
   /* 장비 유형 */
   deviceType: string;
   /* 현재 담당자 */
@@ -107,12 +109,18 @@ export interface DeviceHistoryData {
   approvalStatus: string;
   /* 변경일시 */
   createDatetime: string;
+  /* 생성자 */
+  createUser?: number;
   /* 모델명 */
   modelName?: string;
   /* 변경 내용 */
   changeContents?: string;
   /* 사유 */
   reason?: string;
+  /* 장비 상태 코드 */
+  deviceStatusCode?: string;
+  /* 결재 상태 코드 */
+  approvalStatusCode?: string;
   /* 수정일 */
   modifyDate?: string;
 }

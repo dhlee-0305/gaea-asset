@@ -11,7 +11,6 @@ import {
   TableBody,
   TableCell,
   TableContainer,
-  TableHead,
   TableRow,
   Paper,
 } from '@mui/material';
@@ -22,45 +21,53 @@ import { useDispatch } from 'react-redux';
 import api from '@/common/utils/api';
 import type { DeviceHistoryData } from '@/common/types/device';
 import { showAlert } from '@/store/dialogAction';
-import { MESSAGE } from '@/common/constants';
+import { MESSAGE, CODE } from '@/common/constants';
 import type { AppDispatch } from '@/store';
 
 interface DeviceHistoryDetailPopupProps {
   open: boolean;
   onClose: () => void;
-  deviceNum: number | null;
+  historyNum: number | null;
 }
 
 export default function DeviceHistoryDetailPopup({
   open,
   onClose,
-  deviceNum,
+  historyNum,
 }: DeviceHistoryDetailPopupProps) {
   const dispatch = useDispatch<AppDispatch>();
-  const [historyDataList, setHistoryDataList] = useState<DeviceHistoryData[]>([]);
+  const [historyData, setHistoryData] = useState<DeviceHistoryData | null>(null);
   const [loading, setLoading] = useState(false);
 
+  const getDeviceStatusName = (code?: string) => {
+    if (!code) return '';
+    const item = CODE.deviceStatus.find((c) => c.code === code);
+    return item ? item.codeName : '';
+  };
+
+  const getApprovalStatusName = (code?: string) => {
+    if (!code) return '';
+    const item = CODE.approvalStatus.find((c) => c.code === code);
+    return item ? item.codeName : '';
+  };
+
   useEffect(() => {
-    if (open && deviceNum) {
+    if (open && historyNum) {
       fetchHistoryData();
     }
-  }, [open, deviceNum]);
+  }, [open, historyNum]);
 
-  // 장비 이력 데이터 조회
+  // 장비 이력 단건 조회
   const fetchHistoryData = async () => {
-    if (!deviceNum) return;
+    if (!historyNum) return;
 
     setLoading(true);
     try {
-      const response = await api.get(`/histories/${deviceNum}`, {
-        params: {
-          currentPage: 1,
-          pageSize: 100, // 충분히 큰 값으로 설정
-        },
-      });
+      const response = await api.get(`/histories/${historyNum}`);
 
       if (response.status === 200 && response.data.resultCode === '0000') {
-        setHistoryDataList(response.data.data);
+        // API가 data에 단건 객체를 반환한다고 가정
+        setHistoryData(response.data.data);
       }
     } catch (e) {
       console.error(e);
@@ -76,11 +83,11 @@ export default function DeviceHistoryDetailPopup({
   };
 
   const handleClose = () => {
-    setHistoryDataList([]);
+    setHistoryData(null);
     onClose();
   };
 
-  if (!deviceNum) return null;
+  if (!historyNum) return null;
 
   return (
     <Dialog
@@ -96,7 +103,7 @@ export default function DeviceHistoryDetailPopup({
     >
       <DialogTitle sx={{ m: 0, p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Typography variant="h6" component="div">
-          장비번호 [{deviceNum}] 이력 상세
+          이력번호 [{historyNum}] 상세
         </Typography>
         <IconButton
           aria-label="close"
@@ -117,37 +124,70 @@ export default function DeviceHistoryDetailPopup({
         ) : (
           <TableContainer component={Paper} sx={{ mt: 2 }}>
             <Table sx={{ minWidth: 800 }} aria-label='history table'>
-              <TableHead>
-                <TableRow>
-                  <TableCell align='center'>이력번호</TableCell>
-                  <TableCell align='center'>장비상태코드</TableCell>
-                  <TableCell align='center'>결재상태코드</TableCell>
-                  <TableCell align='center'>변경내용</TableCell>
-                  <TableCell align='center'>사유</TableCell>
-                  <TableCell align='center'>생성일시</TableCell>
-                  <TableCell align='center'>생성자</TableCell>
-                </TableRow>
-              </TableHead>
               <TableBody>
-                {historyDataList.length > 0 ? (
-                  historyDataList.map((historyData) => (
-                    <TableRow
-                      key={historyData.historyNum}
-                      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                    >
-                      <TableCell align='center'>{historyData.historyNum}</TableCell>
-                      <TableCell align='center'>{historyData.deviceStatus}</TableCell>
-                      <TableCell align='center'>{historyData.approvalStatus}</TableCell>
-                      <TableCell align='center'>{historyData.changeContents}</TableCell>
-                      <TableCell align='center'>{historyData.reason}</TableCell>
-                      <TableCell align='center'>{historyData.createDatetime}</TableCell>
-                      <TableCell align='center'>{historyData.userName}</TableCell>
+                {historyData ? (
+                  <>
+                    <TableRow>
+                      <TableCell sx={{ width: '30%', backgroundColor: '#f5f5f5', fontWeight: 600 }}>일반사항</TableCell>
+                      <TableCell>
+                        {[
+                          historyData.deviceType,
+                          historyData.modelName,
+                        ]
+                          .filter((v) => !!v)
+                          .join(', ') || '없음'}
+                      </TableCell>
                     </TableRow>
-                  ))
+                    <TableRow>
+                      <TableCell sx={{ width: '30%', backgroundColor: '#f5f5f5', fontWeight: 600 }}>장비번호</TableCell>
+                      <TableCell>{historyData.deviceNum || '없음'}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell sx={{ backgroundColor: '#f5f5f5', fontWeight: 600 }}>사용자</TableCell>
+                      <TableCell>
+                        {historyData.userName || '없음'}
+                        {historyData.empNum ? ` (사번 ${historyData.empNum})` : ''}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell sx={{ backgroundColor: '#f5f5f5', fontWeight: 600 }}>장비 상태</TableCell>
+                      <TableCell>
+                        {getDeviceStatusName(historyData.deviceStatusCode) || historyData.deviceStatus || '없음'}
+                        {historyData.deviceStatusCode ? ` (${historyData.deviceStatusCode})` : ''}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell sx={{ backgroundColor: '#f5f5f5', fontWeight: 600 }}>결재 상태</TableCell>
+                      <TableCell>
+                        {getApprovalStatusName(historyData.approvalStatusCode) || historyData.approvalStatus || '없음'}
+                        {historyData.approvalStatusCode ? ` (${historyData.approvalStatusCode})` : ''}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell sx={{ backgroundColor: '#f5f5f5', fontWeight: 600 }}>변경 내용</TableCell>
+                      <TableCell>{historyData.changeContents || '없음'}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell sx={{ backgroundColor: '#f5f5f5', fontWeight: 600 }}>사유</TableCell>
+                      <TableCell>{historyData.reason || '없음'}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell sx={{ backgroundColor: '#f5f5f5', fontWeight: 600 }}>생성 일시</TableCell>
+                      <TableCell>{historyData.createDatetime || '없음'}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell sx={{ backgroundColor: '#f5f5f5', fontWeight: 600 }}>생성자</TableCell>
+                      <TableCell>{historyData.createUser ?? '없음'}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell sx={{ backgroundColor: '#f5f5f5', fontWeight: 600 }}>이력번호</TableCell>
+                      <TableCell>{historyData.historyNum}</TableCell>
+                    </TableRow>
+                  </>
                 ) : (
                   <TableRow>
-                    <TableCell align='center' colSpan={7}>
-                      이력 데이터가 없습니다.
+                    <TableCell align='center' colSpan={2}>
+                      이력 데이터를 불러오지 못했습니다.
                     </TableCell>
                   </TableRow>
                 )}

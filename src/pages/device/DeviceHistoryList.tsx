@@ -35,9 +35,9 @@ export default function DeviceHistoryList() {
     pageSize: 10,
     currentPage: 1,
   });
-  // 상세 팝업 선택 이력 데이터는 현재 미사용 상태이므로 제거
+  // 팝업 상태
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [selectedDeviceNum, setSelectedDeviceNum] = useState<number | null>(null);
+  const [selectedHistoryNum, setSelectedHistoryNum] = useState<number | null>(null);
 
   useEffect(() => {
     fetchData();
@@ -89,16 +89,16 @@ export default function DeviceHistoryList() {
     fetchData(page);
   };
 
-  // 장비번호 클릭 핸들러
-  const handleDeviceNumClick = (historyData: DeviceHistoryData) => {
-    setSelectedDeviceNum(Number(historyData.deviceNum));
+  // 행 선택 핸들러 (팝업 오픈)
+  const handleRowClick = (historyData: DeviceHistoryData) => {
+    setSelectedHistoryNum(historyData.historyNum);
     setIsPopupOpen(true);
   };
 
-  // 팝업 닫기 핸들러
+  // 팝업 닫기
   const handleClosePopup = () => {
     setIsPopupOpen(false);
-    setSelectedDeviceNum(null);
+    setSelectedHistoryNum(null);
   };
 
   return (
@@ -157,23 +157,12 @@ export default function DeviceHistoryList() {
               deviceHistoryDatas.map((historyData) => (
                 <TableRow
                   key={historyData.historyNum}
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 }, cursor: 'pointer' }}
+                  hover
+                  onClick={() => handleRowClick(historyData)}
                 >
                   <TableCell align='center'>{historyData.historyNum}</TableCell>
-                  <TableCell 
-                    align='center'
-                    sx={{ 
-                      cursor: 'pointer',
-                      color: 'primary.main',
-                      textDecoration: 'underline',
-                      '&:hover': {
-                        color: 'primary.dark',
-                      }
-                    }}
-                    onClick={() => handleDeviceNumClick(historyData)}
-                  >
-                    {historyData.deviceNum ?? ''}
-                  </TableCell>
+                  <TableCell align='center'>{historyData.deviceNum ?? ''}</TableCell>
                   <TableCell align='center'>{historyData.deviceType ?? ''}</TableCell>
                   <TableCell align='center'>{historyData.userName ?? ''}</TableCell>
                   <TableCell align='center'>{historyData.deviceStatus ?? ''}</TableCell>
@@ -206,7 +195,7 @@ export default function DeviceHistoryList() {
       <DeviceHistoryDetailPopup
         open={isPopupOpen}
         onClose={handleClosePopup}
-        deviceNum={selectedDeviceNum}
+        historyNum={selectedHistoryNum}
       />
     </>
   );

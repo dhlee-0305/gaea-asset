@@ -18,6 +18,7 @@ import LoginPage from '@/pages/login/LoginPage';
 import ChangePasswordPage from '@/pages/login/ChangePasswordPage';
 import DepartmentManagement from '@/pages/department/DepartmentManagement';
 import CodeManager from '@/pages/code/CodeManager';
+import { USER_ROLE } from '@/common/constants';
 
 export default function AppRoute() {
   return (
@@ -30,7 +31,13 @@ export default function AppRoute() {
           <Route
             path='/user-management/users'
             element={
-              <RequireRoles allowedRoles={['01','02','03']}>
+              <RequireRoles
+                allowedRoles={[
+                  USER_ROLE.TEAM_MANAGER,
+                  USER_ROLE.ASSET_MANAGER,
+                  USER_ROLE.SYSTEM_MANAGER,
+                ]}
+              >
                 <UserList />
               </RequireRoles>
             }
@@ -38,7 +45,13 @@ export default function AppRoute() {
           <Route
             path='/user-management/users/:userNo'
             element={
-              <RequireRoles allowedRoles={['01','02','03']}>
+              <RequireRoles
+                allowedRoles={[
+                  USER_ROLE.TEAM_MANAGER,
+                  USER_ROLE.ASSET_MANAGER,
+                  USER_ROLE.SYSTEM_MANAGER,
+                ]}
+              >
                 <UserDetail />
               </RequireRoles>
             }
@@ -46,7 +59,13 @@ export default function AppRoute() {
           <Route
             path='/user-management/users/create'
             element={
-              <RequireRoles allowedRoles={['01','02','03']}>
+              <RequireRoles
+                allowedRoles={[
+                  USER_ROLE.TEAM_MANAGER,
+                  USER_ROLE.ASSET_MANAGER,
+                  USER_ROLE.SYSTEM_MANAGER,
+                ]}
+              >
                 <UserForm />
               </RequireRoles>
             }
@@ -54,7 +73,13 @@ export default function AppRoute() {
           <Route
             path='/user-management/users/:userNo/update'
             element={
-              <RequireRoles allowedRoles={['01','02','03']}>
+              <RequireRoles
+                allowedRoles={[
+                  USER_ROLE.TEAM_MANAGER,
+                  USER_ROLE.ASSET_MANAGER,
+                  USER_ROLE.SYSTEM_MANAGER,
+                ]}
+              >
                 <UserForm />
               </RequireRoles>
             }
@@ -62,7 +87,13 @@ export default function AppRoute() {
           <Route
             path='/user-management/departments'
             element={
-              <RequireRoles allowedRoles={['01','02','03']}>
+              <RequireRoles
+                allowedRoles={[
+                  USER_ROLE.TEAM_MANAGER,
+                  USER_ROLE.ASSET_MANAGER,
+                  USER_ROLE.SYSTEM_MANAGER,
+                ]}
+              >
                 <DepartmentManagement />
               </RequireRoles>
             }
@@ -98,7 +129,7 @@ export default function AppRoute() {
           <Route
             path='/code-management/codes'
             element={
-              <RequireRoles allowedRoles={['03']}>
+              <RequireRoles allowedRoles={[USER_ROLE.SYSTEM_MANAGER]}>
                 <CodeManager />
               </RequireRoles>
             }

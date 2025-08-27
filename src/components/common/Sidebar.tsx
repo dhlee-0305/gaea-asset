@@ -17,6 +17,7 @@ import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
 
 import { getToken, parseJwt } from '@/common/utils/auth';
+import { USER_ROLE } from '@/common/constants';
 
 const menuItems = [
   {
@@ -60,20 +61,20 @@ export default function Sidebar() {
   type SidebarMenuItem = typeof menuItems[number];
   const dynamicMenuItems = menuItems.reduce<Array<SidebarMenuItem>>((acc, menu) => {
     if (menu.key === 'user-management') {
-      // roleCode가 '01','02','03'인 경우에만 사용자관리(및 하위 메뉴) 노출
+      // 특정 권한에서만 사용자관리(및 하위 메뉴) 노출
       const allowed =
         !!userInfo &&
-        (userInfo.roleCode === '01' ||
-          userInfo.roleCode === '02' ||
-          userInfo.roleCode === '03');
+        (userInfo.roleCode === USER_ROLE.TEAM_MANAGER ||
+          userInfo.roleCode === USER_ROLE.ASSET_MANAGER ||
+          userInfo.roleCode === USER_ROLE.SYSTEM_MANAGER);
       if (!allowed) {
         return acc;
       }
     }
 
     if (menu.key === 'code-management') {
-      // roleCode가 '03'인 경우에만 공통코드 노출
-      if (userInfo?.roleCode !== '03') {
+      // 시스템관리자만 공통코드 노출
+      if (userInfo?.roleCode !== USER_ROLE.SYSTEM_MANAGER) {
         return acc;
       }
     }
@@ -108,6 +109,18 @@ export default function Sidebar() {
   // 메뉴 클릭
   const handleClick = (menu: string) => {
     setOpenMenu((prev) => (prev === menu ? null : menu));
+  };
+
+  // 하위 메뉴 클릭 (특정 메뉴 초기화 목적)
+  const handleChildClick = (
+    e: React.MouseEvent,
+    to: string,
+  ) => {
+    // 장비이력관리: 동일 페이지에서 클릭 시 전체 초기화(하드 리로드)
+    if (to === '/device-management/device-history' && location.pathname === to) {
+      e.preventDefault();
+      window.location.href = to;
+    }
   };
 
   return (
@@ -149,6 +162,7 @@ export default function Sidebar() {
                         key={child.to}
                         component={Link}
                         to={child.to}
+                        onClick={(e) => handleChildClick(e, child.to)}
                         sx={{
                           '&:hover': { backgroundColor: '#33334d' },
                           backgroundColor: isSelected ? '#2d2d4d' : 'inherit',
