@@ -64,7 +64,7 @@ export default function NoticePreview() {
         <Table size='small'>
           <TableHead>
             <TableRow>
-              <TableCell align='center'>제목</TableCell>
+              <TableCell align='left'>제목</TableCell>
               <TableCell align='center'>작성자</TableCell>
               <TableCell align='center'>등록일자</TableCell>
             </TableRow>
@@ -79,7 +79,7 @@ export default function NoticePreview() {
                     sx={{ cursor: 'pointer', height: 35 }}
                     onClick={() => handleClickRow(Number(notice.noticeNum))}
                   >
-                    <TableCell align='center'>{notice.title}</TableCell>
+                    <TableCell align='left'>{notice.title}</TableCell>
                     <TableCell align='center'>{notice.createUser}</TableCell>
                     <TableCell align='center'>
                       {notice.createDateTime}
