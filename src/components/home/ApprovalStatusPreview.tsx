@@ -82,7 +82,7 @@ export default function ApprovalStatusPreview() {
               <>
                 {approvalList.map((item) => (
                   <TableRow
-                    key={item.historyNum}
+                    key={item.deviceNum}
                     hover
                     sx={{ cursor: 'pointer', height: 35 }}
                     onClick={() => handleClickRow(item.deviceNum)}
@@ -92,7 +92,7 @@ export default function ApprovalStatusPreview() {
                     <TableCell align='center'>{item.approvalStatus}</TableCell>
                     <TableCell align='center'>
                       {item.createDatetime
-                        ? item.createDatetime.split(' ')[0].replace(/-/g, '.')
+                        ? item.createDatetime.split(' ')[0].replace(/-/g, '-')
                         : ''}
                     </TableCell>
                   </TableRow>
