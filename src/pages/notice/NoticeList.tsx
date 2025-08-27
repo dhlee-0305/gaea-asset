@@ -15,7 +15,7 @@ import {
   TextField,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
 import api from '@/common/utils/api';
@@ -152,7 +152,7 @@ export default function NoticeList() {
                   sx={{ cursor: 'pointer' }}
                   onClick={() => handleMoveDetail(Number(noticeData.noticeNum))}
                 >
-                  <TableCell align='center'>{noticeData.noticeNum}</TableCell>
+                  <TableCell align='center'>{noticeData.rowNum}</TableCell>
                   <TableCell align='left'>{noticeData.title}</TableCell>
                   <TableCell align='center'>{noticeData.createUser}</TableCell>
                   <TableCell align='center'>
