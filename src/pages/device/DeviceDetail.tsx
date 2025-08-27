@@ -24,11 +24,22 @@ export default function DeviceDetail() {
   const userRoleCode = userInfo?.roleCode;
   const isAdmin = isAdminRole();
 
+  // 수정 가능 여부 : 결재 상태가 승인 대기면 수정 불가
   const isUpdatable = !(
     deviceData?.approvalStatusCode ===
       DEVICE_APPROVAL_STATUS.TEAM_MANAGER_PENDING ||
     deviceData?.approvalStatusCode === DEVICE_APPROVAL_STATUS.ADMIN_PENDING
   );
+
+  // 승인 버튼 노출 조건
+  // 부서장 승인 대기 -> 부서장(01) 노출
+  // 관리자 승인 대기 -> 관리자(02/03) 노출
+  const canShowApproveButton =
+    (deviceData?.approvalStatusCode ===
+      DEVICE_APPROVAL_STATUS.TEAM_MANAGER_PENDING &&
+      userRoleCode === USER_ROLE.TEAM_MANAGER) ||
+    (deviceData?.approvalStatusCode === DEVICE_APPROVAL_STATUS.ADMIN_PENDING &&
+      isAdmin);
 
   useEffect(() => {
     fetchData();
@@ -252,7 +263,7 @@ export default function DeviceDetail() {
           <Box
             sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end', gap: 1 }}
           >
-            {!isUpdatable && userRoleCode != USER_ROLE.USER && (
+            {canShowApproveButton && (
               <Button
                 variant='outlined'
                 color='error'
