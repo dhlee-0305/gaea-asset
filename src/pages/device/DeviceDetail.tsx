@@ -167,7 +167,7 @@ export default function DeviceDetail() {
               <Typography color='textSecondary'>제조사</Typography>
             </Grid>
             <Grid size={8}>
-              <Typography>{deviceData?.manufacturerCode}</Typography>
+              <Typography>{deviceData?.manufacturer}</Typography>
             </Grid>
             <Grid size={4}>
               <Typography color='textSecondary'>모델명</Typography>
@@ -210,6 +210,12 @@ export default function DeviceDetail() {
             </Grid>
             <Grid size={8}>
               <Typography>{deviceData?.screenSize}</Typography>
+            </Grid>
+            <Grid size={4}>
+              <Typography color='textSecondary'>GPU</Typography>
+            </Grid>
+            <Grid size={8}>
+              <Typography>{deviceData?.gpuSpec}</Typography>
             </Grid>
             <Grid size={4}>
               <Typography color='textSecondary'>구매일자</Typography>

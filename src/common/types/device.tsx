@@ -25,7 +25,7 @@ export interface DeviceData {
   /* 장비 유형 */
   deviceType: string;
   /* 제조사 코드 */
-  manufacturerCode: string;
+  manufacturer: string;
   /* 모델명 */
   modelName: string;
   /* 제조일자 */
@@ -33,15 +33,15 @@ export interface DeviceData {
   /* CPU 사양 */
   cpuSpec: string;
   /* 메모리 */
-  memorySize: number;
+  memorySize: string;
   /* 스토리지 정보 */
   storageInfo: string;
   /* 운영체제 */
   operatingSystem: string;
   /* 화면 크기 */
-  screenSize: number;
+  screenSize: string;
   /* GPU */
-  gpuSpec: number;
+  gpuSpec: string;
   /* 장비 상태 코드*/
   deviceStatusCode: string;
   /* 장비 상태 */
@@ -76,7 +76,7 @@ export const deviceLabels: Partial<Record<keyof DeviceData, string>> = {
   usagePurpose: '사용용도',
   archiveLocation: '사용/보관 위치',
   oldDeviceId: '기존 장비관리번호',
-  manufacturerCode: '제조사',
+  manufacturer: '제조사',
   modelName: '모델명',
   manufactureDate: '제조년도',
   cpuSpec: 'CPU',

@@ -51,6 +51,7 @@ export default function UserListPopup({
     try {
       const response = await api.get('/users', {
         params: {
+          searchColumn: 'userName',
           searchKeyword: value,
           currentPage: 1,
           pageSize: 10000,

@@ -397,7 +397,7 @@ export default function DeviceForm() {
                       shrink: true,
                     },
                   }}
-                  {...register('manufacturerCode')}
+                  {...register('manufacturer')}
                 />
               </Grid>
               <Grid size={12}>

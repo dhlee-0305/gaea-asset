@@ -16,7 +16,7 @@ import {
   TextField,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
 import api from '@/common/utils/api';
@@ -99,6 +99,11 @@ export default function DeviceList() {
   // 등록 버튼 클릭 핸들러
   const handleMoveCreate = (): void => {
     navigate('/device-management/devices/create');
+  };
+
+  // 상세보기 이동 핸들러
+  const handleMoveDetail = (deviceNum: number): void => {
+    navigate(`/device-management/devices/${deviceNum}`);
   };
 
   const excelDownload = async (): Promise<void> => {
@@ -202,14 +207,15 @@ export default function DeviceList() {
               deviceDatas.map((deviceData) => (
                 <TableRow
                   key={deviceData.deviceNum}
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                  sx={{
+                    '&:last-child td, &:last-child th': { border: 0 },
+                    cursor: 'pointer',
+                  }}
+                  hover
+                  onClick={() => handleMoveDetail(deviceData.deviceNum)}
                 >
                   <TableCell align='center' component='th' scope='row'>
-                    <Link
-                      to={`/device-management/devices/${deviceData.deviceNum}`}
-                    >
-                      {deviceData.deviceNum}
-                    </Link>
+                    {deviceData.deviceNum}
                   </TableCell>
                   <TableCell align='center'>{deviceData.userName}</TableCell>
                   <TableCell align='center'>{deviceData.orgName}</TableCell>
