@@ -7,6 +7,15 @@ interface DialogState {
   contents: string;
   confirmButtonLabel?: string;
   cancelButtonLabel?: string;
+  input?: DialogInput;
+}
+
+interface DialogInput {
+  placeholder?: string;
+  defaultValue?: string;
+  required?: boolean;
+  minRows?: number;
+  helperText?: string;
 }
 
 const initialState: { dialog: DialogState } = {
@@ -16,6 +25,7 @@ const initialState: { dialog: DialogState } = {
     contents: '',
     confirmButtonLabel: '',
     cancelButtonLabel: '',
+    input: undefined,
   },
 };
 
@@ -30,6 +40,7 @@ const dialogSlice = createSlice({
         contents: string;
         confirmButtonLabel?: string;
         cancelButtonLabel?: string;
+        input?: DialogInput;
       }>,
     ) => {
       state.dialog = {
@@ -38,6 +49,7 @@ const dialogSlice = createSlice({
         contents: action.payload.contents,
         confirmButtonLabel: action.payload.confirmButtonLabel,
         cancelButtonLabel: action.payload.cancelButtonLabel,
+        input: action.payload.input,
       };
     },
     hideDialog: (state) => {

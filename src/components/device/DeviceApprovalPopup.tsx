@@ -19,7 +19,7 @@ import { useParams } from 'react-router-dom';
 
 import { deviceLabels, type DeviceData } from '@/common/types/device';
 import type { AppDispatch } from '@/store';
-import { showAlert, showConfirm } from '@/store/dialogAction';
+import { showAlert, showConfirm, showPrompt } from '@/store/dialogAction';
 import { MESSAGE } from '@/common/constants';
 import api from '@/common/utils/api';
 
@@ -72,29 +72,70 @@ export default function DeviceApprovalPopup({
   });
 
   // 승인/반려 버튼 클릭 핸들러
-  const handleDecision = async (action: 'approve' | 'reject') => {
+  const handleApproval = async () => {
     const confirmed = await dispatch(
       showConfirm({
-        contents:
-          action === 'approve' ? '승인하시겠습니까?' : '반려하시겠습니까?',
+        contents: '승인하시겠습니까?',
       }),
     );
 
     if (!confirmed) return;
 
     try {
-      const url =
-        action === 'approve'
-          ? `/devices/${deviceNum}/approval`
-          : `/devices/${deviceNum}/rejection`;
-
-      const response = await api.post(url, deviceApprovaldata);
+      const response = await api.post(
+        `/devices/${deviceNum}/approval`,
+        deviceApprovaldata,
+      );
 
       if (response.status === 200 && response.data.resultCode === '0000') {
         dispatch(
           showAlert({
-            contents:
-              action === 'approve' ? '승인되었습니다.' : '반려되었습니다.',
+            contents: '승인되었습니다.',
+          }),
+        );
+        onClose();
+      } else {
+        dispatch(
+          showAlert({
+            title: 'Error',
+            contents: response.data.description,
+          }),
+        );
+      }
+    } catch (error) {
+      console.error(error);
+      dispatch(
+        showAlert({
+          title: 'Error',
+          contents: MESSAGE.error,
+        }),
+      );
+    }
+  };
+
+  // 반려 버튼 클릭 핸들러
+  const handleRejection = async () => {
+    const rejectReason = await dispatch(
+      showPrompt({
+        contents: '반려하시겠습니까?',
+        placeholder: '반려 사유를 입력해주세요.',
+        required: true,
+      }),
+    );
+
+    if (rejectReason === null) return;
+
+    try {
+      const payload = { ...deviceApprovaldata, rejectReason };
+      const response = await api.post(
+        `/devices/${deviceNum}/rejection`,
+        payload,
+      );
+
+      if (response.status === 200 && response.data.resultCode === '0000') {
+        dispatch(
+          showAlert({
+            contents: '반려되었습니다.',
           }),
         );
         onClose();
@@ -137,9 +178,9 @@ export default function DeviceApprovalPopup({
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>항목</TableCell>
-                <TableCell>기존 데이터</TableCell>
-                <TableCell>변경 데이터</TableCell>
+                <TableCell sx={{ fontWeight: 'bold' }}>항목</TableCell>
+                <TableCell sx={{ fontWeight: 'bold' }}>기존 데이터</TableCell>
+                <TableCell sx={{ fontWeight: 'bold' }}>변경 데이터</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -162,13 +203,13 @@ export default function DeviceApprovalPopup({
         </TableContainer>
       </DialogContent>
       <DialogActions>
-        <Button variant='contained' onClick={() => handleDecision('approve')}>
+        <Button variant='contained' onClick={() => handleApproval()}>
           승인
         </Button>
         <Button
           variant='contained'
           color='error'
-          onClick={() => handleDecision('reject')}
+          onClick={() => handleRejection()}
         >
           반려
         </Button>
