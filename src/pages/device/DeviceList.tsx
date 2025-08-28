@@ -41,12 +41,6 @@ export default function DeviceList() {
   });
   const isAdmin = isAdminRole();
 
-  const excelButtonStyle = {
-    fontSize: '11px',
-    minWidth: 'auto',
-    padding: '2px 8px',
-  };
-
   useEffect(() => {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -212,11 +206,18 @@ export default function DeviceList() {
       {/* 액셀 영역 */}
       <Box display='flex' justifyContent='flex-end' sx={{ mt: 0.1, mb: 2.5 }}>
         <ButtonGroup>
-          <Button size='small' sx={excelButtonStyle} onClick={excelDownload}>
+          <Button
+            size='small'
+            onClick={excelDownload}
+            sx={{ fontSize: 11, height: 24 }}
+          >
             액셀 다운로드
           </Button>
           {isAdmin && (
-            <ExcelUpload sx={excelButtonStyle} excelUpload={excelUpload}>
+            <ExcelUpload
+              sx={{ fontSize: 11, height: 24 }}
+              excelUpload={excelUpload}
+            >
               엑셀 업로드
             </ExcelUpload>
           )}
