@@ -25,11 +25,10 @@ export const CODE = {
     { code: 'ETC', codeName: '기타' },
   ],
   deviceStatus: [
-    { code: '01', codeName: '대기' },
-    { code: '02', codeName: '사용' },
-    { code: '03', codeName: '반납' },
-    { code: '04', codeName: '파손' },
-    { code: '05', codeName: '폐기' },
+    { code: '01', codeName: '사용' },
+    { code: '02', codeName: '반납' },
+    { code: '03', codeName: '파손' },
+    { code: '04', codeName: '폐기' },
   ],
   approvalStatus: [
     { code: 'A1', codeName: '부서장 승인대기' },
@@ -74,4 +73,25 @@ export const USER_ROLE = {
 export const DEVICE_APPROVAL_STATUS = {
   TEAM_MANAGER_PENDING: 'A1',
   ADMIN_PENDING: 'A2',
+  APPROVED: 'A3',
+  REJECTED: 'A4',
+};
+
+export const DEVICE_TYPE = {
+  COMPUTER: 'PC',
+  MONITOR: 'MO',
+  PHONE: 'HP',
+  ETC: 'ETC',
+};
+
+export const DEVICE_STATUS = {
+  USE: '01',
+  RETURN: '02',
+  BREAKAGE: '03',
+  DISPOSAL: '04',
+};
+
+export const USAGE_DIVISION = {
+  BUSINESS: '01',
+  DEVELOPMENT: '02',
 };

@@ -21,7 +21,14 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 
 import api from '@/common/utils/api';
-import { MESSAGE, CODE, USER_ROLE } from '@/common/constants';
+import {
+  MESSAGE,
+  CODE,
+  USAGE_DIVISION,
+  DEVICE_STATUS,
+  DEVICE_TYPE,
+} from '@/common/constants';
+import { isAdminRole } from '@/common/utils/auth';
 import PageHeader from '@/components/common/PageHeader';
 import { showAlert, showConfirm } from '@/store/dialogAction';
 import type { AppDispatch } from '@/store';
@@ -36,6 +43,7 @@ export default function DeviceForm() {
   const { deviceNum } = useParams();
   const isUpdate = !!deviceNum;
   const [isOpen, setIsOpen] = useState(false);
+  const isAdmin = isAdminRole();
 
   // useForm 선언
   const {
@@ -47,11 +55,11 @@ export default function DeviceForm() {
     setValue,
   } = useForm<DeviceData>({
     defaultValues: {
-      deviceTypeCode: 'PC',
-      usageDivisionCode: USER_ROLE.TEAM_MANAGER,
+      deviceTypeCode: DEVICE_TYPE.COMPUTER,
+      usageDivisionCode: USAGE_DIVISION.BUSINESS,
       userName: '',
       modelName: '',
-      deviceStatusCode: USER_ROLE.TEAM_MANAGER,
+      deviceStatusCode: DEVICE_STATUS.USE,
       manufactureDate: '',
       purchaseDate: null,
       returnDate: null,
@@ -256,6 +264,7 @@ export default function DeviceForm() {
                           id='device-status'
                           label='장비상태'
                           value={field.value}
+                          disabled={!isUpdate} // 등록 시 '사용'으로 고정
                           onChange={(e) => {
                             field.onChange(e.target.value);
                             handleSetChangeData(
@@ -265,7 +274,14 @@ export default function DeviceForm() {
                           }}
                         >
                           {CODE.deviceStatus.map((status) => (
-                            <MenuItem key={status.code} value={status.code}>
+                            <MenuItem
+                              key={status.code}
+                              value={status.code}
+                              disabled={
+                                // 관리자가 아닌 경우 '사용' 항목 비활성화
+                                !isAdmin && status.code === DEVICE_STATUS.USE
+                              }
+                            >
                               {status.codeName}
                             </MenuItem>
                           ))}
