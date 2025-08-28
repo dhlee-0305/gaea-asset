@@ -96,7 +96,7 @@ export default function LoginForm() {
         userId,
       });
 
-      if (res.status === 200 && res.data.resultCode === '0000') {
+      if (res.status === 200 && res.data.resultCode === '200') {
         dispatch(
           showAlert({
             title: '비밀번호 초기화 요청 완료',
