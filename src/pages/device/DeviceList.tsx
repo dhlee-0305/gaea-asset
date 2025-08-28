@@ -27,6 +27,7 @@ import { MESSAGE } from '@/common/constants';
 import type { AppDispatch } from '@/store';
 import type { PageInfo } from '@/common/types/common';
 import { isAdminRole } from '@/common/utils/auth';
+import ExcelUpload from '@/components/common/ExcelUpload';
 
 export default function DeviceList() {
   const dispatch = useDispatch<AppDispatch>();
@@ -138,6 +139,40 @@ export default function DeviceList() {
     }
   };
 
+  const excelUpload = async (file: File): Promise<void> => {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const response = await api.post('/devices/upload/excel', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+
+      if (response.status === 200 && response.data.resultCode === '0000') {
+        await dispatch(
+          showAlert({
+            contents: '엑셀 업로드가 완료되었습니다.',
+          }),
+        );
+      } else {
+        await dispatch(
+          showAlert({
+            title: 'Error',
+            contents: response.data.description,
+          }),
+        );
+      }
+    } catch (error) {
+      console.error(error);
+      dispatch(
+        showAlert({
+          title: 'Error',
+          contents: MESSAGE.error,
+        }),
+      );
+    }
+  };
+
   return (
     <>
       <PageHeader contents='장비 목록' />
@@ -181,9 +216,9 @@ export default function DeviceList() {
             액셀 다운로드
           </Button>
           {isAdmin && (
-            <Button size='small' sx={excelButtonStyle}>
-              액셀 업로드
-            </Button>
+            <ExcelUpload sx={excelButtonStyle} excelUpload={excelUpload}>
+              엑셀 업로드
+            </ExcelUpload>
           )}
         </ButtonGroup>
       </Box>
