@@ -101,6 +101,7 @@ export default function DeviceList() {
     navigate(`/device-management/devices/${deviceNum}`);
   };
 
+  // 엑셀 다운로드
   const excelDownload = async (): Promise<void> => {
     let url: string | null = null;
     try {
@@ -133,6 +134,7 @@ export default function DeviceList() {
     }
   };
 
+  // 엑셀 업로드 처리
   const excelUpload = async (file: File): Promise<void> => {
     const formData = new FormData();
     formData.append('file', file);
@@ -148,6 +150,7 @@ export default function DeviceList() {
             contents: '엑셀 업로드가 완료되었습니다.',
           }),
         );
+        fetchData(1);
       } else {
         await dispatch(
           showAlert({

@@ -165,7 +165,7 @@ export default function ExcelUpload({
                           whiteSpace: 'nowrap',
                           overflow: 'hidden',
                           textOverflow: 'ellipsis',
-                          maxWidth: '80%',
+                          maxWidth: '250px',
                         }}
                       >
                         📄 {uploadFile.name}
