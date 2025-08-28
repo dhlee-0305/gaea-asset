@@ -24,11 +24,15 @@ import { MESSAGE, CODE, VALID_RULES } from '@/common/constants';
 import PageHeader from '@/components/common/PageHeader';
 import { showAlert, showConfirm } from '@/store/dialogAction';
 import type { AppDispatch } from '@/store';
+import type { CodeData } from '@/common/types/code';
 
 export default function UserForm() {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  const [positionData, setPositionData] = useState<CodeData[]>([]);
+  const [gradeData, setGradeData] = useState<CodeData[]>([]);
+
   const { userNo } = useParams();
   const isUpdate = !!userNo;
 
@@ -61,8 +65,10 @@ export default function UserForm() {
           if (response.status === 200) {
             const resData = response.data;
             if (resData.resultCode === '0000') {
+              setPositionData(resData.data.positionList);
+              setGradeData(resData.data.gradeList);
               reset({
-                ...resData.data,
+                ...resData.data.userInfo,
               });
             } else {
               dispatch(
@@ -263,9 +269,9 @@ export default function UserForm() {
                           {...field}
                           error={!!errors.userGradeCd}
                         >
-                          {CODE.userGradeCd.map((gradeCd) => (
+                          {gradeData.map((gradeCd) => (
                             <MenuItem key={gradeCd.code} value={gradeCd.code}>
-                              {gradeCd.userGradeName}
+                              {gradeCd.codeName}
                             </MenuItem>
                           ))}
                         </Select>
@@ -287,7 +293,7 @@ export default function UserForm() {
                         row
                         aria-labelledby='device-type-label'
                       >
-                        {CODE.userPositionCd.map((positionCd) => (
+                        {positionData.map((positionCd) => (
                           <FormControlLabel
                             key={positionCd.code}
                             value={positionCd.code}
