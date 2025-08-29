@@ -12,6 +12,10 @@ import {
   TableRow,
   Paper,
   CircularProgress,
+  MenuItem,
+  Select,
+  InputLabel,
+  FormControl,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
@@ -39,11 +43,37 @@ export default function CodeManager() {
   const [newlyAddedId, setNewlyAddedId] = useState<number | null>(null);
   const inputRefs = useRef<Record<number, HTMLInputElement | null>>({});
 
-  const fetchCodes = async () => {
+  const [categoryList, setCategoryList] = useState<CodeData[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
+
+  const fetchCategories = async () => {
+    try {
+      const res = await api.get('/categories');
+      if (res.data.resultCode === '200') {
+        setCategoryList(res.data.data || []);
+      } else {
+        dispatch(
+          showAlert({ title: '그룹 코드 조회 실패', contents: MESSAGE.error }),
+        );
+      }
+    } catch (error) {
+      console.error('그룹 코드 조회 실패:', error);
+      dispatch(
+        showAlert({ title: '그룹 코드 조회 실패', contents: MESSAGE.error }),
+      );
+    }
+  };
+
+  const fetchCodes = async (category?: string) => {
     setLoading(true);
     try {
-      const response = await api.get('/codes');
-      if (response.status === 200 && response.data.resultCode === '0000') {
+      console.log('category : ', category);
+      const response = await api.get('/codes', {
+        params: {
+          category: category,
+        },
+      });
+      if (response.data.resultCode === '200') {
         let tempId = nextId;
         const rawData: CodeData[] = response.data.data;
         const enrichedData = rawData.map((item) => ({
@@ -77,6 +107,8 @@ export default function CodeManager() {
   };
 
   useEffect(() => {
+    console.log('useEffect : ', new Date());
+    fetchCategories();
     fetchCodes();
   }, []);
   // 새 행 추가 후 첫 번째 입력란에 포커스 주기
@@ -89,6 +121,10 @@ export default function CodeManager() {
       setNewlyAddedId(null);
     }
   }, [newlyAddedId]);
+
+  const handleSearch = () => {
+    fetchCodes(selectedCategory);
+  };
 
   const handleAdd = () => {
     const hasEmptyRow = codes.some(
@@ -121,7 +157,7 @@ export default function CodeManager() {
       },
     ]);
     setNextId((prev) => prev + 1);
-    setNewlyAddedId(newId); // 새로 추가된 id 저장
+    setNewlyAddedId(newId);
   };
 
   const handleChange = (id: number, field: keyof CodeData, value: string) => {
@@ -144,11 +180,11 @@ export default function CodeManager() {
     try {
       const response = await api.delete(`/codes/${category}/${code}`);
 
-      if (response.status === 200 && response.data.resultCode === '0000') {
+      if (response.data.resultCode === '200') {
         dispatch(
           showAlert({ title: '', contents: '공통 코드가 삭제되었습니다.' }),
         );
-        fetchCodes();
+        fetchCodes(selectedCategory);
       } else {
         dispatch(
           showAlert({ title: '공통 코드 삭제 실패', contents: MESSAGE.error }),
@@ -215,9 +251,9 @@ export default function CodeManager() {
         response = await api.put('/codes', code);
       }
 
-      if (response.status === 200 && response.data.resultCode === '0000') {
+      if (response.data.resultCode === '200') {
         dispatch(showAlert({ title: '', contents: '저장되었습니다.' }));
-        fetchCodes();
+        fetchCodes(selectedCategory);
       } else {
         dispatch(
           showAlert({ title: '공통코드 저장 실패', contents: MESSAGE.error }),
@@ -234,7 +270,41 @@ export default function CodeManager() {
   return (
     <Box p={2}>
       <PageHeader contents='공통 코드 관리' />
-      <Box display='flex' justifyContent='flex-end' mb={2}>
+
+      {/* 추가된 UI 영역 */}
+      <Box
+        display='flex'
+        justifyContent='space-between'
+        alignItems='center'
+        mb={2}
+      >
+        <Box display='flex' gap={2}>
+          <FormControl size='small' sx={{ minWidth: 160 }}>
+            <InputLabel>그룹 코드</InputLabel>
+            <Select
+              label='그룹 코드'
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+            >
+              <MenuItem value=''>전체</MenuItem>
+              {categoryList.map((category) => (
+                <MenuItem key={category.category} value={category.category}>
+                  [{category.category}] {category.categoryName}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          <Button
+            variant='outlined'
+            size='small'
+            onClick={handleSearch}
+            sx={{ minWidth: 80 }}
+          >
+            검색
+          </Button>
+        </Box>
+
         <Button
           variant='contained'
           startIcon={<AddIcon />}
