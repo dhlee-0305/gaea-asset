@@ -144,6 +144,44 @@ export default function NoticeDetail() {
               <Typography>{noticeData.createDateTime}</Typography>
             </Grid>
 
+            {noticeData.fileList && noticeData.fileList.length > 0 && (
+              <>
+                <Grid size={7}>
+                  <Box
+                    sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}
+                  >
+                    {noticeData.fileList.map((file, idx) => (
+                      <Box
+                        key={idx}
+                        sx={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          height: 32,
+                          border: '1px solid #eee',
+                          borderRadius: 1,
+                          padding: '2px 6px',
+                        }}
+                      >
+                        <Typography
+                          sx={{
+                            fontSize: '0.75rem',
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            maxWidth: '80%',
+                          }}
+                          key={idx}
+                        >
+                          📄 {file.originFileName}
+                        </Typography>
+                      </Box>
+                    ))}
+                  </Box>
+                </Grid>
+              </>
+            )}
+
             <Grid size={4}></Grid>
             <Grid size={50}>
               <Typography component='pre' sx={{ whiteSpace: 'pre-wrap' }}>

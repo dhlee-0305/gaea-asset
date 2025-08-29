@@ -150,6 +150,7 @@ export default function NoticeList() {
               <TableCell align='left'>제목</TableCell>
               <TableCell align='center'>부서/작성자</TableCell>
               <TableCell align='center'>등록일자</TableCell>
+              <TableCell align='center'>파일 목록</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -164,6 +165,9 @@ export default function NoticeList() {
                   <TableCell align='center'>{noticeData.rowNum}</TableCell>
                   <TableCell align='left'>{noticeData.title}</TableCell>
                   <TableCell align='center'>{noticeData.createUser}</TableCell>
+                  <TableCell align='center'>
+                    {noticeData.createDateTime}
+                  </TableCell>
                   <TableCell align='center'>
                     {noticeData.createDateTime}
                   </TableCell>
