@@ -24,6 +24,7 @@ import PageHeader from '@/components/common/PageHeader';
 import { showAlert } from '@/store/dialogAction';
 import { MESSAGE } from '@/common/constants';
 import type { AppDispatch } from '@/store';
+import { isAdminRole } from '@/common/utils/auth';
 import type { PageInfo } from '@/common/types/common';
 
 export default function NoticeList() {
@@ -36,6 +37,7 @@ export default function NoticeList() {
     pageSize: 10,
     currentPage: 1,
   });
+  const isAdmin = isAdminRole();
 
   useEffect(() => {
     searchData();
@@ -150,7 +152,6 @@ export default function NoticeList() {
               <TableCell align='left'>제목</TableCell>
               <TableCell align='center'>부서/작성자</TableCell>
               <TableCell align='center'>등록일자</TableCell>
-              <TableCell align='center'>파일 목록</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -165,9 +166,6 @@ export default function NoticeList() {
                   <TableCell align='center'>{noticeData.rowNum}</TableCell>
                   <TableCell align='left'>{noticeData.title}</TableCell>
                   <TableCell align='center'>{noticeData.createUser}</TableCell>
-                  <TableCell align='center'>
-                    {noticeData.createDateTime}
-                  </TableCell>
                   <TableCell align='center'>
                     {noticeData.createDateTime}
                   </TableCell>
@@ -193,11 +191,15 @@ export default function NoticeList() {
           />
         )}
       </Box>
-      <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
-        <Button variant='contained' onClick={handleMoveCreate}>
-          등록
-        </Button>
-      </Box>
+      {isAdmin && (
+        <Box
+          sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end', gap: 2 }}
+        >
+          <Button variant='contained' onClick={handleMoveCreate}>
+            등록
+          </Button>
+        </Box>
+      )}
     </>
   );
 }
