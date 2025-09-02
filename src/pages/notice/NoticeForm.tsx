@@ -6,6 +6,7 @@ import {
   TextField,
   Typography,
   IconButton,
+  Tooltip,
 } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -17,6 +18,7 @@ import CloseIcon from '@mui/icons-material/Close';
 
 import api from '@/common/utils/api';
 import type { NoticeData } from '@/common/types/notice';
+import type { FileData } from '@/common/types/file';
 import { MESSAGE } from '@/common/constants';
 import PageHeader from '@/components/common/PageHeader';
 import { showAlert, showConfirm } from '@/store/dialogAction';
@@ -32,11 +34,30 @@ export default function NoticeForm() {
   const isUpdate = !!noticeId;
   const token = getToken();
   const loginInfo = token ? parseJwt(token) : null;
-  const [fileList, setFileList] = useState<File[]>([]);
+  const [existingFiles, setExistingFiles] = useState<FileData[]>([]);
+  const [addedFiles, setAddedFiles] = useState<File[]>([]);
 
   const VisuallyHiddenInput = styled('input')({
     display: 'none',
   });
+
+  const boxStyle = {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    height: 32,
+    border: '1px solid #eee',
+    borderRadius: 1,
+    padding: '2px 6px',
+  };
+
+  const textStyle = {
+    fontSize: '0.75rem',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    maxWidth: '80%',
+  };
 
   // useForm 선언
   const {
@@ -49,7 +70,8 @@ export default function NoticeForm() {
       title: '',
       content: '',
       createDateTime: '',
-      createUser: loginInfo?.empNum || '',
+      createUser: loginInfo?.empNum ?? '',
+      fileList: [],
     },
   });
 
@@ -63,6 +85,10 @@ export default function NoticeForm() {
 
           if (resultCode === '0000' && data) {
             reset(data);
+
+            if (Array.isArray(data.fileList)) {
+              setExistingFiles(data.fileList);
+            }
           } else {
             dispatch(
               showAlert({
@@ -92,7 +118,7 @@ export default function NoticeForm() {
     if (files) {
       const newFiles = Array.from(files);
 
-      setFileList((prev) => {
+      setAddedFiles((prev) => {
         const existingNames = prev.map((file) => file.name);
         const filtered = newFiles.filter(
           (file) => !existingNames.includes(file.name),
@@ -103,8 +129,24 @@ export default function NoticeForm() {
   };
 
   // 파일 삭제 처리
-  const handleRemoveFile = (index: number) => {
-    setFileList((prev) => prev.filter((_, i) => i !== index));
+  const handleRemoveFile = async (fileNum: number) => {
+    try {
+      await api.delete(`/files/${fileNum}`);
+      setExistingFiles((prev) => prev.filter((f) => f.fileNum !== fileNum));
+    } catch (error) {
+      console.error('파일 삭제 실패:', error);
+      dispatch(
+        showAlert({
+          title: '삭제 실패',
+          contents: '파일 삭제 중 오류가 발생했습니다.',
+        }),
+      );
+    }
+  };
+
+  // 파일 업로드 취소
+  const handleUploadCancel = (index: number) => {
+    setAddedFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
   // 저장(등록, 수정) 처리
@@ -128,12 +170,12 @@ export default function NoticeForm() {
       formData.append('createUser', data.createUser);
       formData.append('createDateTime', data.createDateTime);
 
-      if (isUpdate) {
-        formData.append('updateUser', loginInfo?.empNum || '');
+      if (isUpdate && loginInfo?.empNum != null) {
+        formData.append('updateUser', String(loginInfo.empNum));
       }
 
       // 파일 추가
-      fileList.forEach((file) => {
+      addedFiles.forEach((file) => {
         formData.append('files', file);
       });
 
@@ -290,48 +332,53 @@ export default function NoticeForm() {
                     />
                   </Button>
                 </Grid>
-                {fileList.length > 0 ? (
-                  <Grid>
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                      {fileList.map((file, index) => (
-                        <Box
-                          key={index}
-                          sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                            height: 32,
-                            border: '1px solid #eee',
-                            borderRadius: 1,
-                            padding: '2px 6px',
-                          }}
+                {addedFiles.length === 0 && existingFiles.length === 0 && (
+                  <Grid spacing={12}>
+                    <Typography sx={{ fontSize: '0.8rem', color: 'gray' }}>
+                      선택된 파일 없음
+                    </Typography>
+                  </Grid>
+                )}
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                  {[...existingFiles, ...addedFiles].map((file, index) => {
+                    const isNewFile = !('fileNum' in file);
+                    const fileKey = isNewFile
+                      ? `new-${index}`
+                      : `existing-${file.fileNum}`;
+                    const fileName =
+                      'originFileName' in file
+                        ? file.originFileName
+                        : file.name;
+
+                    return (
+                      <Box key={fileKey} sx={boxStyle}>
+                        <Tooltip
+                          title={isNewFile ? '추가된 파일' : '등록된 파일'}
                         >
                           <Typography
                             sx={{
-                              fontSize: '0.75rem',
-                              whiteSpace: 'nowrap',
-                              overflow: 'hidden',
-                              textOverflow: 'ellipsis',
-                              maxWidth: '80%',
+                              ...textStyle,
+                              color: isNewFile ? 'blue' : 'inherit',
+                              cursor: 'pointer',
                             }}
                           >
-                            📄 {file.name}
+                            📄 {fileName}
                           </Typography>
-                          <IconButton
-                            size='small'
-                            onClick={() => handleRemoveFile(index)}
-                          >
-                            <CloseIcon fontSize='small' />
-                          </IconButton>
-                        </Box>
-                      ))}
-                    </Box>
-                  </Grid>
-                ) : (
-                  <Typography sx={{ fontSize: '0.8rem', color: 'gray' }}>
-                    선택된 파일 없음
-                  </Typography>
-                )}
+                        </Tooltip>
+                        <IconButton
+                          size='small'
+                          onClick={() =>
+                            isNewFile
+                              ? handleUploadCancel(index)
+                              : handleRemoveFile(file.fileNum)
+                          }
+                        >
+                          <CloseIcon fontSize='small' />
+                        </IconButton>
+                      </Box>
+                    );
+                  })}
+                </Box>
               </Grid>
             </Grid>
             <Box
