@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Paper, Typography } from '@mui/material';
+import { Box, Button, Grid, Paper, Stack, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -7,6 +7,7 @@ import api from '@/common/utils/api';
 import type { NoticeData } from '@/common/types/notice';
 import PageHeader from '@/components/common/PageHeader';
 import type { AppDispatch } from '@/store';
+import { isAdminRole } from '@/common/utils/auth';
 import { showAlert, showConfirm } from '@/store/dialogAction';
 import { MESSAGE } from '@/common/constants';
 
@@ -21,7 +22,9 @@ export default function NoticeDetail() {
     content: '',
     createDateTime: '',
     createUser: '',
+    fileList: [],
   });
+  const isAdmin = isAdminRole();
 
   useEffect(() => {
     searchData();
@@ -117,6 +120,36 @@ export default function NoticeDetail() {
     navigate(`/notice/notices/update/${noticeId}`);
   };
 
+  // 파일 다운로드
+  const downloadFile = async (
+    storedFileName: string,
+    originFileName: string,
+  ) => {
+    let blobUrl: string | null = null;
+    try {
+      const response = await api.get(`/files/${storedFileName}`, {
+        responseType: 'blob',
+      });
+      blobUrl = window.URL.createObjectURL(response.data);
+      const downloadLink = document.createElement('a');
+      downloadLink.href = blobUrl;
+      downloadLink.setAttribute('download', originFileName);
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
+    } catch (error) {
+      console.error('파일 다운로드 실패:', error);
+      dispatch(
+        showAlert({
+          title: 'Error',
+          contents: MESSAGE.error,
+        }),
+      );
+    } finally {
+      if (blobUrl) URL.revokeObjectURL(blobUrl);
+    }
+  };
+
   return (
     <>
       <PageHeader contents='공지사항 상세' />
@@ -164,14 +197,25 @@ export default function NoticeDetail() {
                         }}
                       >
                         <Typography
+                          component='span'
+                          onClick={() =>
+                            downloadFile(
+                              file.storedFileName,
+                              file.originFileName,
+                            )
+                          }
                           sx={{
                             fontSize: '0.75rem',
                             whiteSpace: 'nowrap',
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
                             maxWidth: '80%',
+                            cursor: 'pointer',
+                            color: 'primary.main',
+                            '&:hover': {
+                              textDecoration: 'underline',
+                            },
                           }}
-                          key={idx}
                         >
                           📄 {file.originFileName}
                         </Typography>
@@ -195,21 +239,25 @@ export default function NoticeDetail() {
             <Button variant='outlined' onClick={handleMoveList}>
               목록
             </Button>
-            <Button
-              variant='contained'
-              color='primary'
-              onClick={handleMoveUpdate}
-            >
-              수정
-            </Button>
-            <Button
-              variant='contained'
-              color='error'
-              onClick={handleDelete}
-              disabled={isLoading}
-            >
-              삭제
-            </Button>
+            {isAdmin && (
+              <Stack direction='row' spacing={1}>
+                <Button
+                  variant='contained'
+                  color='primary'
+                  onClick={handleMoveUpdate}
+                >
+                  수정
+                </Button>
+                <Button
+                  variant='contained'
+                  color='error'
+                  onClick={handleDelete}
+                  disabled={isLoading}
+                >
+                  삭제
+                </Button>
+              </Stack>
+            )}
           </Box>
         </Paper>
       </Box>
