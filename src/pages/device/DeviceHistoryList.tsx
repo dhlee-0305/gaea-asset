@@ -22,7 +22,7 @@ import type { DeviceHistoryData } from '@/common/types/device';
 import PageHeader from '@/components/common/PageHeader';
 import DeviceHistoryDetailPopup from '@/components/device/DeviceHistoryDetailPopup';
 import { showAlert } from '@/store/dialogAction';
-import { MESSAGE } from '@/common/constants';
+import { MESSAGE, CODE } from '@/common/constants';
 import type { AppDispatch } from '@/store';
 import type { PageInfo } from '@/common/types/common';
 
@@ -35,6 +35,14 @@ export default function DeviceHistoryList() {
     pageSize: 10,
     currentPage: 1,
   });
+  
+  const getDeviceTypeName = (value?: string) => {
+    if (!value) return '';
+    const byCode = CODE.deviceType.find((c) => c.code === value);
+    if (byCode) return byCode.codeName;
+    const byName = CODE.deviceType.find((c) => c.codeName === value);
+    return byName ? byName.codeName : value;
+  };
   // 팝업 상태
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedHistoryNum, setSelectedHistoryNum] = useState<number | null>(null);
@@ -163,7 +171,7 @@ export default function DeviceHistoryList() {
                 >
                   <TableCell align='center'>{historyData.historyNum}</TableCell>
                   <TableCell align='center'>{historyData.deviceNum ?? ''}</TableCell>
-                  <TableCell align='center'>{historyData.deviceType ?? ''}</TableCell>
+                  <TableCell align='center'>{getDeviceTypeName(historyData.deviceType) || ''}</TableCell>
                   <TableCell align='center'>{historyData.userName ?? ''}</TableCell>
                   <TableCell align='center'>{historyData.deviceStatus ?? ''}</TableCell>
                   <TableCell align='center'>{historyData.approvalStatus ?? ''}</TableCell>

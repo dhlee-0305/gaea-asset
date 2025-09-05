@@ -51,6 +51,14 @@ export default function DeviceHistoryDetailPopup({
     return item ? item.codeName : '';
   };
 
+  const getDeviceTypeName = (value?: string) => {
+    if (!value) return '';
+    const byCode = CODE.deviceType.find((c) => c.code === value);
+    if (byCode) return byCode.codeName;
+    const byName = CODE.deviceType.find((c) => c.codeName === value);
+    return byName ? byName.codeName : value;
+  };
+
   useEffect(() => {
     if (open && historyNum) {
       fetchHistoryData();
@@ -128,11 +136,11 @@ export default function DeviceHistoryDetailPopup({
                 {historyData ? (
                   <>
                     <TableRow>
-                      <TableCell sx={{ width: '30%', backgroundColor: '#f5f5f5', fontWeight: 600 }}>일반사항</TableCell>
+                      <TableCell sx={{ width: '30%', backgroundColor: '#f5f5f5', fontWeight: 600 }}>장비유형/모델명</TableCell>
                       <TableCell>
                         {[
-                          historyData.deviceType,
-                          historyData.modelName,
+                          getDeviceTypeName(historyData.deviceType),
+                          ` (${historyData.modelName})`,
                         ]
                           .filter((v) => !!v)
                           .join(', ') || '없음'}
