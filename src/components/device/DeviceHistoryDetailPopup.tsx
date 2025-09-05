@@ -36,7 +36,9 @@ export default function DeviceHistoryDetailPopup({
   historyNum,
 }: DeviceHistoryDetailPopupProps) {
   const dispatch = useDispatch<AppDispatch>();
-  const [historyData, setHistoryData] = useState<DeviceHistoryData | null>(null);
+  const [historyData, setHistoryData] = useState<DeviceHistoryData | null>(
+    null,
+  );
   const [loading, setLoading] = useState(false);
 
   const getDeviceStatusName = (code?: string) => {
@@ -101,7 +103,7 @@ export default function DeviceHistoryDetailPopup({
     <Dialog
       open={open}
       onClose={handleClose}
-      maxWidth="lg"
+      maxWidth='lg'
       fullWidth
       PaperProps={{
         sx: {
@@ -109,12 +111,20 @@ export default function DeviceHistoryDetailPopup({
         },
       }}
     >
-      <DialogTitle sx={{ m: 0, p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Typography variant="h6" component="div">
+      <DialogTitle
+        sx={{
+          m: 0,
+          p: 2,
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
+      >
+        <Typography variant='h6' component='div'>
           이력번호 [{historyNum}] 상세
         </Typography>
         <IconButton
-          aria-label="close"
+          aria-label='close'
           onClick={handleClose}
           sx={{
             color: (theme) => theme.palette.grey[500],
@@ -123,7 +133,7 @@ export default function DeviceHistoryDetailPopup({
           <CloseIcon />
         </IconButton>
       </DialogTitle>
-      
+
       <DialogContent dividers>
         {loading ? (
           <Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}>
@@ -136,7 +146,15 @@ export default function DeviceHistoryDetailPopup({
                 {historyData ? (
                   <>
                     <TableRow>
-                      <TableCell sx={{ width: '30%', backgroundColor: '#f5f5f5', fontWeight: 600 }}>장비유형/모델명</TableCell>
+                      <TableCell
+                        sx={{
+                          width: '30%',
+                          backgroundColor: '#f5f5f5',
+                          fontWeight: 600,
+                        }}
+                      >
+                        장비유형/모델명
+                      </TableCell>
                       <TableCell>
                         {[
                           getDeviceTypeName(historyData.deviceType),
@@ -147,48 +165,104 @@ export default function DeviceHistoryDetailPopup({
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell sx={{ width: '30%', backgroundColor: '#f5f5f5', fontWeight: 600 }}>장비번호</TableCell>
+                      <TableCell
+                        sx={{
+                          width: '30%',
+                          backgroundColor: '#f5f5f5',
+                          fontWeight: 600,
+                        }}
+                      >
+                        장비번호
+                      </TableCell>
                       <TableCell>{historyData.deviceNum || '없음'}</TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell sx={{ backgroundColor: '#f5f5f5', fontWeight: 600 }}>사용자</TableCell>
+                      <TableCell
+                        sx={{ backgroundColor: '#f5f5f5', fontWeight: 600 }}
+                      >
+                        사용자
+                      </TableCell>
                       <TableCell>
                         {historyData.userName || '없음'}
-                        {historyData.empNum ? ` (사번 ${historyData.empNum})` : ''}
+                        {historyData.empNum
+                          ? ` (사번 ${historyData.empNum})`
+                          : ''}
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell sx={{ backgroundColor: '#f5f5f5', fontWeight: 600 }}>장비 상태</TableCell>
+                      <TableCell
+                        sx={{ backgroundColor: '#f5f5f5', fontWeight: 600 }}
+                      >
+                        장비 상태
+                      </TableCell>
                       <TableCell>
-                        {getDeviceStatusName(historyData.deviceStatusCode) || historyData.deviceStatus || '없음'}
-                        {historyData.deviceStatusCode ? ` (${historyData.deviceStatusCode})` : ''}
+                        {getDeviceStatusName(historyData.deviceStatusCode) ||
+                          historyData.deviceStatus ||
+                          '없음'}
+                        {historyData.deviceStatusCode
+                          ? ` (${historyData.deviceStatusCode})`
+                          : ''}
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell sx={{ backgroundColor: '#f5f5f5', fontWeight: 600 }}>결재 상태</TableCell>
+                      <TableCell
+                        sx={{ backgroundColor: '#f5f5f5', fontWeight: 600 }}
+                      >
+                        결재 상태
+                      </TableCell>
                       <TableCell>
-                        {getApprovalStatusName(historyData.approvalStatusCode) || historyData.approvalStatus || '없음'}
-                        {historyData.approvalStatusCode ? ` (${historyData.approvalStatusCode})` : ''}
+                        {getApprovalStatusName(
+                          historyData.approvalStatusCode,
+                        ) ||
+                          historyData.approvalStatus ||
+                          '없음'}
+                        {historyData.approvalStatusCode
+                          ? ` (${historyData.approvalStatusCode})`
+                          : ''}
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell sx={{ backgroundColor: '#f5f5f5', fontWeight: 600 }}>변경 내용</TableCell>
-                      <TableCell>{historyData.changeContents || '없음'}</TableCell>
+                      <TableCell
+                        sx={{ backgroundColor: '#f5f5f5', fontWeight: 600 }}
+                      >
+                        변경 내용
+                      </TableCell>
+                      <TableCell>
+                        {historyData.changeContents || '없음'}
+                      </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell sx={{ backgroundColor: '#f5f5f5', fontWeight: 600 }}>사유</TableCell>
+                      <TableCell
+                        sx={{ backgroundColor: '#f5f5f5', fontWeight: 600 }}
+                      >
+                        사유
+                      </TableCell>
                       <TableCell>{historyData.reason || '없음'}</TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell sx={{ backgroundColor: '#f5f5f5', fontWeight: 600 }}>생성 일시</TableCell>
-                      <TableCell>{historyData.createDatetime || '없음'}</TableCell>
+                      <TableCell
+                        sx={{ backgroundColor: '#f5f5f5', fontWeight: 600 }}
+                      >
+                        생성 일시
+                      </TableCell>
+                      <TableCell>
+                        {historyData.createDatetime || '없음'}
+                      </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell sx={{ backgroundColor: '#f5f5f5', fontWeight: 600 }}>생성자</TableCell>
+                      <TableCell
+                        sx={{ backgroundColor: '#f5f5f5', fontWeight: 600 }}
+                      >
+                        생성자
+                      </TableCell>
                       <TableCell>{historyData.createUser ?? '없음'}</TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell sx={{ backgroundColor: '#f5f5f5', fontWeight: 600 }}>이력번호</TableCell>
+                      <TableCell
+                        sx={{ backgroundColor: '#f5f5f5', fontWeight: 600 }}
+                      >
+                        이력번호
+                      </TableCell>
                       <TableCell>{historyData.historyNum}</TableCell>
                     </TableRow>
                   </>
@@ -204,11 +278,11 @@ export default function DeviceHistoryDetailPopup({
           </TableContainer>
         )}
       </DialogContent>
-      
+
       <DialogActions sx={{ p: 2 }}>
         <Button
           onClick={handleClose}
-          variant="contained"
+          variant='contained'
           sx={{
             backgroundColor: '#4CAF50',
             '&:hover': {
@@ -221,4 +295,4 @@ export default function DeviceHistoryDetailPopup({
       </DialogActions>
     </Dialog>
   );
-} 
+}

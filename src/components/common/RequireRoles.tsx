@@ -8,7 +8,10 @@ interface RequireRolesProps {
   children: ReactNode;
 }
 
-export default function RequireRoles({ allowedRoles, children }: RequireRolesProps) {
+export default function RequireRoles({
+  allowedRoles,
+  children,
+}: RequireRolesProps) {
   const roleCode = getUserInfo()?.roleCode;
 
   if (!roleCode) {
@@ -23,5 +26,3 @@ export default function RequireRoles({ allowedRoles, children }: RequireRolesPro
 
   return <>{children}</>;
 }
-
-

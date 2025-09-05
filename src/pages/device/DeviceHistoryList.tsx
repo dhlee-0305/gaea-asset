@@ -30,12 +30,14 @@ export default function DeviceHistoryList() {
   const dispatch = useDispatch<AppDispatch>();
   const [searchColumn, setSearchColumn] = useState('deviceNum');
   const [searchKeyword, setSearchKeyword] = useState('');
-  const [deviceHistoryDatas, setDeviceHistoryDatas] = useState<DeviceHistoryData[]>([]);
+  const [deviceHistoryDatas, setDeviceHistoryDatas] = useState<
+    DeviceHistoryData[]
+  >([]);
   const [pageInfo, setPageInfo] = useState<PageInfo>({
     pageSize: 10,
     currentPage: 1,
   });
-  
+
   const getDeviceTypeName = (value?: string) => {
     if (!value) return '';
     const byCode = CODE.deviceType.find((c) => c.code === value);
@@ -45,7 +47,9 @@ export default function DeviceHistoryList() {
   };
   // 팝업 상태
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [selectedHistoryNum, setSelectedHistoryNum] = useState<number | null>(null);
+  const [selectedHistoryNum, setSelectedHistoryNum] = useState<number | null>(
+    null,
+  );
 
   useEffect(() => {
     fetchData();
@@ -130,7 +134,6 @@ export default function DeviceHistoryList() {
             <MenuItem value='orgName'>부서</MenuItem>
             <MenuItem value='userName'>장비담당자</MenuItem>
             <MenuItem value='deviceNum'>장비번호</MenuItem>
-
           </Select>
         </FormControl>
 
@@ -165,17 +168,36 @@ export default function DeviceHistoryList() {
               deviceHistoryDatas.map((historyData) => (
                 <TableRow
                   key={historyData.historyNum}
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 }, cursor: 'pointer' }}
+                  sx={{
+                    '&:last-child td, &:last-child th': { border: 0 },
+                    cursor: 'pointer',
+                  }}
                   hover
                   onClick={() => handleRowClick(historyData)}
                 >
                   <TableCell align='center'>{historyData.historyNum}</TableCell>
-                  <TableCell align='center'>{historyData.deviceNum ?? ''}</TableCell>
-                  <TableCell align='center'>{getDeviceTypeName(historyData.deviceType) || ''}</TableCell>
-                  <TableCell align='center'>{historyData.userName ?? ''}</TableCell>
-                  <TableCell align='center'>{historyData.deviceStatus ?? ''}</TableCell>
-                  <TableCell align='center'>{historyData.approvalStatus ?? ''}</TableCell>
-                  <TableCell align='center'>{historyData.createDatetime ? historyData.createDatetime.split(' ')[0].replace(/-/g, '.') : ''}</TableCell>
+                  <TableCell align='center'>
+                    {historyData.deviceNum ?? ''}
+                  </TableCell>
+                  <TableCell align='center'>
+                    {getDeviceTypeName(historyData.deviceType) || ''}
+                  </TableCell>
+                  <TableCell align='center'>
+                    {historyData.userName ?? ''}
+                  </TableCell>
+                  <TableCell align='center'>
+                    {historyData.deviceStatus ?? ''}
+                  </TableCell>
+                  <TableCell align='center'>
+                    {historyData.approvalStatus ?? ''}
+                  </TableCell>
+                  <TableCell align='center'>
+                    {historyData.createDatetime
+                      ? historyData.createDatetime
+                          .split(' ')[0]
+                          .replace(/-/g, '.')
+                      : ''}
+                  </TableCell>
                 </TableRow>
               ))
             ) : (
@@ -207,4 +229,4 @@ export default function DeviceHistoryList() {
       />
     </>
   );
-} 
+}
