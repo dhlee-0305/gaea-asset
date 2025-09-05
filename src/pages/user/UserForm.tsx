@@ -20,15 +20,37 @@ import { useEffect, useState } from 'react';
 
 import api from '@/common/utils/api';
 import type { UserData } from '@/common/types/user';
-import { MESSAGE, CODE, VALID_RULES } from '@/common/constants';
+import { MESSAGE, VALID_RULES } from '@/common/constants';
 import PageHeader from '@/components/common/PageHeader';
 import { showAlert, showConfirm } from '@/store/dialogAction';
 import type { AppDispatch } from '@/store';
+import type { CodeData } from '@/common/types/code';
+
+type Dept = {
+  orgId?: string | number;
+  orgName: string;
+  parentOrgId?: string | number | null;
+  orgType?: string;
+};
 
 export default function UserForm() {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  const [positionData, setPositionData] = useState<CodeData[]>([]);
+  const [gradeData, setGradeData] = useState<CodeData[]>([]);
+  const [
+    [orgData, setOrgData],
+    [companyData, setCompanyData],
+    [divisionData, setDivisionData],
+    [teamData, setTeamData],
+  ] = [
+    useState<Dept[]>([]),
+    useState<Dept[]>([]),
+    useState<Dept[]>([]),
+    useState<Dept[]>([]),
+  ];
+
   const { userNo } = useParams();
   const isUpdate = !!userNo;
 
@@ -38,6 +60,7 @@ export default function UserForm() {
     handleSubmit,
     control,
     reset,
+    setValue,
     formState: { errors },
   } = useForm<UserData>({
     defaultValues: {
@@ -49,6 +72,8 @@ export default function UserForm() {
       userPositionCd: '',
       userGradeName: '',
       userGradeCd: '',
+      company: '',
+      division: '',
     },
   });
 
@@ -61,9 +86,91 @@ export default function UserForm() {
           if (response.status === 200) {
             const resData = response.data;
             if (resData.resultCode === '0000') {
-              reset({
-                ...resData.data,
-              });
+              setPositionData(resData.data.positionList);
+              setGradeData(resData.data.gradeList);
+              setOrgData(resData.data.organizationList);
+
+              // 1. 부서(팀) 찾기
+              const userOrgId = resData.data.userInfo.orgId;
+              const team = resData.data.organizationList.find(
+                (dept: Dept) => dept.orgId == userOrgId,
+              );
+
+              // 2. 부문 찾기 (부서의 parentOrgId)
+              const division = resData.data.organizationList.find(
+                (dept: Dept) => dept.orgId == team?.parentOrgId,
+              );
+
+              // 3. 회사 찾기 (부문의 parentOrgId)
+              const company = resData.data.organizationList.find(
+                (dept: Dept) => dept.orgId == division?.parentOrgId,
+              );
+
+              // 부서 리스트(팀): 부문의 orgId가 parentOrgId인 것들
+              const teamList = resData.data.organizationList.filter(
+                (dept: Dept) => dept.parentOrgId == division?.orgId,
+              );
+              // 부문 리스트: 회사 orgId가 parentOrgId인 것들
+              const divisionList = resData.data.organizationList.filter(
+                (dept: Dept) => dept.parentOrgId == company?.orgId,
+              );
+              // 회사 리스트: parentOrgId가 null인 것들
+              const companyList = resData.data.organizationList.filter(
+                (dept: Dept) => dept.parentOrgId == null,
+              );
+
+              setTeamData(teamList);
+              setDivisionData(divisionList);
+              setCompanyData(companyList);
+
+              // 데이터 세팅 후 reset 호출 (비동기 반영 위해 setTimeout 사용)
+              setTimeout(() => {
+                reset({
+                  ...resData.data.userInfo,
+                  company: resData.data.company,
+                  division: resData.data.division,
+                });
+              }, 0);
+            } else {
+              dispatch(
+                showAlert({
+                  contents: resData.description,
+                }),
+              );
+            }
+          } else {
+            dispatch(
+              showAlert({
+                title: 'Error',
+                contents: MESSAGE.error,
+              }),
+            );
+          }
+        } catch (error) {
+          console.error(error);
+          dispatch(
+            showAlert({
+              title: 'Error',
+              contents: MESSAGE.error,
+            }),
+          );
+        }
+      })();
+    } else {
+      (async () => {
+        try {
+          const response = await api.get('/users/commonCode');
+          if (response.status === 200) {
+            const resData = response.data;
+            if (resData.resultCode === '0000') {
+              setPositionData(resData.data.positionList);
+              setGradeData(resData.data.gradeList);
+              setOrgData(resData.data.organizationList);
+              setCompanyData(
+                resData.data.organizationList.filter(
+                  (dept: { parentOrgId: null }) => dept.parentOrgId == null,
+                ),
+              );
             } else {
               dispatch(
                 showAlert({
@@ -151,6 +258,25 @@ export default function UserForm() {
     }
   };
 
+  const handleSetChangeCompany = (key: keyof UserData, value: string) => {
+    console.log(key + ':' + value);
+    setValue('orgId', '');
+    switch (key) {
+      case 'company': {
+        const division = orgData.filter((dept) => dept.parentOrgId == value);
+        console.log(division);
+        setDivisionData(division);
+        break;
+      }
+      case 'division': {
+        const team = orgData.filter((dept) => dept.parentOrgId == value);
+        console.log(team);
+        setTeamData(team);
+        break;
+      }
+    }
+  };
+
   return (
     <>
       <PageHeader contents={isUpdate ? '사용자 수정' : '사용자 등록'} />
@@ -222,6 +348,66 @@ export default function UserForm() {
               </Grid>
               <Grid size={12}>
                 <Controller
+                  name='company'
+                  control={control}
+                  rules={{ required: '회사 선택은 필수입니다.' }}
+                  render={({ field }) => (
+                    <>
+                      <FormControl sx={{ width: 535 }}>
+                        <InputLabel id='company-id-label'>회사</InputLabel>
+                        <Select
+                          labelId='company-id-label'
+                          id='company-id'
+                          label='회사'
+                          {...field}
+                          onChange={(e) => {
+                            field.onChange(e.target.value);
+                            handleSetChangeCompany('company', e.target.value);
+                          }}
+                        >
+                          {companyData.map((orgId) => (
+                            <MenuItem key={orgId.orgId} value={orgId.orgId}>
+                              {orgId.orgName}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </>
+                  )}
+                />
+              </Grid>
+              <Grid size={12}>
+                <Controller
+                  name='division'
+                  control={control}
+                  rules={{ required: '부문 선택은 필수입니다.' }}
+                  render={({ field }) => (
+                    <>
+                      <FormControl sx={{ width: 535 }}>
+                        <InputLabel id='division-id-label'>부문</InputLabel>
+                        <Select
+                          labelId='division-id-label'
+                          id='division-id'
+                          label='부문'
+                          {...field}
+                          onChange={(e) => {
+                            field.onChange(e.target.value);
+                            handleSetChangeCompany('division', e.target.value);
+                          }}
+                        >
+                          {divisionData.map((orgId) => (
+                            <MenuItem key={orgId.orgId} value={orgId.orgId}>
+                              {orgId.orgName}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </>
+                  )}
+                />
+              </Grid>
+              <Grid size={12}>
+                <Controller
                   name='orgId'
                   control={control}
                   rules={{ required: '부서 선택은 필수입니다.' }}
@@ -236,8 +422,8 @@ export default function UserForm() {
                           {...field}
                           error={!!errors.orgId}
                         >
-                          {CODE.orgId.map((orgId) => (
-                            <MenuItem key={orgId.code} value={orgId.code}>
+                          {teamData.map((orgId) => (
+                            <MenuItem key={orgId.orgId} value={orgId.orgId}>
                               {orgId.orgName}
                             </MenuItem>
                           ))}
@@ -263,9 +449,9 @@ export default function UserForm() {
                           {...field}
                           error={!!errors.userGradeCd}
                         >
-                          {CODE.userGradeCd.map((gradeCd) => (
+                          {gradeData.map((gradeCd) => (
                             <MenuItem key={gradeCd.code} value={gradeCd.code}>
-                              {gradeCd.userGradeName}
+                              {gradeCd.codeName}
                             </MenuItem>
                           ))}
                         </Select>
@@ -287,7 +473,7 @@ export default function UserForm() {
                         row
                         aria-labelledby='device-type-label'
                       >
-                        {CODE.userPositionCd.map((positionCd) => (
+                        {positionData.map((positionCd) => (
                           <FormControlLabel
                             key={positionCd.code}
                             value={positionCd.code}

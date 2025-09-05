@@ -1,3 +1,5 @@
+import type { FileData } from './file';
+
 // 공지사항 데이터
 export interface NoticeData {
   rowNum?: number;
@@ -8,4 +10,5 @@ export interface NoticeData {
   createUser: string;
   updateDateTime?: string;
   updateUser?: string;
+  fileList?: FileData[];
 }

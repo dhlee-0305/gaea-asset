@@ -4,11 +4,35 @@ import { type UserData } from '../types/user';
 const TOKEN_KEY = 'token';
 
 export const saveToken = (token: string) => {
-  localStorage.setItem(TOKEN_KEY, token);
+  const now = new Date();
+  const item = {
+    token: token,
+    expireTime: now.getTime() + 1000 * 60 * 60, // 1시간
+  };
+
+  localStorage.setItem(TOKEN_KEY, JSON.stringify(item));
 };
 
 export const getToken = () => {
-  return localStorage.getItem(TOKEN_KEY);
+  const itemStr = localStorage.getItem(TOKEN_KEY);
+  if (!itemStr) {
+    return null;
+  }
+
+  try {
+    const item = JSON.parse(itemStr);
+    const now = new Date();
+    if (now.getTime() > item.expireTime) {
+      localStorage.removeItem(TOKEN_KEY);
+      return null;
+    }
+
+    return item.token;
+  } catch (e) {
+    console.error('토큰 파싱 실패:', e);
+    localStorage.removeItem(TOKEN_KEY);
+    return null;
+  }
 };
 
 export const removeToken = () => {

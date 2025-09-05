@@ -16,4 +16,6 @@ export interface UserData {
   passwordChangeDate: string;
   createDatetime: string;
   passwordResetReq: string;
+  company: string;
+  division: string;
 }

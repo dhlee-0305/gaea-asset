@@ -27,6 +27,7 @@ import { MESSAGE } from '@/common/constants';
 import type { AppDispatch } from '@/store';
 import type { PageInfo } from '@/common/types/common';
 import { isAdminRole } from '@/common/utils/auth';
+import ExcelUpload from '@/components/common/ExcelUpload';
 
 export default function DeviceList() {
   const dispatch = useDispatch<AppDispatch>();
@@ -39,12 +40,6 @@ export default function DeviceList() {
     currentPage: 1,
   });
   const isAdmin = isAdminRole();
-
-  const excelButtonStyle = {
-    fontSize: '11px',
-    minWidth: 'auto',
-    padding: '2px 8px',
-  };
 
   useEffect(() => {
     fetchData();
@@ -106,6 +101,7 @@ export default function DeviceList() {
     navigate(`/device-management/devices/${deviceNum}`);
   };
 
+  // 엑셀 다운로드
   const excelDownload = async (): Promise<void> => {
     let url: string | null = null;
     try {
@@ -135,6 +131,42 @@ export default function DeviceList() {
       );
     } finally {
       if (url) URL.revokeObjectURL(url);
+    }
+  };
+
+  // 엑셀 업로드 처리
+  const excelUpload = async (file: File): Promise<void> => {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const response = await api.post('/devices/upload/excel', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+
+      if (response.status === 200 && response.data.resultCode === '0000') {
+        await dispatch(
+          showAlert({
+            contents: '엑셀 업로드가 완료되었습니다.',
+          }),
+        );
+        fetchData(1);
+      } else {
+        await dispatch(
+          showAlert({
+            title: 'Error',
+            contents: response.data.description,
+          }),
+        );
+      }
+    } catch (error) {
+      console.error(error);
+      dispatch(
+        showAlert({
+          title: 'Error',
+          contents: MESSAGE.error,
+        }),
+      );
     }
   };
 
@@ -177,13 +209,20 @@ export default function DeviceList() {
       {/* 액셀 영역 */}
       <Box display='flex' justifyContent='flex-end' sx={{ mt: 0.1, mb: 2.5 }}>
         <ButtonGroup>
-          <Button size='small' sx={excelButtonStyle} onClick={excelDownload}>
+          <Button
+            size='small'
+            onClick={excelDownload}
+            sx={{ fontSize: 11, height: 24 }}
+          >
             액셀 다운로드
           </Button>
           {isAdmin && (
-            <Button size='small' sx={excelButtonStyle}>
-              액셀 업로드
-            </Button>
+            <ExcelUpload
+              sx={{ fontSize: 11, height: 24 }}
+              excelUpload={excelUpload}
+            >
+              엑셀 업로드
+            </ExcelUpload>
           )}
         </ButtonGroup>
       </Box>

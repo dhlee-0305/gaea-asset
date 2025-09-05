@@ -30,7 +30,7 @@ export default function UserDetail() {
       if (response.status === 200) {
         const resData = response.data;
         if (resData.resultCode === '0000') {
-          setUserData(resData.data);
+          setUserData(resData.data.userInfo);
         } else if (resData.resultCode === '204') {
           await dispatch(
             showAlert({
