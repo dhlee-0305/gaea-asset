@@ -88,34 +88,20 @@ export default function UserForm() {
             if (resData.resultCode === '0000') {
               setPositionData(resData.data.positionList);
               setGradeData(resData.data.gradeList);
-              setOrgData(resData.data.organizationList);
 
-              // 1. 부서(팀) 찾기
-              const userOrgId = resData.data.userInfo.orgId;
-              const team = resData.data.organizationList.find(
-                (dept: Dept) => dept.orgId == userOrgId,
-              );
-
-              // 2. 부문 찾기 (부서의 parentOrgId)
-              const division = resData.data.organizationList.find(
-                (dept: Dept) => dept.orgId == team?.parentOrgId,
-              );
-
-              // 3. 회사 찾기 (부문의 parentOrgId)
-              const company = resData.data.organizationList.find(
-                (dept: Dept) => dept.orgId == division?.parentOrgId,
-              );
+              const organizationList = resData.data.organizationList; // 전체 조직 데이터
+              setOrgData(organizationList);
 
               // 부서 리스트(팀): 부문의 orgId가 parentOrgId인 것들
-              const teamList = resData.data.organizationList.filter(
-                (dept: Dept) => dept.parentOrgId == division?.orgId,
+              const teamList = organizationList.filter(
+                (dept: Dept) => dept.parentOrgId == resData.data.division,
               );
               // 부문 리스트: 회사 orgId가 parentOrgId인 것들
-              const divisionList = resData.data.organizationList.filter(
-                (dept: Dept) => dept.parentOrgId == company?.orgId,
+              const divisionList = organizationList.filter(
+                (dept: Dept) => dept.parentOrgId == resData.data.company,
               );
               // 회사 리스트: parentOrgId가 null인 것들
-              const companyList = resData.data.organizationList.filter(
+              const companyList = organizationList.filter(
                 (dept: Dept) => dept.parentOrgId == null,
               );
 
