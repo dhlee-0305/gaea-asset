@@ -61,6 +61,7 @@ export const CODE = {
     { code: '06', userGradeName: '대리' },
     { code: '07', userGradeName: '사원' },
   ],
+  commonCategory: { CATEGORY_POSITION: 'C001', CATEGORY_GRADE: 'C002' },
 };
 
 export const USER_ROLE = {

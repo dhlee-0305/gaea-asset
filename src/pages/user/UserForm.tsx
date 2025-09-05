@@ -20,7 +20,7 @@ import { useEffect, useState } from 'react';
 
 import api from '@/common/utils/api';
 import type { UserData } from '@/common/types/user';
-import { MESSAGE, VALID_RULES } from '@/common/constants';
+import { MESSAGE, CODE, VALID_RULES } from '@/common/constants';
 import PageHeader from '@/components/common/PageHeader';
 import { showAlert, showConfirm } from '@/store/dialogAction';
 import type { AppDispatch } from '@/store';
@@ -145,12 +145,20 @@ export default function UserForm() {
     } else {
       (async () => {
         try {
-          const response = await api.get('/users/commonCode');
+          const categoryList = [
+            CODE.commonCategory.CATEGORY_POSITION,
+            CODE.commonCategory.CATEGORY_GRADE,
+          ];
+          const response = await api.get('/codesByCategories', {
+            params: { categoryList: categoryList.join(',') },
+          });
           if (response.status === 200) {
             const resData = response.data;
             if (resData.resultCode === '0000') {
-              setPositionData(resData.data.positionList);
-              setGradeData(resData.data.gradeList);
+              setPositionData(
+                resData.data[CODE.commonCategory.CATEGORY_POSITION],
+              );
+              setGradeData(resData.data[CODE.commonCategory.CATEGORY_GRADE]);
               setOrgData(resData.data.organizationList);
               setCompanyData(
                 resData.data.organizationList.filter(
@@ -247,17 +255,14 @@ export default function UserForm() {
   const handleSetChangeCompany = (key: keyof UserData, value: string) => {
     console.log(key + ':' + value);
     setValue('orgId', '');
+    const setData = orgData.filter((dept) => dept.parentOrgId == value);
     switch (key) {
       case 'company': {
-        const division = orgData.filter((dept) => dept.parentOrgId == value);
-        console.log(division);
-        setDivisionData(division);
+        setDivisionData(setData);
         break;
       }
       case 'division': {
-        const team = orgData.filter((dept) => dept.parentOrgId == value);
-        console.log(team);
-        setTeamData(team);
+        setTeamData(setData);
         break;
       }
     }
