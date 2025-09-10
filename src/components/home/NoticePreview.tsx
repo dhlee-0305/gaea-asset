@@ -61,7 +61,7 @@ export default function NoticePreview() {
         </Button>
       </Box>
       <TableContainer component={Paper} sx={{ mt: 1 }}>
-        <Table size='small'>
+        <Table size='small' sx={{ tableLayout: 'fixed' }}>
           <TableHead>
             <TableRow>
               <TableCell align='left'>제목</TableCell>
@@ -79,7 +79,20 @@ export default function NoticePreview() {
                     sx={{ cursor: 'pointer', height: 35 }}
                     onClick={() => handleClickRow(Number(notice.noticeNum))}
                   >
-                    <TableCell align='left'>{notice.title}</TableCell>
+                    <TableCell align='left'>
+                      <Box
+                        component='span'
+                        sx={{
+                          display: 'block',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap',
+                        }}
+                        title={notice.title}
+                      >
+                        {notice.title}
+                      </Box>
+                    </TableCell>
                     <TableCell align='center'>{notice.createUser}</TableCell>
                     <TableCell align='center'>
                       {notice.createDateTime}
