@@ -143,6 +143,8 @@ export default function DeviceList() {
         responseType: 'blob',
         params: {
           deviceType,
+          searchColumn,
+          searchKeyword,
         },
       });
       const contentDisposition = response.headers['content-disposition'];
