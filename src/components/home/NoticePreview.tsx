@@ -81,9 +81,7 @@ export default function NoticePreview() {
                   >
                     <TableCell align='left'>
                       <Box
-                        component='span'
                         sx={{
-                          display: 'block',
                           overflow: 'hidden',
                           textOverflow: 'ellipsis',
                           whiteSpace: 'nowrap',
