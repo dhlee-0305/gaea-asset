@@ -5,5 +5,6 @@ export interface FileData {
   storedFileName: string;
   uploadDateTime: string;
   isDeleted: string;
-  noticeNum: number;
+  postNum: number;
+  postType: string;
 }

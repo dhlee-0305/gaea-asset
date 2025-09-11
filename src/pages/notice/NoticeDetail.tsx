@@ -9,7 +9,7 @@ import PageHeader from '@/components/common/PageHeader';
 import type { AppDispatch } from '@/store';
 import { isAdminRole } from '@/common/utils/auth';
 import { showAlert, showConfirm } from '@/store/dialogAction';
-import { MESSAGE } from '@/common/constants';
+import { MESSAGE, POST_TYPE } from '@/common/constants';
 
 export default function NoticeDetail() {
   const dispatch = useDispatch<AppDispatch>();
@@ -124,6 +124,7 @@ export default function NoticeDetail() {
   const downloadFile = async (
     storedFileName: string,
     originFileName: string,
+    postType: string = POST_TYPE.NOTICE,
   ) => {
     let blobUrl: string | null = null;
     try {

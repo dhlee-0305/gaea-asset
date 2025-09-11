@@ -19,7 +19,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import api from '@/common/utils/api';
 import type { NoticeData } from '@/common/types/notice';
 import type { FileData } from '@/common/types/file';
-import { MESSAGE } from '@/common/constants';
+import { MESSAGE, POST_TYPE } from '@/common/constants';
 import PageHeader from '@/components/common/PageHeader';
 import { showAlert, showConfirm } from '@/store/dialogAction';
 import type { AppDispatch } from '@/store';
@@ -129,9 +129,12 @@ export default function NoticeForm() {
   };
 
   // 파일 삭제 처리
-  const handleRemoveFile = async (fileNum: number) => {
+  const handleRemoveFile = async (
+    fileNum: number,
+    postType: string = POST_TYPE.NOTICE,
+  ) => {
     try {
-      await api.delete(`/files/${fileNum}`);
+      await api.delete(`/files/${postType}/${fileNum}`);
       setExistingFiles((prev) => prev.filter((f) => f.fileNum !== fileNum));
     } catch (error) {
       console.error('파일 삭제 실패:', error);

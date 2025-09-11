@@ -96,3 +96,7 @@ export const USAGE_DIVISION = {
   BUSINESS: '01',
   DEVELOPMENT: '02',
 };
+
+export const POST_TYPE = {
+  NOTICE: 'NO',
+};
