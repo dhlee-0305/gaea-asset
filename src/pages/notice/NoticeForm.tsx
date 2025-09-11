@@ -119,10 +119,22 @@ export default function NoticeForm() {
       const newFiles = Array.from(files);
 
       setAddedFiles((prev) => {
-        const existingNames = prev.map((file) => file.name);
+        const existingNames = [
+          ...existingFiles.map((file) => file.originFileName),
+          ...prev.map((file) => file.name),
+        ];
         const filtered = newFiles.filter(
           (file) => !existingNames.includes(file.name),
         );
+        if (filtered.length < newFiles.length) {
+          dispatch(
+            showAlert({
+              title: '알림',
+              contents: '이미 등록된 파일입니다.',
+            }),
+          );
+        }
+
         return [...prev, ...filtered];
       });
     }
