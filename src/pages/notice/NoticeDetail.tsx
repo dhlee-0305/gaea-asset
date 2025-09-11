@@ -122,13 +122,13 @@ export default function NoticeDetail() {
 
   // 파일 다운로드
   const downloadFile = async (
-    storedFileName: string,
+    fileNum: number,
     originFileName: string,
     postType: string = POST_TYPE.NOTICE,
   ) => {
     let blobUrl: string | null = null;
     try {
-      const response = await api.get(`/files/${storedFileName}`, {
+      const response = await api.get(`/files/${postType}/${fileNum}`, {
         responseType: 'blob',
       });
       blobUrl = window.URL.createObjectURL(response.data);
@@ -200,10 +200,7 @@ export default function NoticeDetail() {
                         <Typography
                           component='span'
                           onClick={() =>
-                            downloadFile(
-                              file.storedFileName,
-                              file.originFileName,
-                            )
+                            downloadFile(file.fileNum, file.originFileName)
                           }
                           sx={{
                             fontSize: '0.75rem',
