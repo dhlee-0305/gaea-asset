@@ -78,6 +78,7 @@ export default function UserForm() {
   });
 
   useEffect(() => {
+    fetchGradeAndPosiionList(); // 직급 및 직책 리스트 조회
     // 사용자 정보 조회
     if (isUpdate) {
       (async () => {
@@ -86,9 +87,6 @@ export default function UserForm() {
           if (response.status === 200) {
             const resData = response.data;
             if (resData.resultCode === '0000') {
-              setPositionData(resData.data.positionList);
-              setGradeData(resData.data.gradeList);
-
               const organizationList = resData.data.organizationList; // 전체 조직 데이터
               setOrgData(organizationList);
 
@@ -143,56 +141,90 @@ export default function UserForm() {
         }
       })();
     } else {
-      (async () => {
-        try {
-          const categoryList = [
-            CODE.commonCategory.CATEGORY_POSITION,
-            CODE.commonCategory.CATEGORY_GRADE,
-          ];
-          const response = await api.get('/codesByCategories', {
-            params: { categoryList: categoryList.join(',') },
-          });
-          if (response.status === 200) {
-            const resData = response.data;
-            if (resData.resultCode === '0000') {
-              setPositionData(
-                resData.data[CODE.commonCategory.CATEGORY_POSITION],
-              );
-              setGradeData(resData.data[CODE.commonCategory.CATEGORY_GRADE]);
-              setOrgData(resData.data.organizationList);
-              setCompanyData(
-                resData.data.organizationList.filter(
-                  (dept: { parentOrgId: null }) => dept.parentOrgId == null,
-                ),
-              );
-            } else {
-              dispatch(
-                showAlert({
-                  contents: resData.description,
-                }),
-              );
-            }
-          } else {
-            dispatch(
-              showAlert({
-                title: 'Error',
-                contents: MESSAGE.error,
-              }),
-            );
-          }
-        } catch (error) {
-          console.error(error);
-          dispatch(
-            showAlert({
-              title: 'Error',
-              contents: MESSAGE.error,
-            }),
-          );
-        }
-      })();
+      fetchOrganizationList(); // 조직 조회
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // 직급 및 직책 리스트 조회
+  const fetchGradeAndPosiionList = async () => {
+    try {
+      const categoryList = [
+        CODE.commonCategory.CATEGORY_POSITION,
+        CODE.commonCategory.CATEGORY_GRADE,
+      ];
+      const response = await api.get('/codesByCategories', {
+        params: { categoryList: categoryList.join(',') },
+      });
+      if (response.status === 200) {
+        const resData = response.data;
+        if (resData.resultCode === '0000') {
+          setPositionData(resData.data[CODE.commonCategory.CATEGORY_POSITION]);
+          setGradeData(resData.data[CODE.commonCategory.CATEGORY_GRADE]);
+        } else {
+          dispatch(
+            showAlert({
+              contents: resData.description,
+            }),
+          );
+        }
+      } else {
+        dispatch(
+          showAlert({
+            title: 'Error',
+            contents: MESSAGE.error,
+          }),
+        );
+      }
+    } catch (error) {
+      console.error(error);
+      dispatch(
+        showAlert({
+          title: 'Error',
+          contents: MESSAGE.error,
+        }),
+      );
+    }
+  };
+
+  // 조직 조회
+  const fetchOrganizationList = async () => {
+    try {
+      const response = await api.get('/organization');
+      if (response.status === 200) {
+        const resData = response.data;
+        if (resData.resultCode === '0000') {
+          setOrgData(resData.data);
+          setCompanyData(
+            resData.data.filter(
+              (dept: { parentOrgId: null }) => dept.parentOrgId == null,
+            ),
+          );
+        } else {
+          dispatch(
+            showAlert({
+              contents: resData.description,
+            }),
+          );
+        }
+      } else {
+        dispatch(
+          showAlert({
+            title: 'Error',
+            contents: MESSAGE.error,
+          }),
+        );
+      }
+    } catch (error) {
+      console.error(error);
+      dispatch(
+        showAlert({
+          title: 'Error',
+          contents: MESSAGE.error,
+        }),
+      );
+    }
+  };
 
   // 저장(등록, 수정) 처리
   const save = async (data: UserData): Promise<void> => {

@@ -23,11 +23,12 @@ import api from '@/common/utils/api';
 import type { DeviceData } from '@/common/types/device';
 import PageHeader from '@/components/common/PageHeader';
 import { showAlert } from '@/store/dialogAction';
-import { MESSAGE } from '@/common/constants';
+import { CODE, MESSAGE } from '@/common/constants';
 import type { AppDispatch } from '@/store';
 import type { PageInfo } from '@/common/types/common';
 import { isAdminRole } from '@/common/utils/auth';
 import ExcelUpload from '@/components/common/ExcelUpload';
+import type { CodeData } from '@/common/types/code';
 
 export default function DeviceList() {
   const dispatch = useDispatch<AppDispatch>();
@@ -35,6 +36,8 @@ export default function DeviceList() {
   const [searchColumn, setSearchColumn] = useState('userName');
   const [searchKeyword, setSearchKeyword] = useState('');
   const [deviceDatas, setDeviceDatas] = useState<DeviceData[]>([]);
+  const [deviceTypeList, setDeviceTypeList] = useState<CodeData[]>([]);
+  const [deviceType, setDeviceType] = useState('all');
   const [pageInfo, setPageInfo] = useState<PageInfo>({
     pageSize: 10,
     currentPage: 1,
@@ -43,6 +46,7 @@ export default function DeviceList() {
 
   useEffect(() => {
     fetchData();
+    fetchDeviceTypeList(); //장비 유형 목록 조회
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -55,12 +59,42 @@ export default function DeviceList() {
           searchKeyword: searchKeyword,
           currentPage: currentPage,
           pageSize: pageInfo.pageSize,
+          deviceType: deviceType,
         },
       });
 
       if (response.status === 200 && response.data.resultCode === '0000') {
         setDeviceDatas(response.data.data);
         setPageInfo(response.data.pagination);
+      }
+    } catch (e) {
+      console.error(e);
+      dispatch(
+        showAlert({
+          title: 'Error',
+          contents: MESSAGE.error,
+        }),
+      );
+    }
+  };
+
+  // 장비 유형 리스트 조회
+  const fetchDeviceTypeList = async () => {
+    try {
+      const categoryList = [CODE.commonCategory.CATEGORY_DEVICE_TYPE];
+      const response = await api.get('/codesByCategories', {
+        params: { categoryList: categoryList.join(',') },
+      });
+      if (response.status === 200 && response.data.resultCode === '0000') {
+        setDeviceTypeList(
+          response.data.data[CODE.commonCategory.CATEGORY_DEVICE_TYPE],
+        );
+      } else {
+        dispatch(
+          showAlert({
+            contents: response.data.description,
+          }),
+        );
       }
     } catch (e) {
       console.error(e);
@@ -107,6 +141,11 @@ export default function DeviceList() {
     try {
       const response = await api.get('/devices/download/excel', {
         responseType: 'blob',
+        params: {
+          deviceType,
+          searchColumn,
+          searchKeyword,
+        },
       });
       const contentDisposition = response.headers['content-disposition'];
       const match = contentDisposition?.match(/filename="?([^"]+)"?/);
@@ -184,6 +223,21 @@ export default function DeviceList() {
           mb: 1.2,
         }}
       >
+        <FormControl size='small'>
+          <Select
+            value={deviceType}
+            onChange={(e) => setDeviceType(e.target.value)}
+          >
+            <MenuItem value='all'>장비유형</MenuItem>
+            {deviceTypeList.map((deviceType) => {
+              return (
+                <MenuItem key={deviceType.code} value={deviceType.code}>
+                  {deviceType.codeName}
+                </MenuItem>
+              );
+            })}
+          </Select>
+        </FormControl>
         <FormControl size='small'>
           <Select
             value={searchColumn}
