@@ -10,6 +10,7 @@ import type { AppDispatch } from '@/store';
 import { isAdminRole } from '@/common/utils/auth';
 import { showAlert, showConfirm } from '@/store/dialogAction';
 import { MESSAGE, POST_TYPE } from '@/common/constants';
+import { FileDownload } from '@/components/common/FileDownload';
 
 export default function NoticeDetail() {
   const dispatch = useDispatch<AppDispatch>();
@@ -120,37 +121,6 @@ export default function NoticeDetail() {
     navigate(`/notice/notices/update/${noticeId}`);
   };
 
-  // 파일 다운로드
-  const downloadFile = async (
-    fileNum: number,
-    originFileName: string,
-    postType: string = POST_TYPE.NOTICE,
-  ) => {
-    let blobUrl: string | null = null;
-    try {
-      const response = await api.get(`/files/${postType}/${fileNum}`, {
-        responseType: 'blob',
-      });
-      blobUrl = window.URL.createObjectURL(response.data);
-      const downloadLink = document.createElement('a');
-      downloadLink.href = blobUrl;
-      downloadLink.setAttribute('download', originFileName);
-      document.body.appendChild(downloadLink);
-      downloadLink.click();
-      document.body.removeChild(downloadLink);
-    } catch (error) {
-      console.error('파일 다운로드 실패:', error);
-      dispatch(
-        showAlert({
-          title: 'Error',
-          contents: MESSAGE.error,
-        }),
-      );
-    } finally {
-      if (blobUrl) URL.revokeObjectURL(blobUrl);
-    }
-  };
-
   return (
     <>
       <PageHeader contents='공지사항 상세' />
@@ -200,7 +170,12 @@ export default function NoticeDetail() {
                         <Typography
                           component='span'
                           onClick={() =>
-                            downloadFile(file.fileNum, file.originFileName)
+                            FileDownload({
+                              fileNum: file.fileNum,
+                              postType: POST_TYPE.NOTICE,
+                              originFileName: file.originFileName,
+                              dispatch,
+                            })
                           }
                           sx={{
                             fontSize: '0.75rem',
