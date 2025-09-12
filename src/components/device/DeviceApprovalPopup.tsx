@@ -71,7 +71,7 @@ export default function DeviceApprovalPopup({
     };
   });
 
-  // 승인/반려 버튼 클릭 핸들러
+  // 승인 버튼 클릭 핸들러
   const handleApproval = async () => {
     const confirmed = await dispatch(
       showConfirm({
