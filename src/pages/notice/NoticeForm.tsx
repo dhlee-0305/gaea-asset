@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 
 import api from '@/common/utils/api';
 import type { NoticeData } from '@/common/types/notice';
-import type { FileData } from '@/common/types/file';
+import type { FileData } from '@/common/types/common';
 import { MESSAGE, POST_TYPE } from '@/common/constants';
 import PageHeader from '@/components/common/PageHeader';
 import { showAlert, showConfirm } from '@/store/dialogAction';

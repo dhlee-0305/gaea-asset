@@ -1,4 +1,4 @@
-import type { FileData } from './file';
+import type { FileData } from './common';
 
 // 공지사항 데이터
 export interface NoticeData {

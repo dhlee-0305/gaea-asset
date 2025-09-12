@@ -12,7 +12,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CloseIcon from '@mui/icons-material/Close';
 
 import api from '@/common/utils/api';
-import type { FileData } from '@/common/types/file';
+import type { FileData } from '@/common/types/common';
 import { showAlert } from '@/store/dialogAction';
 import type { AppDispatch } from '@/store';
 
