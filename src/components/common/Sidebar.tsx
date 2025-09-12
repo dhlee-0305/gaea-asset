@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import ComputerIcon from '@mui/icons-material/Computer';
 import PeopleIcon from '@mui/icons-material/People';
-import AnnouncementIcon from '@mui/icons-material/Announcement';
+import CampaignIcon from '@mui/icons-material/Campaign';
 import Code from '@mui/icons-material/Code';
 import { Link, useLocation } from 'react-router-dom';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
@@ -38,7 +38,7 @@ const menuItems = [
   {
     key: 'notice',
     text: '공지사항',
-    icon: <AnnouncementIcon />,
+    icon: <CampaignIcon />,
     children: [{ text: '공지사항', to: '/notice/notices' }],
   },
   {
@@ -58,43 +58,46 @@ export default function Sidebar() {
   const userInfo = token ? parseJwt(token) : null;
 
   // 메뉴 동적 구성
-  type SidebarMenuItem = typeof menuItems[number];
-  const dynamicMenuItems = menuItems.reduce<Array<SidebarMenuItem>>((acc, menu) => {
-    if (menu.key === 'user-management') {
-      // 특정 권한에서만 사용자관리(및 하위 메뉴) 노출
-      const allowed =
-        !!userInfo &&
-        (userInfo.roleCode === USER_ROLE.TEAM_MANAGER ||
-          userInfo.roleCode === USER_ROLE.ASSET_MANAGER ||
-          userInfo.roleCode === USER_ROLE.SYSTEM_MANAGER);
-      if (!allowed) {
+  type SidebarMenuItem = (typeof menuItems)[number];
+  const dynamicMenuItems = menuItems.reduce<Array<SidebarMenuItem>>(
+    (acc, menu) => {
+      if (menu.key === 'user-management') {
+        // 특정 권한에서만 사용자관리(및 하위 메뉴) 노출
+        const allowed =
+          !!userInfo &&
+          (userInfo.roleCode === USER_ROLE.TEAM_MANAGER ||
+            userInfo.roleCode === USER_ROLE.ASSET_MANAGER ||
+            userInfo.roleCode === USER_ROLE.SYSTEM_MANAGER);
+        if (!allowed) {
+          return acc;
+        }
+      }
+
+      if (menu.key === 'code-management') {
+        // 시스템관리자만 공통코드 노출
+        if (userInfo?.roleCode !== USER_ROLE.SYSTEM_MANAGER) {
+          return acc;
+        }
+      }
+
+      if (menu.key === 'device-management') {
+        // 장비이력관리 메뉴는 권한 제한 없이 항상 노출
+        const children = [...menu.children];
+        if (!children.some((c) => c.text === '장비이력관리')) {
+          children.push({
+            text: '장비이력관리',
+            to: '/device-management/device-history',
+          });
+        }
+        acc.push({ ...menu, children });
         return acc;
       }
-    }
 
-    if (menu.key === 'code-management') {
-      // 시스템관리자만 공통코드 노출
-      if (userInfo?.roleCode !== USER_ROLE.SYSTEM_MANAGER) {
-        return acc;
-      }
-    }
-
-    if (menu.key === 'device-management') {
-      // 장비이력관리 메뉴는 권한 제한 없이 항상 노출
-      const children = [...menu.children];
-      if (!children.some((c) => c.text === '장비이력관리')) {
-        children.push({
-          text: '장비이력관리',
-          to: '/device-management/device-history',
-        });
-      }
-      acc.push({ ...menu, children });
+      acc.push(menu);
       return acc;
-    }
-
-    acc.push(menu);
-    return acc;
-  }, []);
+    },
+    [],
+  );
 
   useEffect(() => {
     // 현재 경로에 해당하는 메뉴를 열기
@@ -112,12 +115,12 @@ export default function Sidebar() {
   };
 
   // 하위 메뉴 클릭 (특정 메뉴 초기화 목적)
-  const handleChildClick = (
-    e: React.MouseEvent,
-    to: string,
-  ) => {
+  const handleChildClick = (e: React.MouseEvent, to: string) => {
     // 장비이력관리: 동일 페이지에서 클릭 시 전체 초기화(하드 리로드)
-    if (to === '/device-management/device-history' && location.pathname === to) {
+    if (
+      to === '/device-management/device-history' &&
+      location.pathname === to
+    ) {
       e.preventDefault();
       window.location.href = to;
     }
