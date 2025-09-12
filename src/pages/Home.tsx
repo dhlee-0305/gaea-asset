@@ -15,13 +15,19 @@ export default function Home() {
       <Box padding={3}>
         <Grid container spacing={2}>
           <Grid size={{ xs: 12, xl: 6 }}>
-            <DevicesPreview />
+            <Box sx={{ minWidth: 560 }}>
+              <DevicesPreview />
+            </Box>
           </Grid>
           <Grid size={{ xs: 12, xl: 6 }}>
-            <NoticePreview />
+            <Box sx={{ minWidth: 560 }}>
+              <NoticePreview />
+            </Box>
           </Grid>
           <Grid size={12}>
-            {userInfo?.roleCode != '00' && <ApprovalStatusPreview />}
+            <Box sx={{ minWidth: 560 }}>
+              {userInfo?.roleCode != '00' && <ApprovalStatusPreview />}
+            </Box>
           </Grid>
         </Grid>
       </Box>
