@@ -178,28 +178,6 @@ export default function DeviceForm() {
     setValue('empNum', user.empNum);
   };
 
-  // Select 코드명 데이터 세팅
-  const handleSetChangeData = (key: keyof DeviceData, value: string) => {
-    setValue(key, value);
-
-    // 코드명 세팅
-    if (key === 'deviceTypeCode') {
-      const name =
-        CODE.deviceType.find((opt) => opt.code === value)?.codeName || '';
-      setValue('deviceType', name);
-    }
-    if (key === 'deviceStatusCode') {
-      const name =
-        CODE.deviceStatus.find((opt) => opt.code === value)?.codeName || '';
-      setValue('deviceStatus', name);
-    }
-    if (key === 'usageDivisionCode') {
-      const name =
-        CODE.usageDivision.find((opt) => opt.code === value)?.codeName || '';
-      setValue('usageDivision', name);
-    }
-  };
-
   return (
     <>
       <PageHeader contents={isUpdate ? '장비 수정' : '장비 등록'} />
@@ -267,10 +245,6 @@ export default function DeviceForm() {
                           disabled={!isUpdate} // 등록 시 '사용'으로 고정
                           onChange={(e) => {
                             field.onChange(e.target.value);
-                            handleSetChangeData(
-                              'deviceStatusCode',
-                              e.target.value,
-                            );
                           }}
                         >
                           {CODE.deviceStatus.map((status) => (
@@ -306,10 +280,6 @@ export default function DeviceForm() {
                           value={field.value}
                           onChange={(e) => {
                             field.onChange(e.target.value);
-                            handleSetChangeData(
-                              'deviceTypeCode',
-                              e.target.value,
-                            );
                           }}
                         >
                           {CODE.deviceType.map((deviceType) => (
@@ -338,10 +308,6 @@ export default function DeviceForm() {
                         value={field.value}
                         onChange={(e) => {
                           field.onChange(e.target.value);
-                          handleSetChangeData(
-                            'usageDivisionCode',
-                            e.target.value,
-                          );
                         }}
                         row
                         aria-labelledby='usage-division-label'
