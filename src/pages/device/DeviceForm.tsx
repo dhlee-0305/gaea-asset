@@ -14,7 +14,7 @@ import {
   TextField,
 } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Controller, useForm } from 'react-hook-form';
 import { useEffect, useState } from 'react';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -23,15 +23,15 @@ import dayjs from 'dayjs';
 import api from '@/common/utils/api';
 import {
   MESSAGE,
-  CODE,
   USAGE_DIVISION,
   DEVICE_STATUS,
   DEVICE_TYPE,
+  COMMON_CATEGORY,
 } from '@/common/constants';
 import { isAdminRole } from '@/common/utils/auth';
 import PageHeader from '@/components/common/PageHeader';
 import { showAlert, showConfirm } from '@/store/dialogAction';
-import type { AppDispatch } from '@/store';
+import type { AppDispatch, RootState } from '@/store';
 import type { DeviceData } from '@/common/types/device';
 import { type UserData } from '@/common/types/user';
 import UserSelectPopup from '@/components/user/UserSelectPopup';
@@ -44,6 +44,11 @@ export default function DeviceForm() {
   const isUpdate = !!deviceNum;
   const [isOpen, setIsOpen] = useState(false);
   const isAdmin = isAdminRole();
+  const commonCode = useSelector((state: RootState) => state.commonCode);
+  const deviceTypeCodes = commonCode[COMMON_CATEGORY.CATEGORY_DEVICE_TYPE];
+  const deviceStatusCodes = commonCode[COMMON_CATEGORY.CATEGORY_DEVICE_STATUS];
+  const usageDivisionCodes =
+    commonCode[COMMON_CATEGORY.CATEGORY_USAGE_DIVISION];
 
   // useForm 선언
   const {
@@ -247,7 +252,7 @@ export default function DeviceForm() {
                             field.onChange(e.target.value);
                           }}
                         >
-                          {CODE.deviceStatus.map((status) => (
+                          {deviceStatusCodes.map((status) => (
                             <MenuItem
                               key={status.code}
                               value={status.code}
@@ -282,7 +287,7 @@ export default function DeviceForm() {
                             field.onChange(e.target.value);
                           }}
                         >
-                          {CODE.deviceType.map((deviceType) => (
+                          {deviceTypeCodes.map((deviceType) => (
                             <MenuItem
                               key={deviceType.code}
                               value={deviceType.code}
@@ -312,7 +317,7 @@ export default function DeviceForm() {
                         row
                         aria-labelledby='usage-division-label'
                       >
-                        {CODE.usageDivision.map((usageDivision) => (
+                        {usageDivisionCodes.map((usageDivision) => (
                           <FormControlLabel
                             key={usageDivision.code}
                             value={usageDivision.code}

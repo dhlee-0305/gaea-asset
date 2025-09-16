@@ -68,6 +68,15 @@ export const CODE = {
   },
 };
 
+export const COMMON_CATEGORY = {
+  CATEGORY_POSITION: 'C001',
+  CATEGORY_GRADE: 'C002',
+  CATEGORY_DEVICE_TYPE: 'C004',
+  CATEGORY_DEVICE_STATUS: 'C005',
+  CATEGORY_APPROVAL_STATUS: 'C006',
+  CATEGORY_USAGE_DIVISION: 'C007',
+};
+
 export const USER_ROLE = {
   USER: '00',
   TEAM_MANAGER: '01',
@@ -90,10 +99,11 @@ export const DEVICE_TYPE = {
 };
 
 export const DEVICE_STATUS = {
-  USE: '01',
-  RETURN: '02',
-  BREAKAGE: '03',
-  DISPOSAL: '04',
+  WAITING: '01',
+  USE: '02',
+  RETURN: '03',
+  BREAKAGE: '04',
+  DISPOSAL: '05',
 };
 
 export const USAGE_DIVISION = {

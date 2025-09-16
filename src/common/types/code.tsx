@@ -8,3 +8,7 @@ export interface CodeData {
   isEditing?: boolean;
   isDeletable?: boolean;
 }
+
+export interface CodeGroupData {
+  [category: string]: { id: string; code: string; codeName: string }[];
+}

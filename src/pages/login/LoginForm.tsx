@@ -8,6 +8,7 @@ import type { AppDispatch } from '@/store';
 import { MESSAGE } from '@/common/constants';
 import { showAlert, showConfirm } from '@/store/dialogAction';
 import { saveToken } from '@/common/utils/auth';
+import { fetchCommonCodes } from '@/store/commonCodeSlice';
 
 export default function LoginForm() {
   const navigate = useNavigate();
@@ -38,6 +39,9 @@ export default function LoginForm() {
 
       if (res.data.resultCode === '200') {
         saveToken(res.data.data);
+
+        // 공통코드 조회
+        dispatch(fetchCommonCodes());
 
         dispatch(
           showAlert({

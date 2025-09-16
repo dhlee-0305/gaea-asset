@@ -17,18 +17,17 @@ import {
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import api from '@/common/utils/api';
 import type { DeviceData } from '@/common/types/device';
 import PageHeader from '@/components/common/PageHeader';
 import { showAlert } from '@/store/dialogAction';
-import { CODE, MESSAGE } from '@/common/constants';
-import type { AppDispatch } from '@/store';
+import { COMMON_CATEGORY, MESSAGE } from '@/common/constants';
+import type { AppDispatch, RootState } from '@/store';
 import type { PageInfo } from '@/common/types/common';
 import { isAdminRole } from '@/common/utils/auth';
 import ExcelUpload from '@/components/common/ExcelUpload';
-import type { CodeData } from '@/common/types/code';
 
 export default function DeviceList() {
   const dispatch = useDispatch<AppDispatch>();
@@ -36,17 +35,17 @@ export default function DeviceList() {
   const [searchColumn, setSearchColumn] = useState('userName');
   const [searchKeyword, setSearchKeyword] = useState('');
   const [deviceDatas, setDeviceDatas] = useState<DeviceData[]>([]);
-  const [deviceTypeList, setDeviceTypeList] = useState<CodeData[]>([]);
   const [deviceType, setDeviceType] = useState('all');
   const [pageInfo, setPageInfo] = useState<PageInfo>({
     pageSize: 10,
     currentPage: 1,
   });
   const isAdmin = isAdminRole();
+  const commonCode = useSelector((state: RootState) => state.commonCode);
+  const deviceTypeCodes = commonCode[COMMON_CATEGORY.CATEGORY_DEVICE_TYPE];
 
   useEffect(() => {
     fetchData();
-    fetchDeviceTypeList(); //장비 유형 목록 조회
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -66,35 +65,6 @@ export default function DeviceList() {
       if (response.status === 200 && response.data.resultCode === '0000') {
         setDeviceDatas(response.data.data);
         setPageInfo(response.data.pagination);
-      }
-    } catch (e) {
-      console.error(e);
-      dispatch(
-        showAlert({
-          title: 'Error',
-          contents: MESSAGE.error,
-        }),
-      );
-    }
-  };
-
-  // 장비 유형 리스트 조회
-  const fetchDeviceTypeList = async () => {
-    try {
-      const categoryList = [CODE.commonCategory.CATEGORY_DEVICE_TYPE];
-      const response = await api.get('/codesByCategories', {
-        params: { categoryList: categoryList.join(',') },
-      });
-      if (response.status === 200 && response.data.resultCode === '0000') {
-        setDeviceTypeList(
-          response.data.data[CODE.commonCategory.CATEGORY_DEVICE_TYPE],
-        );
-      } else {
-        dispatch(
-          showAlert({
-            contents: response.data.description,
-          }),
-        );
       }
     } catch (e) {
       console.error(e);
@@ -229,7 +199,7 @@ export default function DeviceList() {
             onChange={(e) => setDeviceType(e.target.value)}
           >
             <MenuItem value='all'>장비유형</MenuItem>
-            {deviceTypeList.map((deviceType) => {
+            {deviceTypeCodes.map((deviceType) => {
               return (
                 <MenuItem key={deviceType.code} value={deviceType.code}>
                   {deviceType.codeName}
