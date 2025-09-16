@@ -13,6 +13,7 @@ import {
   TableHead,
   TableRow,
   TextField,
+  ButtonGroup,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -25,6 +26,7 @@ import { showAlert } from '@/store/dialogAction';
 import { MESSAGE } from '@/common/constants';
 import type { AppDispatch } from '@/store';
 import type { PageInfo } from '@/common/types/common';
+import ExcelUpload from '@/components/common/ExcelUpload';
 
 export default function UserList() {
   const dispatch = useDispatch<AppDispatch>();
@@ -112,6 +114,42 @@ export default function UserList() {
     navigate(`/user-management/users/${empNum}`);
   };
 
+  // 엑셀 업로드 처리
+  const excelUpload = async (file: File): Promise<void> => {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const response = await api.post('/users/upload/excel', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+
+      if (response.status === 200 && response.data.resultCode === '0000') {
+        await dispatch(
+          showAlert({
+            contents: '엑셀 업로드가 완료되었습니다.',
+          }),
+        );
+        fetchUsers(1);
+      } else {
+        await dispatch(
+          showAlert({
+            title: 'Error',
+            contents: response.data.description,
+          }),
+        );
+      }
+    } catch (error) {
+      console.error(error);
+      dispatch(
+        showAlert({
+          title: 'Error',
+          contents: MESSAGE.error,
+        }),
+      );
+    }
+  };
+
   return (
     <>
       <PageHeader contents='사용자 목록' />
@@ -146,6 +184,17 @@ export default function UserList() {
         <Button variant='contained' onClick={handleSearch}>
           검색
         </Button>
+      </Box>
+      {/* 액셀 영역 */}
+      <Box display='flex' justifyContent='flex-end' sx={{ mt: 0.1, mb: 2.5 }}>
+        <ButtonGroup>
+          <ExcelUpload
+            sx={{ fontSize: 11, height: 24 }}
+            excelUpload={excelUpload}
+          >
+            엑셀 업로드
+          </ExcelUpload>
+        </ButtonGroup>
       </Box>
       {/* 목록 영역 */}
       <TableContainer component={Paper}>
