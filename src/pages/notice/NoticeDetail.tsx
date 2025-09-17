@@ -38,7 +38,7 @@ export default function NoticeDetail() {
       const response = await api.get(`/notices/${noticeId}`);
       const { resultCode, description, data } = response.data;
 
-      if (resultCode === '0000' && data) {
+      if (resultCode === '200' && data) {
         setNoticeData(data);
       } else if (resultCode === '204') {
         dispatch(
@@ -83,7 +83,7 @@ export default function NoticeDetail() {
 
       setIsLoading(false);
 
-      if (resultCode === '0000' && data) {
+      if (resultCode === '200' && data) {
         await dispatch(
           showAlert({
             contents: '공지사항이 삭제되었습니다.',

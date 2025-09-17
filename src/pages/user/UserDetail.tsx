@@ -29,7 +29,7 @@ export default function UserDetail() {
 
       if (response.status === 200) {
         const resData = response.data;
-        if (resData.resultCode === '0000') {
+        if (resData.resultCode === '200') {
           setUserData(resData.data.userInfo);
         } else if (resData.resultCode === '204') {
           await dispatch(
@@ -74,7 +74,7 @@ export default function UserDetail() {
 
       if (response.status === 200) {
         const resData = response.data;
-        if (resData.resultCode === '0000') {
+        if (resData.resultCode === '200') {
           await dispatch(
             showAlert({
               contents: '비밀번호가 초기화되었습니다.',
@@ -125,7 +125,7 @@ export default function UserDetail() {
 
       setIsLoading(false);
 
-      if (response.status === 200 && response.data.resultCode === '0000') {
+      if (response.status === 200 && response.data.resultCode === '200') {
         await dispatch(
           showAlert({
             contents: '사용자 정보가 삭제되었습니다.',

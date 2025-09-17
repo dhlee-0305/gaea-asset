@@ -58,7 +58,7 @@ export default function UserList() {
 
       if (response.status === 200) {
         const resData = response.data;
-        if (resData.resultCode === '0000') {
+        if (resData.resultCode === '200') {
           setUserDatas(resData.data);
           setPageInfo(resData.pagination);
         } else {
@@ -124,7 +124,7 @@ export default function UserList() {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
-      if (response.status === 200 && response.data.resultCode === '0000') {
+      if (response.status === 200 && response.data.resultCode === '200') {
         await dispatch(
           showAlert({
             contents: '엑셀 업로드가 완료되었습니다.',

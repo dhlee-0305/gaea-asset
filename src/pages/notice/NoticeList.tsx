@@ -58,7 +58,7 @@ export default function NoticeList() {
 
       const { resultCode, description, data, pagination } = response.data;
 
-      if (resultCode === '0000' && data) {
+      if (resultCode === '200' && data) {
         setNoticeDatas(data);
         setPageInfo(pagination);
       } else if (resultCode === '500') {

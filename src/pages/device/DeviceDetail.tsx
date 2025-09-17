@@ -51,7 +51,7 @@ export default function DeviceDetail() {
     try {
       const response = await api.get(`/devices/${deviceNum}`);
 
-      if (response.status === 200 && response.data.resultCode === '0000') {
+      if (response.status === 200 && response.data.resultCode === '200') {
         setDeviceData(response.data.data);
       }
     } catch (e) {
@@ -99,7 +99,7 @@ export default function DeviceDetail() {
 
       setIsLoading(false);
 
-      if (response.status === 200 && response.data.resultCode === '0000') {
+      if (response.status === 200 && response.data.resultCode === '200') {
         await dispatch(
           showAlert({
             contents: '장비 정보가 삭제되었습니다.',

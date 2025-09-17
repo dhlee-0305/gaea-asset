@@ -86,7 +86,7 @@ export default function UserForm() {
           const response = await api.get(`/users/${userNo}`);
           if (response.status === 200) {
             const resData = response.data;
-            if (resData.resultCode === '0000') {
+            if (resData.resultCode === '200') {
               const organizationList = resData.data.organizationList; // 전체 조직 데이터
               setOrgData(organizationList);
 
@@ -158,7 +158,7 @@ export default function UserForm() {
       });
       if (response.status === 200) {
         const resData = response.data;
-        if (resData.resultCode === '0000') {
+        if (resData.resultCode === '200') {
           setPositionData(resData.data[CODE.commonCategory.CATEGORY_POSITION]);
           setGradeData(resData.data[CODE.commonCategory.CATEGORY_GRADE]);
         } else {
@@ -193,7 +193,7 @@ export default function UserForm() {
       const response = await api.get('/organization');
       if (response.status === 200) {
         const resData = response.data;
-        if (resData.resultCode === '0000') {
+        if (resData.resultCode === '200') {
           setOrgData(resData.data);
           setCompanyData(
             resData.data.filter(
@@ -246,7 +246,7 @@ export default function UserForm() {
 
       if (response.status === 200) {
         const resData = response.data;
-        if (resData.resultCode === '0000') {
+        if (resData.resultCode === '200') {
           await dispatch(
             showAlert({
               contents: isUpdate

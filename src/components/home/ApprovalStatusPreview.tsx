@@ -34,7 +34,7 @@ export default function ApprovalStatusPreview() {
         },
       });
 
-      if (response.status === 200 && response.data.resultCode === '0000') {
+      if (response.status === 200 && response.data.resultCode === '200') {
         const myApprovals = response.data.data;
         setApprovalList(myApprovals);
       }

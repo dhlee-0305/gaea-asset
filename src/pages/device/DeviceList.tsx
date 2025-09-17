@@ -62,7 +62,7 @@ export default function DeviceList() {
         },
       });
 
-      if (response.status === 200 && response.data.resultCode === '0000') {
+      if (response.status === 200 && response.data.resultCode === '200') {
         setDeviceDatas(response.data.data);
         setPageInfo(response.data.pagination);
       }
@@ -153,7 +153,7 @@ export default function DeviceList() {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
-      if (response.status === 200 && response.data.resultCode === '0000') {
+      if (response.status === 200 && response.data.resultCode === '200') {
         await dispatch(
           showAlert({
             contents: '엑셀 업로드가 완료되었습니다.',

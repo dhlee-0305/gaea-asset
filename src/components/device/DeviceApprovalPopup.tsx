@@ -48,7 +48,7 @@ export default function DeviceApprovalPopup({
   const getDeviceApprovalData = async () => {
     try {
       const response = await api.get(`/devices/${deviceNum}/draft`);
-      if (response.status === 200 && response.data.resultCode === '0000') {
+      if (response.status === 200 && response.data.resultCode === '200') {
         setDeviceApprovaldata(response.data.data);
       }
     } catch (e) {
@@ -87,7 +87,7 @@ export default function DeviceApprovalPopup({
         deviceApprovaldata,
       );
 
-      if (response.status === 200 && response.data.resultCode === '0000') {
+      if (response.status === 200 && response.data.resultCode === '200') {
         dispatch(
           showAlert({
             contents: '승인되었습니다.',
@@ -132,7 +132,7 @@ export default function DeviceApprovalPopup({
         payload,
       );
 
-      if (response.status === 200 && response.data.resultCode === '0000') {
+      if (response.status === 200 && response.data.resultCode === '200') {
         dispatch(
           showAlert({
             contents: '반려되었습니다.',

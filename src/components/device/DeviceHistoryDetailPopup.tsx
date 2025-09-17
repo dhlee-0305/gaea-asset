@@ -75,7 +75,7 @@ export default function DeviceHistoryDetailPopup({
     try {
       const response = await api.get(`/histories/${historyNum}`);
 
-      if (response.status === 200 && response.data.resultCode === '0000') {
+      if (response.status === 200 && response.data.resultCode === '200') {
         // API가 data에 단건 객체를 반환한다고 가정
         setHistoryData(response.data.data);
       }

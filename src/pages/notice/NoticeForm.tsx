@@ -50,7 +50,7 @@ export default function NoticeForm() {
           const response = await api.get(`/notices/${noticeId}`);
           const { resultCode, description, data } = response.data;
 
-          if (resultCode === '0000' && data) {
+          if (resultCode === '200' && data) {
             reset(data);
 
             if (Array.isArray(data.fileList)) {
@@ -122,7 +122,7 @@ export default function NoticeForm() {
 
       setIsLoading(false);
 
-      if (resultCode === '0000' && data) {
+      if (resultCode === '200' && data) {
         await dispatch(
           showAlert({
             contents: isUpdate

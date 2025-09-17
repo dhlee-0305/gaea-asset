@@ -78,7 +78,7 @@ export default function DeviceForm() {
         try {
           const response = await api.get(`/devices/${deviceNum}`);
 
-          if (response.status === 200 && response.data.resultCode === '0000') {
+          if (response.status === 200 && response.data.resultCode === '200') {
             reset({
               ...response.data.data,
               purchaseDate: response.data.data?.purchaseDate
@@ -129,7 +129,7 @@ export default function DeviceForm() {
       const response = await api[method](url, payload);
       setIsLoading(false);
 
-      if (response.status === 200 && response.data.resultCode === '0000') {
+      if (response.status === 200 && response.data.resultCode === '200') {
         await dispatch(
           showAlert({
             contents: isUpdate

@@ -58,7 +58,7 @@ export default function UserListPopup({
         },
       });
 
-      if (response.status === 200 && response.data.resultCode === '0000') {
+      if (response.status === 200 && response.data.resultCode === '200') {
         setUserDatas(response.data.data);
       }
     } catch (e) {

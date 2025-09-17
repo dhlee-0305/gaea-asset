@@ -68,7 +68,7 @@ export default function DeviceHistoryList() {
         },
       });
 
-      if (response.status === 200 && response.data.resultCode === '0000') {
+      if (response.status === 200 && response.data.resultCode === '200') {
         setDeviceHistoryDatas(response.data.data);
         setPageInfo(response.data.pagination);
       }
