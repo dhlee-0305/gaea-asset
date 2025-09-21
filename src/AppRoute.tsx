@@ -16,6 +16,7 @@ import DeviceList from '@/pages/device/DeviceList';
 import NoticeList from '@/pages/notice/NoticeList';
 import LoginPage from '@/pages/login/LoginPage';
 import ChangePasswordPage from '@/pages/login/ChangePasswordPage';
+import UserVerificationPage from '@/pages/login/UserVerificationPage';
 import DepartmentManagement from '@/pages/department/DepartmentManagement';
 import CodeManager from '@/pages/code/CodeManager';
 import { USER_ROLE } from '@/common/constants';
@@ -26,6 +27,7 @@ export default function AppRoute() {
       <Routes>
         <Route path='/login' element={<LoginPage />} />
         <Route path='/change-password' element={<ChangePasswordPage />} />
+        <Route path='/user-verification' element={<UserVerificationPage />} />
         <Route path='/' element={<LayoutBo />}>
           <Route index element={<Home />} />
           <Route

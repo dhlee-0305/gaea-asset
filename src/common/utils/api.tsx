@@ -14,6 +14,8 @@ const excludedUrls: string[] = [
   '/auth/login',
   '/auth/password',
   '/auth/password/reset',
+  '/verification/request',
+  '/verification/verify',
   // 필요시 URL 추가
 ];
 

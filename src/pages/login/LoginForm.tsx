@@ -16,7 +16,7 @@ export default function LoginForm() {
 
   const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
-  const [isResetting, setIsResetting] = useState(false);
+  //const [isResetting, setIsResetting] = useState(false);
 
   const handleSubmit = async (e?: React.FormEvent) => {
     e?.preventDefault(); // form submit의 기본 동작 방지
@@ -94,38 +94,7 @@ export default function LoginForm() {
 
     if (!confirmed) return;
 
-    try {
-      setIsResetting(true);
-      const res = await api.put('/auth/password/reset', {
-        userId,
-      });
-
-      if (res.status === 200 && res.data.resultCode === '200') {
-        dispatch(
-          showAlert({
-            title: '비밀번호 초기화 요청 완료',
-            contents: '관리자에게 비밀번호 초기화 요청을 보냈습니다.',
-          }),
-        );
-      } else {
-        dispatch(
-          showAlert({
-            title: '초기화 요청 실패',
-            contents: res.data.description,
-          }),
-        );
-      }
-    } catch (e) {
-      console.error(e);
-      dispatch(
-        showAlert({
-          title: '초기화 요청 실패',
-          contents: '초기화 요청 중 오류가 발생했습니다.',
-        }),
-      );
-    } finally {
-      setIsResetting(false);
-    }
+    navigate('/user-verification', { state: { userId } }); // 사용자 인증 페이지로 이동
   };
 
   return (
@@ -154,7 +123,7 @@ export default function LoginForm() {
             <Button
               size='small'
               onClick={handlePasswordResetRequest}
-              disabled={isResetting}
+              //disabled={isResetting}
             >
               비밀번호 초기화 요청
             </Button>
