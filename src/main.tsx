@@ -8,6 +8,7 @@ import dayjs from 'dayjs';
 
 import App from './App.tsx';
 
+import { AuthProvider } from '@/common/utils/AuthProvider.tsx';
 import store from '@/store/index.tsx';
 import 'dayjs/locale/ko';
 
@@ -22,7 +23,9 @@ createRoot(document.getElementById('root')!).render(
     <Provider store={store}>
       <BrowserRouter>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <App />
+          <AuthProvider>
+            <App />
+          </AuthProvider>
         </LocalizationProvider>
       </BrowserRouter>
     </Provider>

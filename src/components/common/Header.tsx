@@ -15,18 +15,17 @@ import { useDispatch } from 'react-redux';
 import styles from '@/styles/components/Header.module.css';
 import gaeasoftLogo from '@/assets/images/gaeasoft-logo.svg';
 import gaeasoftLogoIcon from '@/assets/images/gaeasoft-logo-icon.png';
-import { getToken, parseJwt, removeToken } from '@/common/utils/auth';
+import { getToken, parseJwt } from '@/common/utils/auth';
 import type { AppDispatch } from '@/store';
 import { showAlert } from '@/store/dialogAction';
+import { useAuth } from '@/common/utils/useAuth';
 /**
  * Header 컴포넌트
  */
 export default function Header() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [logoError, setLogoError] = useState(false);
-  const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-
   const token = getToken();
   const userInfo = token ? parseJwt(token) : null;
 
@@ -38,17 +37,20 @@ export default function Header() {
     setAnchorEl(null);
   };
 
+  const { logout } = useAuth();
+  const navigate = useNavigate();
   const handleLogout = () => {
-    //setAnchorEl(null);
-    //alert('로그아웃 되었습니다.');
+    navigate('/login', { replace: true, state: null });
+
+    setTimeout(() => {
+      logout();
+    }, 1000);
+
     dispatch(
       showAlert({
-        title: '',
         contents: '로그아웃 되었습니다.',
       }),
     );
-    removeToken();
-    navigate('/login');
   };
 
   const handleLogoError = () => {
@@ -57,7 +59,8 @@ export default function Header() {
 
   const handleLogoClick = () => {
     // localhost:3000 메인 화면으로 이동
-    window.location.href = 'http://localhost:3000';
+    //window.location.href = 'http://localhost:3000';
+    navigate('/');
   };
 
   return (
