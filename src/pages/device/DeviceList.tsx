@@ -42,7 +42,8 @@ export default function DeviceList() {
   });
   const isAdmin = isAdminRole();
   const commonCode = useSelector((state: RootState) => state.commonCode);
-  const deviceTypeCodes = commonCode[COMMON_CATEGORY.CATEGORY_DEVICE_TYPE];
+  const deviceTypeCodes =
+    commonCode[COMMON_CATEGORY.CATEGORY_DEVICE_TYPE] ?? [];
 
   useEffect(() => {
     fetchData();

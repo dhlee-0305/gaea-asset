@@ -45,10 +45,12 @@ export default function DeviceForm() {
   const [isOpen, setIsOpen] = useState(false);
   const isAdmin = isAdminRole();
   const commonCode = useSelector((state: RootState) => state.commonCode);
-  const deviceTypeCodes = commonCode[COMMON_CATEGORY.CATEGORY_DEVICE_TYPE];
-  const deviceStatusCodes = commonCode[COMMON_CATEGORY.CATEGORY_DEVICE_STATUS];
+  const deviceTypeCodes =
+    commonCode[COMMON_CATEGORY.CATEGORY_DEVICE_TYPE] ?? [];
+  const deviceStatusCodes =
+    commonCode[COMMON_CATEGORY.CATEGORY_DEVICE_STATUS] ?? [];
   const usageDivisionCodes =
-    commonCode[COMMON_CATEGORY.CATEGORY_USAGE_DIVISION];
+    commonCode[COMMON_CATEGORY.CATEGORY_USAGE_DIVISION] ?? [];
 
   // useForm 선언
   const {

@@ -44,11 +44,11 @@ const commonCodeSlice = createSlice({
     builder
       .addCase(
         fetchCommonCodes.fulfilled,
-        (state, action: PayloadAction<CodeGroupData>) => {
+        (_state, action: PayloadAction<CodeGroupData>) => {
           return action.payload;
         },
       )
-      .addCase(fetchCommonCodes.rejected, (_, action) => {
+      .addCase(fetchCommonCodes.rejected, (_state, action) => {
         console.error(action.payload);
       });
   },
