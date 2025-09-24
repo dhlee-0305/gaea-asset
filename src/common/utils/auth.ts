@@ -13,7 +13,7 @@ export const saveToken = (token: string) => {
   localStorage.setItem(TOKEN_KEY, JSON.stringify(item));
 };
 
-export const getToken = () => {
+export const getToken = (): string | null => {
   const itemStr = localStorage.getItem(TOKEN_KEY);
   if (!itemStr) {
     return null;

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Container, TextField, Button, Typography, Box } from '@mui/material';
 import { useDispatch } from 'react-redux';
 
@@ -7,10 +7,13 @@ import api from '@/common/utils/api';
 import type { AppDispatch } from '@/store';
 import { MESSAGE } from '@/common/constants';
 import { showAlert, showConfirm } from '@/store/dialogAction';
-import { saveToken } from '@/common/utils/auth';
+//import { saveToken } from '@/common/utils/auth';
 import { fetchCommonCodes } from '@/store/commonCodeSlice';
+import { useAuth } from '@/common/utils/useAuth';
 
 export default function LoginForm() {
+  const { login } = useAuth();
+  const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
@@ -38,8 +41,6 @@ export default function LoginForm() {
       });
 
       if (res.data.resultCode === '200') {
-        saveToken(res.data.data);
-
         // 공통코드 조회
         dispatch(fetchCommonCodes());
 
@@ -49,7 +50,12 @@ export default function LoginForm() {
             contents: '로그인 성공, 반갑습니다.',
           }),
         );
-        navigate('/'); // 메인 페이지로 이동
+        login(res.data.data);
+
+        const from = location.state?.from?.pathname;
+        const redirectTo = !from || from === '/login' ? '/' : from;
+
+        navigate(redirectTo, { replace: true });
       } else if (res.data.resultCode === '204') {
         dispatch(
           showAlert({

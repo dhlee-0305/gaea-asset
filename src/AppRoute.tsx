@@ -10,6 +10,7 @@ import UserForm from './pages/user/UserForm';
 
 import LayoutBo from '@/layout/Layout';
 import RequireRoles from '@/components/common/RequireRoles';
+import PrivateRoute from '@/common/utils/PrivateRoute';
 import NoticeDetail from '@/pages/notice/NoticeDetail';
 import Home from '@/pages/Home';
 import DeviceList from '@/pages/device/DeviceList';
@@ -28,7 +29,14 @@ export default function AppRoute() {
         <Route path='/login' element={<LoginPage />} />
         <Route path='/change-password' element={<ChangePasswordPage />} />
         <Route path='/user-verification' element={<UserVerificationPage />} />
-        <Route path='/' element={<LayoutBo />}>
+        <Route
+          path='/'
+          element={
+            <PrivateRoute>
+              <LayoutBo />
+            </PrivateRoute>
+          }
+        >
           <Route index element={<Home />} />
           <Route
             path='/user-management/users'
