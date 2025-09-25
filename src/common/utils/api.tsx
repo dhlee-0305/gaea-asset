@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { getToken, removeToken, isTokenExpired } from '@/common/utils/auth';
+import { getToken, saveToken, removeToken } from '@/common/utils/auth';
 
 const api = axios.create({
   baseURL: `${import.meta.env.VITE_BACKEND_URL}`,
@@ -9,34 +9,42 @@ const api = axios.create({
   withCredentials: true,
 });
 
-// 로그인 체크에서 제외할 URL 경로들
-const excludedUrls: string[] = [
-  '/auth/login',
-  '/auth/password',
-  '/auth/password/reset',
-  '/verification/request',
-  '/verification/verify',
-  // 필요시 URL 추가
-];
-
 api.interceptors.request.use((config) => {
   const token = getToken();
-  const isLoggedIn = token && !isTokenExpired(token);
-
-  // 제외 대상 URL인지 확인
-  const requestUrl = config.url || '';
-  const isExcluded = excludedUrls.includes(requestUrl);
-
-  if (!isLoggedIn && !isExcluded) {
-    removeToken();
-    window.location.href = '/login';
-    return Promise.reject(new Error('로그인 토큰이 만료되었습니다.'));
-  }
 
   if (token && config.headers) {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
 });
+
+api.interceptors.response.use(
+  (res) => res,
+  async (err) => {
+    if (err.response.status === 401) {
+      try {
+        const res = await axios.post(
+          `${import.meta.env.VITE_BACKEND_URL}` + '/auth/refresh',
+          {},
+          { withCredentials: true },
+        );
+        if (res.data.resultCode === '200') {
+          const newToken = res.data.data;
+          saveToken(newToken);
+          err.config.headers.Authorization = `Bearer ${newToken}`;
+          return api(err.config);
+        } else {
+          removeToken();
+          window.location.href = '/login';
+        }
+      } catch (refreshErr) {
+        console.log('refreshErr catch : ', refreshErr);
+        removeToken();
+        window.location.href = '/login';
+      }
+    }
+    return Promise.reject(err);
+  },
+);
 
 export default api;
