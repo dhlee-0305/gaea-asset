@@ -99,11 +99,10 @@ export const DEVICE_TYPE = {
 };
 
 export const DEVICE_STATUS = {
-  WAITING: '01',
-  USE: '02',
-  RETURN: '03',
-  BREAKAGE: '04',
-  DISPOSAL: '05',
+  USE: '01',
+  RETURN: '02',
+  BREAKAGE: '03',
+  DISPOSAL: '04',
 };
 
 export const USAGE_DIVISION = {
