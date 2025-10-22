@@ -1,17 +1,18 @@
 import {
   Box,
   Button,
+  Divider,
   FormControl,
   FormControlLabel,
   FormLabel,
   Grid,
   InputLabel,
   MenuItem,
-  Paper,
   Radio,
   RadioGroup,
   Select,
   TextField,
+  Typography,
 } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -188,398 +189,417 @@ export default function DeviceForm() {
   return (
     <>
       <PageHeader contents={isUpdate ? '장비 수정' : '장비 등록'} />
-      <Box sx={{ maxWidth: 600, mx: 'auto' }}>
+      <Box sx={{ maxWidth: 800, mx: 'auto', mt: 10 }}>
         <form onSubmit={handleSubmit(save)}>
-          <Paper sx={{ p: 4, mb: 4 }} elevation={4}>
-            <Grid container spacing={3}>
-              {isUpdate && (
-                <Grid size={12}>
-                  <TextField
-                    label='장비번호'
-                    fullWidth
-                    size='small'
-                    variant='outlined'
-                    slotProps={{
-                      inputLabel: {
-                        shrink: true,
-                      },
-                    }}
-                    {...register('deviceNum')}
-                    disabled
-                  />
-                </Grid>
-              )}
-
+          <Grid container spacing={3}>
+            {isUpdate && (
               <Grid size={12}>
-                <Box display='flex' alignItems='flex-start' gap={1}>
-                  <TextField
-                    label='장비 담당자'
-                    disabled
-                    fullWidth
-                    size='small'
-                    variant='outlined'
-                    slotProps={{
-                      inputLabel: {
-                        shrink: true,
-                      },
-                    }}
-                    {...register('userName', {
-                      required: '장비담당자를 선택해 주세요.',
-                    })}
-                    error={!!errors.userName}
-                    helperText={errors.userName?.message}
-                  />
-                  <Button variant='contained' onClick={handleOpenDialog}>
-                    조회
-                  </Button>
-                </Box>
-              </Grid>
-              <Grid size={12}>
-                <Controller
-                  name='deviceStatusCode'
-                  control={control}
-                  render={({ field }) => (
-                    <>
-                      <FormControl sx={{ minWidth: 250 }} size='small'>
-                        <InputLabel id='device-status-label'>
-                          장비상태
-                        </InputLabel>
-                        <Select
-                          labelId='device-status-label'
-                          id='device-status'
-                          label='장비상태'
-                          value={field.value}
-                          disabled={!isUpdate} // 등록 시 '사용'으로 고정
-                          onChange={(e) => {
-                            field.onChange(e.target.value);
-                          }}
-                        >
-                          {deviceStatusCodes.map((status) => (
-                            <MenuItem
-                              key={status.code}
-                              value={status.code}
-                              disabled={
-                                // 관리자가 아닌 경우 '사용' 항목 비활성화
-                                !isAdmin && status.code === DEVICE_STATUS.USE
-                              }
-                            >
-                              {status.codeName}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                    </>
-                  )}
+                <TextField
+                  label='장비번호'
+                  fullWidth
+                  size='small'
+                  variant='outlined'
+                  slotProps={{
+                    inputLabel: {
+                      shrink: true,
+                    },
+                  }}
+                  {...register('deviceNum')}
+                  disabled
                 />
               </Grid>
-              <Grid size={12}>
-                <Controller
-                  name='deviceTypeCode'
-                  control={control}
-                  render={({ field }) => (
-                    <>
-                      <FormControl sx={{ minWidth: 250 }} size='small'>
-                        <InputLabel id='device-type-label'>장비유형</InputLabel>
-                        <Select
-                          labelId='device-type-label'
-                          id='device-type'
-                          label='장비유형'
-                          value={field.value}
-                          onChange={(e) => {
-                            field.onChange(e.target.value);
-                          }}
-                        >
-                          {deviceTypeCodes.map((deviceType) => (
-                            <MenuItem
-                              key={deviceType.code}
-                              value={deviceType.code}
-                            >
-                              {deviceType.codeName}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                    </>
-                  )}
-                />
-              </Grid>
+            )}
 
-              <Grid size={12}>
-                <Controller
-                  name='usageDivisionCode'
-                  control={control}
-                  render={({ field }) => (
-                    <>
-                      <FormLabel id='usage-division-label'>용도구분</FormLabel>
-                      <RadioGroup
+            <Grid size={12}>
+              <Box display='flex' alignItems='flex-start' gap={1}>
+                <TextField
+                  label='장비 담당자'
+                  disabled
+                  fullWidth
+                  size='small'
+                  variant='outlined'
+                  slotProps={{
+                    inputLabel: {
+                      shrink: true,
+                    },
+                  }}
+                  {...register('userName', {
+                    required: '장비담당자를 선택해 주세요.',
+                  })}
+                  error={!!errors.userName}
+                  helperText={errors.userName?.message}
+                />
+                <Button variant='contained' onClick={handleOpenDialog}>
+                  조회
+                </Button>
+              </Box>
+            </Grid>
+            <Grid size={12}>
+              <Controller
+                name='deviceStatusCode'
+                control={control}
+                render={({ field }) => (
+                  <>
+                    <FormControl sx={{ minWidth: 250 }} size='small'>
+                      <InputLabel id='device-status-label'>장비상태</InputLabel>
+                      <Select
+                        labelId='device-status-label'
+                        id='device-status'
+                        label='장비상태'
+                        value={field.value}
+                        disabled={!isUpdate} // 등록 시 '사용'으로 고정
+                        onChange={(e) => {
+                          field.onChange(e.target.value);
+                        }}
+                      >
+                        {deviceStatusCodes.map((status) => (
+                          <MenuItem
+                            key={status.code}
+                            value={status.code}
+                            disabled={
+                              // 관리자가 아닌 경우 '사용' 항목 비활성화
+                              !isAdmin && status.code === DEVICE_STATUS.USE
+                            }
+                          >
+                            {status.codeName}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </>
+                )}
+              />
+            </Grid>
+            <Grid size={12}>
+              <Controller
+                name='deviceTypeCode'
+                control={control}
+                render={({ field }) => (
+                  <>
+                    <FormControl sx={{ minWidth: 250 }} size='small'>
+                      <InputLabel id='device-type-label'>장비유형</InputLabel>
+                      <Select
+                        labelId='device-type-label'
+                        id='device-type'
+                        label='장비유형'
                         value={field.value}
                         onChange={(e) => {
                           field.onChange(e.target.value);
                         }}
-                        row
-                        aria-labelledby='usage-division-label'
                       >
-                        {usageDivisionCodes.map((usageDivision) => (
-                          <FormControlLabel
-                            key={usageDivision.code}
-                            value={usageDivision.code}
-                            control={<Radio />}
-                            label={usageDivision.codeName}
-                          />
+                        {deviceTypeCodes.map((deviceType) => (
+                          <MenuItem
+                            key={deviceType.code}
+                            value={deviceType.code}
+                          >
+                            {deviceType.codeName}
+                          </MenuItem>
                         ))}
-                      </RadioGroup>
-                    </>
-                  )}
-                />
-              </Grid>
-
-              <Grid size={12}>
-                <TextField
-                  label='사용용도'
-                  fullWidth
-                  size='small'
-                  variant='outlined'
-                  slotProps={{
-                    inputLabel: {
-                      shrink: true,
-                    },
-                  }}
-                  {...register('usagePurpose')}
-                />
-              </Grid>
-              <Grid size={12}>
-                <TextField
-                  label='사용/보관 위치'
-                  fullWidth
-                  size='small'
-                  variant='outlined'
-                  slotProps={{
-                    inputLabel: {
-                      shrink: true,
-                    },
-                  }}
-                  {...register('archiveLocation')}
-                />
-              </Grid>
-              <Grid size={12}>
-                <TextField
-                  label='기존 장비관리번호'
-                  fullWidth
-                  size='small'
-                  variant='outlined'
-                  slotProps={{
-                    inputLabel: {
-                      shrink: true,
-                    },
-                  }}
-                  {...register('oldDeviceId')}
-                />
-              </Grid>
-              <Grid size={12}>
-                <TextField
-                  label='제조사'
-                  fullWidth
-                  size='small'
-                  variant='outlined'
-                  slotProps={{
-                    inputLabel: {
-                      shrink: true,
-                    },
-                  }}
-                  {...register('manufacturer')}
-                />
-              </Grid>
-              <Grid size={12}>
-                <TextField
-                  label='모델명'
-                  fullWidth
-                  size='small'
-                  variant='outlined'
-                  slotProps={{
-                    inputLabel: {
-                      shrink: true,
-                    },
-                  }}
-                  {...register('modelName')}
-                />
-              </Grid>
-              <Grid size={12}>
-                <TextField
-                  label='제조년도'
-                  fullWidth
-                  size='small'
-                  variant='outlined'
-                  slotProps={{
-                    inputLabel: {
-                      shrink: true,
-                    },
-                  }}
-                  {...register('manufactureDate')}
-                />
-              </Grid>
-              <Grid size={12}>
-                <TextField
-                  label='CPU'
-                  fullWidth
-                  size='small'
-                  variant='outlined'
-                  slotProps={{
-                    inputLabel: {
-                      shrink: true,
-                    },
-                  }}
-                  {...register('cpuSpec')}
-                />
-              </Grid>
-              <Grid size={12}>
-                <TextField
-                  label='메모리'
-                  fullWidth
-                  size='small'
-                  variant='outlined'
-                  slotProps={{
-                    inputLabel: {
-                      shrink: true,
-                    },
-                  }}
-                  {...register('memorySize')}
-                />
-              </Grid>
-              <Grid size={12}>
-                <TextField
-                  label='SSD/HDD'
-                  fullWidth
-                  size='small'
-                  variant='outlined'
-                  slotProps={{
-                    inputLabel: {
-                      shrink: true,
-                    },
-                  }}
-                  {...register('storageInfo')}
-                />
-              </Grid>
-              <Grid size={12}>
-                <TextField
-                  label='OS'
-                  fullWidth
-                  size='small'
-                  variant='outlined'
-                  slotProps={{
-                    inputLabel: {
-                      shrink: true,
-                    },
-                  }}
-                  {...register('operatingSystem')}
-                />
-              </Grid>
-              <Grid size={12}>
-                <TextField
-                  label='인치'
-                  fullWidth
-                  size='small'
-                  variant='outlined'
-                  slotProps={{
-                    inputLabel: {
-                      shrink: true,
-                    },
-                  }}
-                  {...register('screenSize')}
-                />
-              </Grid>
-              <Grid size={12}>
-                <TextField
-                  label='GPU'
-                  fullWidth
-                  size='small'
-                  variant='outlined'
-                  slotProps={{
-                    inputLabel: {
-                      shrink: true,
-                    },
-                  }}
-                  {...register('gpuSpec')}
-                />
-              </Grid>
-              <Grid size={12}>
-                <Controller
-                  name='purchaseDate'
-                  control={control}
-                  render={({ field }) => (
-                    <DatePicker
-                      {...field}
-                      label='구매일자'
-                      format='YYYY-MM-DD'
-                      onChange={(date) => field.onChange(date)}
-                      slotProps={{
-                        textField: {
-                          error: !!errors.purchaseDate,
-                          helperText: errors.purchaseDate?.message,
-                          size: 'small',
-                        },
-                      }}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid size={12}>
-                <Controller
-                  name='returnDate'
-                  control={control}
-                  render={({ field }) => (
-                    <DatePicker
-                      {...field}
-                      label='반납일자'
-                      format='YYYY-MM-DD'
-                      onChange={(date) => field.onChange(date)}
-                      slotProps={{
-                        textField: {
-                          error: !!errors.returnDate,
-                          helperText: errors.returnDate?.message,
-                          size: 'small',
-                        },
-                      }}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid size={12}>
-                <TextField
-                  label='비고'
-                  fullWidth
-                  size='small'
-                  variant='outlined'
-                  slotProps={{
-                    inputLabel: {
-                      shrink: true,
-                    },
-                  }}
-                  {...register('remarks')}
-                />
-              </Grid>
+                      </Select>
+                    </FormControl>
+                  </>
+                )}
+              />
             </Grid>
-            <Box
-              sx={{
-                mt: 3,
-                display: 'flex',
-                justifyContent: 'flex-end',
-                gap: 1,
-              }}
+
+            <Typography variant='h5' mt={3}>
+              상세 정보
+            </Typography>
+            <Grid size={12}>
+              <Controller
+                name='usageDivisionCode'
+                control={control}
+                render={({ field }) => (
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 2,
+                      flexWrap: { xs: 'wrap', sm: 'nowrap' },
+                    }}
+                  >
+                    <FormLabel id='usage-division-label' sx={{ minWidth: 88 }}>
+                      용도구분
+                    </FormLabel>
+                    <RadioGroup
+                      row
+                      aria-labelledby='usage-division-label'
+                      value={field.value}
+                      onChange={(e) => field.onChange(e.target.value)}
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        columnGap: 2,
+                        rowGap: 0.5,
+                        flexWrap: 'wrap',
+                      }}
+                    >
+                      {usageDivisionCodes.map((usageDivision) => (
+                        <FormControlLabel
+                          key={usageDivision.code}
+                          value={usageDivision.code}
+                          control={<Radio size='small' />}
+                          label={usageDivision.codeName}
+                          sx={{ mr: 0 }}
+                        />
+                      ))}
+                    </RadioGroup>
+                  </Box>
+                )}
+              />
+            </Grid>
+
+            <Grid size={12}>
+              <TextField
+                label='사용용도'
+                fullWidth
+                size='small'
+                variant='outlined'
+                slotProps={{
+                  inputLabel: {
+                    shrink: true,
+                  },
+                }}
+                {...register('usagePurpose')}
+              />
+            </Grid>
+            <Grid size={12}>
+              <TextField
+                label='사용/보관 위치'
+                fullWidth
+                size='small'
+                variant='outlined'
+                slotProps={{
+                  inputLabel: {
+                    shrink: true,
+                  },
+                }}
+                {...register('archiveLocation')}
+              />
+            </Grid>
+            <Grid size={12}>
+              <TextField
+                label='기존 장비관리번호'
+                fullWidth
+                size='small'
+                variant='outlined'
+                slotProps={{
+                  inputLabel: {
+                    shrink: true,
+                  },
+                }}
+                {...register('oldDeviceId')}
+              />
+            </Grid>
+            <Grid />
+            <Grid size={12}>
+              <TextField
+                label='제조년도'
+                fullWidth
+                size='small'
+                variant='outlined'
+                slotProps={{
+                  inputLabel: {
+                    shrink: true,
+                  },
+                }}
+                {...register('manufactureDate')}
+              />
+            </Grid>
+            <Grid size={6}>
+              <TextField
+                label='제조사'
+                fullWidth
+                size='small'
+                variant='outlined'
+                slotProps={{
+                  inputLabel: {
+                    shrink: true,
+                  },
+                }}
+                {...register('manufacturer')}
+              />
+            </Grid>
+            <Grid size={6}>
+              <TextField
+                label='모델명'
+                fullWidth
+                size='small'
+                variant='outlined'
+                slotProps={{
+                  inputLabel: {
+                    shrink: true,
+                  },
+                }}
+                {...register('modelName')}
+              />
+            </Grid>
+
+            <Grid size={6}>
+              <TextField
+                label='CPU'
+                fullWidth
+                size='small'
+                variant='outlined'
+                slotProps={{
+                  inputLabel: {
+                    shrink: true,
+                  },
+                }}
+                {...register('cpuSpec')}
+              />
+            </Grid>
+            <Grid size={6}>
+              <TextField
+                label='메모리'
+                fullWidth
+                size='small'
+                variant='outlined'
+                slotProps={{
+                  inputLabel: {
+                    shrink: true,
+                  },
+                }}
+                {...register('memorySize')}
+              />
+            </Grid>
+            <Grid size={6}>
+              <TextField
+                label='SSD/HDD'
+                fullWidth
+                size='small'
+                variant='outlined'
+                slotProps={{
+                  inputLabel: {
+                    shrink: true,
+                  },
+                }}
+                {...register('storageInfo')}
+              />
+            </Grid>
+            <Grid size={6}>
+              <TextField
+                label='GPU'
+                fullWidth
+                size='small'
+                variant='outlined'
+                slotProps={{
+                  inputLabel: {
+                    shrink: true,
+                  },
+                }}
+                {...register('gpuSpec')}
+              />
+            </Grid>
+            <Grid size={12}>
+              <TextField
+                label='OS'
+                fullWidth
+                size='small'
+                variant='outlined'
+                slotProps={{
+                  inputLabel: {
+                    shrink: true,
+                  },
+                }}
+                {...register('operatingSystem')}
+              />
+            </Grid>
+            <Grid size={12} mb={2}>
+              <TextField
+                label='인치'
+                fullWidth
+                size='small'
+                variant='outlined'
+                slotProps={{
+                  inputLabel: {
+                    shrink: true,
+                  },
+                }}
+                {...register('screenSize')}
+              />
+            </Grid>
+            <Grid size={12}>
+              <Divider />
+            </Grid>
+            <Grid>
+              <Controller
+                name='purchaseDate'
+                control={control}
+                render={({ field }) => (
+                  <DatePicker
+                    {...field}
+                    label='구매일자'
+                    format='YYYY-MM-DD'
+                    onChange={(date) => field.onChange(date)}
+                    slotProps={{
+                      textField: {
+                        error: !!errors.purchaseDate,
+                        helperText: errors.purchaseDate?.message,
+                        size: 'small',
+                      },
+                    }}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid>
+              <Controller
+                name='returnDate'
+                control={control}
+                render={({ field }) => (
+                  <DatePicker
+                    {...field}
+                    label='반납일자'
+                    format='YYYY-MM-DD'
+                    onChange={(date) => field.onChange(date)}
+                    slotProps={{
+                      textField: {
+                        error: !!errors.returnDate,
+                        helperText: errors.returnDate?.message,
+                        size: 'small',
+                      },
+                    }}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid size={12}>
+              <TextField
+                label='비고'
+                fullWidth
+                size='small'
+                variant='outlined'
+                slotProps={{
+                  inputLabel: {
+                    shrink: true,
+                  },
+                }}
+                {...register('remarks')}
+              />
+            </Grid>
+          </Grid>
+          <Box
+            sx={{
+              mt: 3,
+              display: 'flex',
+              justifyContent: 'flex-end',
+              gap: 1,
+            }}
+          >
+            <Button variant='outlined' onClick={handleCancel}>
+              취소
+            </Button>
+            <Button
+              variant='contained'
+              color='primary'
+              type='submit'
+              loading={isLoading}
+              loadingPosition='start'
             >
-              <Button variant='outlined' onClick={handleCancel}>
-                취소
-              </Button>
-              <Button
-                variant='contained'
-                color='primary'
-                type='submit'
-                loading={isLoading}
-                loadingPosition='start'
-              >
-                저장
-              </Button>
-            </Box>
-          </Paper>
+              저장
+            </Button>
+          </Box>
         </form>
       </Box>
       <UserSelectPopup

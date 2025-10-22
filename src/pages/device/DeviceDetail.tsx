@@ -175,6 +175,12 @@ export default function DeviceDetail() {
               <Typography>{deviceData?.oldDeviceId}</Typography>
             </Grid>
             <Grid size={4}>
+              <Typography color='textSecondary'>제조년도</Typography>
+            </Grid>
+            <Grid size={8}>
+              <Typography>{deviceData?.manufactureDate}</Typography>
+            </Grid>
+            <Grid size={4}>
               <Typography color='textSecondary'>제조사</Typography>
             </Grid>
             <Grid size={8}>
@@ -185,12 +191,6 @@ export default function DeviceDetail() {
             </Grid>
             <Grid size={8}>
               <Typography>{deviceData?.modelName}</Typography>
-            </Grid>
-            <Grid size={4}>
-              <Typography color='textSecondary'>제조년도</Typography>
-            </Grid>
-            <Grid size={8}>
-              <Typography>{deviceData?.manufactureDate}</Typography>
             </Grid>
             <Grid size={4}>
               <Typography color='textSecondary'>CPU</Typography>
@@ -211,6 +211,12 @@ export default function DeviceDetail() {
               <Typography>{deviceData?.storageInfo}</Typography>
             </Grid>
             <Grid size={4}>
+              <Typography color='textSecondary'>GPU</Typography>
+            </Grid>
+            <Grid size={8}>
+              <Typography>{deviceData?.gpuSpec}</Typography>
+            </Grid>
+            <Grid size={4}>
               <Typography color='textSecondary'>OS</Typography>
             </Grid>
             <Grid size={8}>
@@ -221,12 +227,6 @@ export default function DeviceDetail() {
             </Grid>
             <Grid size={8}>
               <Typography>{deviceData?.screenSize}</Typography>
-            </Grid>
-            <Grid size={4}>
-              <Typography color='textSecondary'>GPU</Typography>
-            </Grid>
-            <Grid size={8}>
-              <Typography>{deviceData?.gpuSpec}</Typography>
             </Grid>
             <Grid size={4}>
               <Typography color='textSecondary'>구매일자</Typography>
