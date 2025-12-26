@@ -8,6 +8,7 @@ import { getToken, saveToken, removeToken } from '@/common/utils/auth';
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [token, setToken] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isInitialized, setIsInitialized] = useState<boolean>(false);
 
   useEffect(() => {
     const storedToken = getToken();
@@ -15,6 +16,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setToken(storedToken);
       setIsAuthenticated(true);
     }
+    setIsInitialized(true);
   }, []);
 
   const login = (newToken: string) => {
@@ -30,7 +32,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout, token }}>
+    <AuthContext.Provider
+      value={{ isAuthenticated, isInitialized, login, logout, token }}
+    >
       {children}
     </AuthContext.Provider>
   );

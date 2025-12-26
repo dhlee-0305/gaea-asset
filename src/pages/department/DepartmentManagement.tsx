@@ -26,6 +26,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { showAlert, showConfirm } from '@/store/dialogAction';
 import api from '@/common/utils/api';
 import type { AppDispatch } from '@/store';
+import PageHeader from '@/components/common/PageHeader';
 
 type Dept = {
   orgId?: string | number;
@@ -363,9 +364,7 @@ export default function DepartmentManagement() {
 
   return (
     <Box>
-      <Typography variant='h5' style={{ marginBottom: 16, fontWeight: 700 }}>
-        부서 관리
-      </Typography>
+      <PageHeader contents='부서 관리' />
       <Stack
         direction='row'
         spacing={1}

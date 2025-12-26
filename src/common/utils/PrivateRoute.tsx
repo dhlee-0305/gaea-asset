@@ -4,8 +4,12 @@ import type { ReactNode } from 'react';
 import { useAuth } from '@/common/utils/useAuth';
 
 const PrivateRoute = ({ children }: { children: ReactNode }) => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isInitialized } = useAuth();
   const location = useLocation();
+
+  if (!isInitialized) {
+    return null; // 또는 로딩 스피너
+  }
 
   if (!isAuthenticated) {
     if (location.pathname === '/login') {

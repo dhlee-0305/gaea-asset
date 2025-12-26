@@ -13,4 +13,11 @@
 
   /* Border Radius */
   --radius-sm: 4px;
+
+  /* Theme Colors */
+  --sidebar-bg: #313a46;
+  --header-bg: #ffffff;
+  --body-bg: #fafbfe;
+  --text-color: #6c757d;
+  --title-color: #6c757d;
 }

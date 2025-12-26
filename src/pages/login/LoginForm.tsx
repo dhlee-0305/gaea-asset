@@ -1,6 +1,14 @@
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Container, TextField, Button, Typography, Box } from '@mui/material';
+import {
+  Container,
+  TextField,
+  Button,
+  Typography,
+  Box,
+  Card,
+  CardContent,
+} from '@mui/material';
 import { useDispatch } from 'react-redux';
 
 import api from '@/common/utils/api';
@@ -10,6 +18,7 @@ import { showAlert, showConfirm } from '@/store/dialogAction';
 //import { saveToken } from '@/common/utils/auth';
 import { fetchCommonCodes } from '@/store/commonCodeSlice';
 import { useAuth } from '@/common/utils/useAuth';
+import gaeasoftLogoIcon from '@/assets/images/gaeasoft-logo-icon.png';
 
 export default function LoginForm() {
   const { login } = useAuth();
@@ -104,47 +113,94 @@ export default function LoginForm() {
   };
 
   return (
-    <Container maxWidth='sm'>
-      <Box mt={10}>
-        <form onSubmit={handleSubmit}>
-          <Typography variant='h4' gutterBottom>
-            로그인
-          </Typography>
-          <TextField
-            fullWidth
-            margin='normal'
-            label='아이디'
-            value={userId}
-            onChange={(e) => setUserId(e.target.value)}
-          />
-          <TextField
-            fullWidth
-            margin='normal'
-            type='password'
-            label='비밀번호'
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <Box textAlign='right' mt={1} mb={2}>
-            <Button
-              size='small'
-              onClick={handlePasswordResetRequest}
-              //disabled={isResetting}
+    <Box
+      sx={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#f5f7fa',
+      }}
+    >
+      <Container maxWidth='xs'>
+        <Card sx={{ boxShadow: '0 0 35px 0 rgba(154,161,171,.15)' }}>
+          <CardContent sx={{ p: 4 }}>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                mb: 3,
+              }}
             >
-              비밀번호 초기화 요청
-            </Button>
-          </Box>
-          <Button
-            type='submit' // 중요: submit 버튼
-            fullWidth
-            variant='contained'
-            color='primary'
-            sx={{ mt: 2 }}
-          >
-            로그인
-          </Button>
-        </form>
-      </Box>
-    </Container>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                <img
+                  src={gaeasoftLogoIcon}
+                  alt='GAEA SOFT'
+                  style={{ height: 32 }}
+                />
+                <Typography
+                  variant='h5'
+                  component='div'
+                  sx={{
+                    fontWeight: 700,
+                    color: '#313a46',
+                    letterSpacing: '0.5px',
+                  }}
+                >
+                  전산장비관리시스템
+                </Typography>
+              </Box>
+            </Box>
+
+            <form onSubmit={handleSubmit}>
+              <TextField
+                fullWidth
+                margin='normal'
+                label='아이디'
+                value={userId}
+                onChange={(e) => setUserId(e.target.value)}
+                variant='outlined'
+                size='medium'
+              />
+              <TextField
+                fullWidth
+                margin='normal'
+                type='password'
+                label='비밀번호'
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                variant='outlined'
+                size='medium'
+              />
+              <Box textAlign='right' mt={1} mb={3}>
+                <Button
+                  size='small'
+                  onClick={handlePasswordResetRequest}
+                  sx={{ color: 'text.secondary', textTransform: 'none' }}
+                >
+                  비밀번호 초기화 요청
+                </Button>
+              </Box>
+              <Button
+                type='submit'
+                fullWidth
+                variant='contained'
+                color='primary'
+                size='large'
+                sx={{
+                  py: 1.5,
+                  fontSize: '1rem',
+                  fontWeight: 600,
+                  boxShadow: 'none',
+                }}
+              >
+                로그인
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      </Container>
+    </Box>
   );
 }

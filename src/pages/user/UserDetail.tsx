@@ -1,4 +1,12 @@
-import { Box, Button, Grid, Paper, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Paper,
+  Table,
+  TableBody,
+  TableContainer,
+  TableRow,
+} from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -9,6 +17,7 @@ import PageHeader from '@/components/common/PageHeader';
 import type { AppDispatch } from '@/store';
 import { showAlert, showConfirm } from '@/store/dialogAction';
 import { MESSAGE } from '@/common/constants';
+import { LabelCell, ValueCell } from '@/components/common/TableComponents';
 
 export default function UserDetail() {
   const dispatch = useDispatch<AppDispatch>();
@@ -148,46 +157,37 @@ export default function UserDetail() {
   return (
     <>
       <PageHeader contents='사용자 상세' />
-      <Box sx={{ maxWidth: 600, mx: 'auto' }}>
-        <Paper sx={{ p: 4, mb: 4 }} elevation={4}>
-          <Grid container spacing={2}>
-            <Grid size={4}>
-              <Typography color='textSecondary'>아이디</Typography>
-            </Grid>
-            <Grid size={8}>
-              <Typography>{data?.userId}</Typography>
-            </Grid>
+      <Box sx={{ maxWidth: 1000, mx: 'auto', mb: 4 }}>
+        <Paper sx={{ p: 4 }} elevation={4}>
+          <TableContainer component={Paper} elevation={0} sx={{ mb: 4 }}>
+            <Table>
+              <TableBody>
+                <TableRow>
+                  <LabelCell>아이디</LabelCell>
+                  <ValueCell colSpan={3}>{data?.userId}</ValueCell>
+                </TableRow>
+                <TableRow>
+                  <LabelCell>이름</LabelCell>
+                  <ValueCell colSpan={3}>{data?.userName}</ValueCell>
+                </TableRow>
+                <TableRow>
+                  <LabelCell>부서</LabelCell>
+                  <ValueCell colSpan={3}>{data?.orgName}</ValueCell>
+                </TableRow>
+                <TableRow>
+                  <LabelCell>직급</LabelCell>
+                  <ValueCell colSpan={3}>{data?.userGradeName}</ValueCell>
+                </TableRow>
+                <TableRow>
+                  <LabelCell>직책</LabelCell>
+                  <ValueCell colSpan={3}>{data?.userPositionName}</ValueCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </TableContainer>
 
-            <Grid size={4}>
-              <Typography color='textSecondary'>이름</Typography>
-            </Grid>
-            <Grid size={8}>
-              <Typography>{data?.userName}</Typography>
-            </Grid>
-
-            <Grid size={4}>
-              <Typography color='textSecondary'>부서</Typography>
-            </Grid>
-            <Grid size={8}>
-              <Typography>{data?.orgName}</Typography>
-            </Grid>
-
-            <Grid size={4}>
-              <Typography color='textSecondary'>직급</Typography>
-            </Grid>
-            <Grid size={8}>
-              <Typography>{data?.userGradeName}</Typography>
-            </Grid>
-
-            <Grid size={4}>
-              <Typography color='textSecondary'>직책</Typography>
-            </Grid>
-            <Grid size={8}>
-              <Typography>{data?.userPositionName}</Typography>
-            </Grid>
-          </Grid>
           <Box
-            sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end', gap: 1 }}
+            sx={{ mt: 4, display: 'flex', justifyContent: 'flex-end', gap: 1 }}
           >
             <Button variant='outlined' onClick={handleMoveList}>
               목록

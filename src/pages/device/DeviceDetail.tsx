@@ -1,4 +1,12 @@
-import { Box, Button, Grid, Paper, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Paper,
+  Table,
+  TableBody,
+  TableContainer,
+  TableRow,
+} from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -12,6 +20,11 @@ import { DEVICE_APPROVAL_STATUS, MESSAGE, USER_ROLE } from '@/common/constants';
 import type { DeviceData } from '@/common/types/device';
 import DeviceApprovalPopup from '@/components/device/DeviceApprovalPopup';
 import { getUserInfo, isAdminRole } from '@/common/utils/auth';
+import {
+  LabelCell,
+  SectionTitle,
+  ValueCell,
+} from '@/components/common/TableComponents';
 
 export default function DeviceDetail() {
   const dispatch = useDispatch<AppDispatch>();
@@ -129,139 +142,112 @@ export default function DeviceDetail() {
   return (
     <>
       <PageHeader contents='장비 상세' />
-      <Box sx={{ maxWidth: 600, mx: 'auto' }}>
-        <Paper sx={{ p: 4, mb: 4 }} elevation={4}>
-          <Grid container spacing={2}>
-            <Grid size={4}>
-              <Typography color='textSecondary'>장비번호</Typography>
-            </Grid>
-            <Grid size={8}>
-              <Typography>{deviceData?.deviceNum}</Typography>
-            </Grid>
-            <Grid size={4}>
-              <Typography color='textSecondary'>장비담당자</Typography>
-            </Grid>
-            <Grid size={8}>
-              <Typography>{deviceData?.userName}</Typography>
-            </Grid>
-            <Grid size={4}>
-              <Typography color='textSecondary'>장비 상태</Typography>
-            </Grid>
-            <Grid size={8}>
-              <Typography>{deviceData?.deviceStatus}</Typography>
-            </Grid>
-            <Grid size={4}>
-              <Typography color='textSecondary'>장비유형</Typography>
-            </Grid>
-            <Grid size={8}>
-              <Typography>{deviceData?.deviceType}</Typography>
-            </Grid>
-            <Grid size={4}>
-              <Typography color='textSecondary'>용도구분</Typography>
-            </Grid>
-            <Grid size={8}>
-              <Typography>{deviceData?.usageDivision}</Typography>
-            </Grid>
-            <Grid size={4}>
-              <Typography color='textSecondary'>사용용도</Typography>
-            </Grid>
-            <Grid size={8}>
-              <Typography>{deviceData?.usagePurpose}</Typography>
-            </Grid>
-            <Grid size={4}>
-              <Typography color='textSecondary'>기존 장비관리번호</Typography>
-            </Grid>
-            <Grid size={8}>
-              <Typography>{deviceData?.oldDeviceId}</Typography>
-            </Grid>
-            <Grid size={4}>
-              <Typography color='textSecondary'>제조년도</Typography>
-            </Grid>
-            <Grid size={8}>
-              <Typography>{deviceData?.manufactureDate}</Typography>
-            </Grid>
-            <Grid size={4}>
-              <Typography color='textSecondary'>제조사</Typography>
-            </Grid>
-            <Grid size={8}>
-              <Typography>{deviceData?.manufacturer}</Typography>
-            </Grid>
-            <Grid size={4}>
-              <Typography color='textSecondary'>모델명</Typography>
-            </Grid>
-            <Grid size={8}>
-              <Typography>{deviceData?.modelName}</Typography>
-            </Grid>
-            <Grid size={4}>
-              <Typography color='textSecondary'>CPU</Typography>
-            </Grid>
-            <Grid size={8}>
-              <Typography>{deviceData?.cpuSpec}</Typography>
-            </Grid>
-            <Grid size={4}>
-              <Typography color='textSecondary'>메모리</Typography>
-            </Grid>
-            <Grid size={8}>
-              <Typography>{deviceData?.memorySize}</Typography>
-            </Grid>
-            <Grid size={4}>
-              <Typography color='textSecondary'>SSD/HDD</Typography>
-            </Grid>
-            <Grid size={8}>
-              <Typography>{deviceData?.storageInfo}</Typography>
-            </Grid>
-            <Grid size={4}>
-              <Typography color='textSecondary'>GPU</Typography>
-            </Grid>
-            <Grid size={8}>
-              <Typography>{deviceData?.gpuSpec}</Typography>
-            </Grid>
-            <Grid size={4}>
-              <Typography color='textSecondary'>OS</Typography>
-            </Grid>
-            <Grid size={8}>
-              <Typography>{deviceData?.operatingSystem}</Typography>
-            </Grid>
-            <Grid size={4}>
-              <Typography color='textSecondary'>인치</Typography>
-            </Grid>
-            <Grid size={8}>
-              <Typography>{deviceData?.screenSize}</Typography>
-            </Grid>
-            <Grid size={4}>
-              <Typography color='textSecondary'>구매일자</Typography>
-            </Grid>
-            <Grid size={8}>
-              <Typography>
-                {deviceData?.purchaseDate &&
-                  dayjs(deviceData.purchaseDate).format('YYYY.MM.DD')}
-              </Typography>
-            </Grid>
-            <Grid size={4}>
-              <Typography color='textSecondary'>반납일자</Typography>
-            </Grid>
-            <Grid size={8}>
-              <Typography>
-                {deviceData?.returnDate &&
-                  dayjs(deviceData.returnDate).format('YYYY.MM.DD')}
-              </Typography>
-            </Grid>
-            <Grid size={4}>
-              <Typography color='textSecondary'>비고</Typography>
-            </Grid>
-            <Grid size={8}>
-              <Typography>{deviceData?.remarks}</Typography>
-            </Grid>
+      <Box sx={{ maxWidth: 1000, mx: 'auto', mb: 4 }}>
+        <Paper sx={{ p: 4 }} elevation={4}>
+          <SectionTitle>기본 정보</SectionTitle>
+          <TableContainer component={Paper} elevation={0} sx={{ mb: 4 }}>
+            <Table>
+              <TableBody>
+                <TableRow>
+                  <LabelCell>장비번호</LabelCell>
+                  <ValueCell colSpan={3}>{deviceData?.deviceNum}</ValueCell>
+                </TableRow>
+                <TableRow>
+                  <LabelCell>장비담당자</LabelCell>
+                  <ValueCell colSpan={3}>{deviceData?.userName}</ValueCell>
+                </TableRow>
+                <TableRow>
+                  <LabelCell>장비상태</LabelCell>
+                  <ValueCell>{deviceData?.deviceStatus}</ValueCell>
+                  <LabelCell>장비유형</LabelCell>
+                  <ValueCell>{deviceData?.deviceType}</ValueCell>
+                </TableRow>
+                <TableRow>
+                  <LabelCell>용도구분</LabelCell>
+                  <ValueCell>{deviceData?.usageDivision}</ValueCell>
+                  <LabelCell>사용용도</LabelCell>
+                  <ValueCell>{deviceData?.usagePurpose}</ValueCell>
+                </TableRow>
+                <TableRow>
+                  <LabelCell>사용/보관 위치</LabelCell>
+                  <ValueCell>{deviceData?.archiveLocation}</ValueCell>
+                  <LabelCell>기존 장비관리번호</LabelCell>
+                  <ValueCell>{deviceData?.oldDeviceId}</ValueCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </TableContainer>
 
-            <Grid size={4}>
-              <Typography color='textSecondary'>결재 상태</Typography>
-            </Grid>
-            <Grid size={8}>
-              <Typography>{deviceData?.approvalStatus}</Typography>
-            </Grid>
-          </Grid>
+          <SectionTitle>제원 정보</SectionTitle>
+          <TableContainer component={Paper} elevation={0} sx={{ mb: 4 }}>
+            <Table>
+              <TableBody>
+                <TableRow>
+                  <LabelCell>제조년도</LabelCell>
+                  <ValueCell>{deviceData?.manufactureDate}</ValueCell>
+                  <LabelCell>제조사</LabelCell>
+                  <ValueCell>{deviceData?.manufacturer}</ValueCell>
+                </TableRow>
+                <TableRow>
+                  <LabelCell>모델명</LabelCell>
+                  <ValueCell>{deviceData?.modelName}</ValueCell>
+                  <LabelCell>인치</LabelCell>
+                  <ValueCell>{deviceData?.screenSize}</ValueCell>
+                </TableRow>
+                <TableRow>
+                  <LabelCell>CPU</LabelCell>
+                  <ValueCell>{deviceData?.cpuSpec}</ValueCell>
+                  <LabelCell>메모리</LabelCell>
+                  <ValueCell>{deviceData?.memorySize}</ValueCell>
+                </TableRow>
+                <TableRow>
+                  <LabelCell>SSD/HDD</LabelCell>
+                  <ValueCell>{deviceData?.storageInfo}</ValueCell>
+                  <LabelCell>GPU</LabelCell>
+                  <ValueCell>{deviceData?.gpuSpec}</ValueCell>
+                </TableRow>
+                <TableRow>
+                  <LabelCell>OS</LabelCell>
+                  <ValueCell colSpan={3}>
+                    {deviceData?.operatingSystem}
+                  </ValueCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </TableContainer>
+
+          <SectionTitle>관리 정보</SectionTitle>
+          <TableContainer component={Paper} elevation={0}>
+            <Table>
+              <TableBody>
+                <TableRow>
+                  <LabelCell>구매일자</LabelCell>
+                  <ValueCell>
+                    {deviceData?.purchaseDate &&
+                      dayjs(deviceData.purchaseDate).format('YYYY.MM.DD')}
+                  </ValueCell>
+                  <LabelCell>반납일자</LabelCell>
+                  <ValueCell>
+                    {deviceData?.returnDate &&
+                      dayjs(deviceData.returnDate).format('YYYY.MM.DD')}
+                  </ValueCell>
+                </TableRow>
+                <TableRow>
+                  <LabelCell>결재 상태</LabelCell>
+                  <ValueCell colSpan={3}>
+                    {deviceData?.approvalStatus}
+                  </ValueCell>
+                </TableRow>
+                <TableRow>
+                  <LabelCell>비고</LabelCell>
+                  <ValueCell colSpan={3}>{deviceData?.remarks}</ValueCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </TableContainer>
+
           <Box
-            sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end', gap: 1 }}
+            sx={{ mt: 4, display: 'flex', justifyContent: 'flex-end', gap: 1 }}
           >
             {canShowApproveButton && (
               <Button

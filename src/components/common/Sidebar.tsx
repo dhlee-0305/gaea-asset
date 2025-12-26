@@ -6,52 +6,23 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Toolbar,
+  Typography,
 } from '@mui/material';
-import ComputerIcon from '@mui/icons-material/Computer';
-import PeopleIcon from '@mui/icons-material/People';
-import CampaignIcon from '@mui/icons-material/Campaign';
-import Code from '@mui/icons-material/Code';
 import { Link, useLocation } from 'react-router-dom';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
+import styles from '@/styles/components/Header.module.css';
 import { getToken, parseJwt } from '@/common/utils/auth';
 import { USER_ROLE } from '@/common/constants';
-
-const menuItems = [
-  {
-    key: 'user-management',
-    text: '사용자관리',
-    icon: <PeopleIcon />,
-    children: [
-      { text: '부서관리', to: '/user-management/departments' },
-      { text: '사용자관리', to: '/user-management/users' },
-    ],
-  },
-  {
-    key: 'device-management',
-    text: '장비관리',
-    icon: <ComputerIcon />,
-    children: [{ text: '장비관리', to: '/device-management/devices' }],
-  },
-  {
-    key: 'notice',
-    text: '공지사항',
-    icon: <CampaignIcon />,
-    children: [{ text: '공지사항', to: '/notice/notices' }],
-  },
-  {
-    key: 'code-management',
-    text: '공통코드',
-    icon: <Code />,
-    children: [{ text: '공통코드', to: '/code-management/codes' }],
-  },
-];
+import gaeasoftLogoIcon from '@/assets/images/gaeasoft-logo-icon.png';
+import { menuItems } from '@/common/constants/menu';
 
 export default function Sidebar() {
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const location = useLocation();
+  const navigate = useNavigate();
 
   // 사용자 정보 추출
   const token = getToken();
@@ -80,18 +51,18 @@ export default function Sidebar() {
         }
       }
 
-      if (menu.key === 'device-management') {
-        // 장비이력관리 메뉴는 권한 제한 없이 항상 노출
-        const children = [...menu.children];
-        if (!children.some((c) => c.text === '장비이력관리')) {
-          children.push({
-            text: '장비이력관리',
-            to: '/device-management/device-history',
-          });
-        }
-        acc.push({ ...menu, children });
-        return acc;
-      }
+      // if (menu.key === 'device-management') {
+      //   // 장비이력관리 메뉴는 권한 제한 없이 항상 노출
+      //   const children = [...menu.children];
+      //   if (!children.some((c) => c.text === '장비이력관리')) {
+      //     children.push({
+      //       text: '장비이력관리',
+      //       to: '/device-management/device-history',
+      //     });
+      //   }
+      //   acc.push({ ...menu, children });
+      //   return acc;
+      // }
 
       acc.push(menu);
       return acc;
@@ -126,6 +97,12 @@ export default function Sidebar() {
     }
   };
 
+  const handleLogoClick = () => {
+    // localhost:3000 메인 화면으로 이동
+    //window.location.href = 'http://localhost:3000';
+    navigate('/');
+  };
+
   return (
     <Drawer
       variant='permanent'
@@ -135,24 +112,45 @@ export default function Sidebar() {
         [`& .MuiDrawer-paper`]: {
           width: 240,
           boxSizing: 'border-box',
-          backgroundColor: '#1e1e2f',
-          color: '#fff',
+          backgroundColor: 'var(--sidebar-bg)',
+          color: '#8391a2',
         },
       }}
     >
       <Box sx={{ overflow: 'auto' }}>
-        <Toolbar />
+        <Box
+          onClick={handleLogoClick}
+          sx={{
+            height: 64,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderBottom: '1px solid rgba(255,255,255,0.1)',
+            gap: 1.5,
+          }}
+        >
+          <img
+            src={gaeasoftLogoIcon}
+            alt='GAEA SOFT'
+            className={styles.logoIcon}
+          />
+          <Typography variant='h6' className={styles.logoText}>
+            GAEASOFT
+          </Typography>
+        </Box>
         <List>
           {dynamicMenuItems.map((menu) => (
             <Box key={menu.key}>
               <ListItemButton
                 sx={{
-                  '&:hover': { backgroundColor: '#33334d' },
-                  color: '#fff',
+                  '&:hover': { color: '#bccee4' },
+                  color: '#8391a2',
                 }}
                 onClick={() => handleClick(menu.key)}
               >
-                <ListItemIcon sx={{ color: '#fff' }}>{menu.icon}</ListItemIcon>
+                <ListItemIcon sx={{ color: 'inherit' }}>
+                  {menu.icon}
+                </ListItemIcon>
                 <ListItemText primary={menu.text} />
                 {openMenu === menu.key ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
@@ -167,9 +165,9 @@ export default function Sidebar() {
                         to={child.to}
                         onClick={(e) => handleChildClick(e, child.to)}
                         sx={{
-                          '&:hover': { backgroundColor: '#33334d' },
-                          backgroundColor: isSelected ? '#2d2d4d' : 'inherit',
-                          color: isSelected ? '#90caf9' : '#fff',
+                          '&:hover': { color: '#bccee4' },
+                          backgroundColor: isSelected ? 'inherit' : 'inherit',
+                          color: isSelected ? '#fff' : '#8391a2',
                           pl: 4,
                         }}
                       >

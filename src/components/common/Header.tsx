@@ -14,8 +14,6 @@ import { useDispatch } from 'react-redux';
 
 import api from '@/common/utils/api';
 import styles from '@/styles/components/Header.module.css';
-import gaeasoftLogo from '@/assets/images/gaeasoft-logo.svg';
-import gaeasoftLogoIcon from '@/assets/images/gaeasoft-logo-icon.png';
 import { getToken, parseJwt } from '@/common/utils/auth';
 import type { AppDispatch } from '@/store';
 import { showAlert } from '@/store/dialogAction';
@@ -25,7 +23,6 @@ import { useAuth } from '@/common/utils/useAuth';
  */
 export default function Header() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [logoError, setLogoError] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const token = getToken();
   const userInfo = token ? parseJwt(token) : null;
@@ -59,16 +56,6 @@ export default function Header() {
     );
   };
 
-  const handleLogoError = () => {
-    setLogoError(true);
-  };
-
-  const handleLogoClick = () => {
-    // localhost:3000 메인 화면으로 이동
-    //window.location.href = 'http://localhost:3000';
-    navigate('/');
-  };
-
   return (
     <>
       <AppBar
@@ -76,56 +63,38 @@ export default function Header() {
         color='transparent'
         className={styles.appBar}
         sx={{
+          width: { sm: `calc(100% - 240px)` },
+          ml: { sm: `240px` },
           zIndex: (theme) => theme.zIndex.drawer + 1,
-          backgroundColor: '#1e1e2f !important',
-          background: '#1e1e2f !important',
+          backgroundColor: 'var(--header-bg) !important',
+          background: 'var(--header-bg) !important',
+          boxShadow: '0 0 35px 0 rgba(154,161,171,.15)',
           '&.MuiAppBar-root': {
-            backgroundColor: '#1e1e2f !important',
-            background: '#1e1e2f !important',
+            backgroundColor: 'var(--header-bg) !important',
+            background: 'var(--header-bg) !important',
           },
           '&.MuiAppBar-colorPrimary': {
-            backgroundColor: '#1e1e2f !important',
-            background: '#1e1e2f !important',
+            backgroundColor: 'var(--header-bg) !important',
+            background: 'var(--header-bg) !important',
           },
           '&.MuiAppBar-colorTransparent': {
-            backgroundColor: '#1e1e2f !important',
-            background: '#1e1e2f !important',
+            backgroundColor: 'var(--header-bg) !important',
+            background: 'var(--header-bg) !important',
           },
         }}
       >
         <Toolbar>
-          <Box className={styles.logoContainer}>
-            {!logoError ? (
-              <img
-                src={gaeasoftLogo}
-                alt='GAEA SOFT 로고'
-                className={styles.logo}
-                onError={handleLogoError}
-                onClick={handleLogoClick}
-                style={{ cursor: 'pointer' }}
-              />
-            ) : (
-              // SVG 로고 실패 시 아이콘 + 텍스트 fallback
-              <Box
-                className={styles.logoFallback}
-                onClick={handleLogoClick}
-                sx={{ cursor: 'pointer !important' }}
-              >
-                <img
-                  src={gaeasoftLogoIcon}
-                  alt='GAEA SOFT 아이콘'
-                  className={styles.logoIcon}
-                />
-                <Typography variant='h6' className={styles.logoText}>
-                  GAEASOFT
-                </Typography>
-              </Box>
-            )}
+          <Box className={styles.logoContainer} sx={{ flexGrow: 1 }}>
             <Typography
               variant='h6'
               component='div'
-              className={styles.title}
-              sx={{ cursor: 'default !important' }}
+              sx={{
+                cursor: 'default !important',
+                color: 'var(--title-color)',
+                fontWeight: 700,
+                fontSize: '1.5rem',
+                letterSpacing: '0.5px',
+              }}
             >
               전산장비관리시스템
             </Typography>
@@ -140,6 +109,7 @@ export default function Header() {
                 aria-haspopup='true'
                 onClick={handleMenu}
                 className={styles.userMenuButton}
+                sx={{ color: '#313a46 !important' }}
               >
                 <AccountCircle />
               </IconButton>

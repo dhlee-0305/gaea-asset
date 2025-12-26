@@ -18,7 +18,15 @@ export default function Layout() {
       <Box sx={{ display: 'flex' }}>
         <Header />
         <Sidebar />
-        <Box component='main' sx={{ flexGrow: 1, p: 3 }}>
+        <Box
+          component='main'
+          sx={{
+            flexGrow: 1,
+            p: 3,
+            backgroundColor: 'var(--body-bg)',
+            minHeight: '100vh',
+          }}
+        >
           <Toolbar />
           <Outlet />
         </Box>
